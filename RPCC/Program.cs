@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using RPCC.Data;
+using Data;
+using Data.Models.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +10,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+// Setup JSON API
+builder.Services.AddOptions<CookCompApiJsonAccessSetting>().Configure(options =>
+{
+    options.DataRootPath = @"..\Data\";
+    options.RecipeFolder = "Recipes";
+    options.RecipeIngredientFolder = "RecipeIngredients";
+    options.RecipeStepFolder = "RecipeSteps";
+    options.IngredientFolder = "Ingredients";
+    options.UserFolder = "Users";
+    options.ShoppingListFolder = "ShoppingLists";
+    options.ShoppingListItemFolder = "ShoppingListItems";
+    options.FavouriteFolder = "Favourites";
+}
+);
+
+// When we ask for CompCookAPI, we will get an instance of JsonAccess back from dependency injection
+builder.Services.AddScoped<CookCompAPI, CookCompApiJsonAccess>();
 
 var app = builder.Build();
 

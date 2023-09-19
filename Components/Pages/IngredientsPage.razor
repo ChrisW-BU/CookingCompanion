@@ -1,0 +1,29 @@
+﻿@page "/ingredients"
+@using Data.Models.Interfaces
+@using RPCC.Data.Models
+@inject CookCompAPI _api
+
+<PageTitle>Cooking Companion - Ingredients</PageTitle>
+
+<h1>Ingredients</h1>
+
+Below we will form a list of ingredients which we have loaded from a JSON library.
+<br />
+<br />
+
+<ul>
+    @foreach (var i in ingredients)
+    {
+        <li>@i.Name - @i.Description</li>
+    }
+</ul>
+
+@code {
+    protected List<Ingredient> ingredients = new List<Ingredient>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ingredients = await _api.GetIngredientListAsync(10, 0);
+        await base.OnInitializedAsync();
+    }
+}
