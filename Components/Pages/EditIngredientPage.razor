@@ -1,0 +1,28 @@
+﻿@page "/edit_ingredient/{CatchId}"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+
+<h3>Edit Ingredient</h3>
+
+@if (Ingredient != null)
+{
+    <h2>@Ingredient.Name</h2>
+    @((MarkupString)Ingredient.Description)
+}
+
+@code {
+    [Parameter]
+    public string CatchId { get; set; }
+
+    [Parameter]
+    public int IngredientId { get; set; }
+
+    public Ingredient? Ingredient { get; set; }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        int ingId = Int32.Parse(CatchId);
+        Ingredient = await _api.GetIngredientUniqueAsync(ingId);
+        await base.OnParametersSetAsync();
+    }
+}

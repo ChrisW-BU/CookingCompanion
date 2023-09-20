@@ -1,4 +1,4 @@
-﻿using RPCC.Data.Models;
+﻿using Data.Models;
 
 namespace Data.Models.Interfaces
 {

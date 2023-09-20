@@ -1,4 +1,4 @@
-﻿namespace RPCC.Data.Models
+﻿namespace Data.Models
 {
     public class RecipeIngredient
     {

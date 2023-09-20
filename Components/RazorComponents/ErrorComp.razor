@@ -1,0 +1,15 @@
+﻿<ErrorBoundary Context=ex>
+     <ChildContent>
+        <p>@(1/zero)</p>
+    </ChildContent>
+    <ErrorContent>
+       An error occurred
+       @ex.Message
+
+       There was an error: @ex.Message
+    </ErrorContent>
+</ErrorBoundary>
+
+@code {
+    int zero = 0;
+}

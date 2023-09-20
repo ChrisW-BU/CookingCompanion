@@ -11,13 +11,13 @@
 
 @code {
     [Parameter]
-    public string Icon { get; set; }
+    public string Icon { get; set; } = string.Empty;
 
     [Parameter]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     [Parameter]
-    public string Href { get; set; }
+    public string Href { get; set; } = string.Empty;
 
     private void OnClickEvent()
     {

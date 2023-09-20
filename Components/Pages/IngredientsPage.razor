@@ -1,20 +1,21 @@
 ﻿@page "/ingredients"
 @using Data.Models.Interfaces
-@using RPCC.Data.Models
+@using Data.Models
 @inject CookCompAPI _api
+@inject NavigationManager _nav
 
 <PageTitle>Cooking Companion - Ingredients</PageTitle>
 
 <h1>Ingredients</h1>
 
-Below we will form a list of ingredients which we have loaded from a JSON library.
-<br />
-<br />
+<AlertItem Style="AlertItem.AlertStyle.Info">
+    Below will be a list of all ingredients.
+</AlertItem>
 
 <ul>
     @foreach (var i in ingredients)
     {
-        <li>@i.Name - @i.Description</li>
+        <li @onclick="() => OnClickEvent(i.Id)">@i.Name - @i.Description</li>
     }
 </ul>
 
@@ -25,5 +26,10 @@ Below we will form a list of ingredients which we have loaded from a JSON librar
     {
         ingredients = await _api.GetIngredientListAsync(10, 0);
         await base.OnInitializedAsync();
+    }
+
+    private void OnClickEvent(int ingredientId)
+    {
+        _nav.NavigateTo("/edit_ingredient/" + ingredientId);
     }
 }
