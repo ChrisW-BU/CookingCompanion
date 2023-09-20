@@ -9,6 +9,20 @@
     <h2>@Ingredient.Name</h2>
     @((MarkupString)Ingredient.Description)
 }
+<br />
+<br />
+
+Name
+<br />
+<InputText @bind-Value="@Ingredient.Name" />
+<br />
+<br />
+Description
+<br />
+<InputText @bind-Value="@Ingredient.Description" />
+<br />
+<br />
+<button class="btn btn-success" @onclick="Save" type="submit">Save</button>
 
 @code {
     [Parameter]
@@ -24,5 +38,14 @@
         int ingId = Int32.Parse(CatchId);
         Ingredient = await _api.GetIngredientUniqueAsync(ingId);
         await base.OnParametersSetAsync();
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            await _api.SaveIngredientAsync(Ingredient);
+        }
+        catch {}
     }
 }
