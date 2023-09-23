@@ -1,0 +1,15 @@
+﻿@* <div>
+    <label>@Name</label><br />
+    <InputText @oninput="UpdateParent" @bind-Value="@Value" class="i" />
+</div>
+<br /> *@
+@inherits FormInputBase
+<div>
+    <label>@Name</label><br />
+    <input class="@CssClass" value="@Value" autocomplete="@AutoCompleteStr"
+    @oninput="UpdateParentElementStr" hidden="@IsHidden" disabled="@IsDisabled" />
+</div>
+
+@code {
+
+}

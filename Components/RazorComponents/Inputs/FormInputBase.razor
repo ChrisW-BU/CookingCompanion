@@ -1,0 +1,39 @@
+﻿@code {
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public string Value { get; set; }
+
+    [Parameter]
+    public bool AutoComplete { get; set; }
+
+    [Parameter]
+    public bool IsHidden { get; set; }
+
+    [Parameter]
+    public bool IsDisabled { get; set; }
+
+    [Parameter]
+    public string CssClass { get; set; }
+
+    public string AutoCompleteStr
+    {
+        get
+        {
+            if (AutoComplete)
+            {
+                return "on";
+            }
+            return "off";
+        }
+    }
+
+    [Parameter]
+    public EventCallback<string> ValueChanged { get; set; }
+
+    public async void UpdateParentElementStr(ChangeEventArgs e)
+    {
+        ValueChanged.InvokeAsync(e.Value.ToString());
+    }
+}

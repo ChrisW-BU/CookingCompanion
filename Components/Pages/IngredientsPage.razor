@@ -15,9 +15,12 @@
 <ul>
     @foreach (var i in ingredients)
     {
-        <li @onclick="() => OnClickEvent(i.Id)">@i.Name - @i.Description</li>
+        @* <li @onclick="() => OnClickEvent(i.Id)">@i.Name - @i.Description</li> *@
+        <IngredientCard Name="@i.Name" Description="@i.Description" OnClickCall="() => OnClickEvent(i.Id)"/>
     }
 </ul>
+
+<ButtonControl Name="Add New" Colour="success" Icon="fas fa-edit" OnClickCall="AddNewIngredient"/>
 
 @code {
     protected List<Ingredient> ingredients = new List<Ingredient>();
@@ -31,5 +34,10 @@
     private void OnClickEvent(int ingredientId)
     {
         _nav.NavigateTo("/edit_ingredient/" + ingredientId);
+    }
+
+    private async Task AddNewIngredient ()
+    {
+        _nav.NavigateTo("/edit_ingredient/" + 0);
     }
 }

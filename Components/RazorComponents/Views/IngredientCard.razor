@@ -1,0 +1,31 @@
+﻿<div class="card" style="width: 18rem" @onclick="OnClickCall">
+    <img src="Images/food-img.jpg" class="card-img-top" alt="An image of food">
+    <div class="card-body">
+        <h5 class="card-title">@Name</h5>
+        <p class="card-text">@Description</p>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public string Description { get; set; }
+
+    [Parameter]
+    public string ImgUrl { get; set; }
+
+    [Parameter]
+    public EventCallback OnClickCall { get; set; }
+
+    public string ImgPath { get; set; }
+
+    public void GetImgPath()
+    {
+        
+    }
+}

@@ -4,25 +4,19 @@
 
 <h3>Edit Ingredient</h3>
 
-@if (Ingredient != null)
+@* @if (Ingredient != null)
 {
     <h2>@Ingredient.Name</h2>
     @((MarkupString)Ingredient.Description)
 }
 <br />
-<br />
+<br /> *@
 
-Name
-<br />
-<InputText @bind-Value="@Ingredient.Name" />
-<br />
-<br />
-Description
-<br />
-<InputText @bind-Value="@Ingredient.Description" />
-<br />
-<br />
-<button class="btn btn-success" @onclick="Save" type="submit">Save</button>
+<FormInputText Name="Name" @bind-Value="Ingredient.Name" AutoComplete=false CssClass="form-control mb-3"/>
+<FormInputTextArea Name="Description" @bind-Value="Ingredient.Description" AutoComplete=false CssClass="form-control mb-3"/>
+
+<ButtonControl Colour="success" Icon="fas fa-save" Name="Save" OnClickCall="Save"/>
+<ButtonControl Colour="danger" Icon="far fa-times-circle" Name="Cancel" OnClickCall="PageBack"/>
 
 @code {
     [Parameter]
@@ -36,7 +30,14 @@ Description
     protected async override Task OnParametersSetAsync()
     {
         int ingId = Int32.Parse(CatchId);
-        Ingredient = await _api.GetIngredientUniqueAsync(ingId);
+        if (ingId > 0)
+        {
+            Ingredient = await _api.GetIngredientUniqueAsync(ingId);
+        }
+        else
+        {
+            Ingredient = new Ingredient();
+        }
         await base.OnParametersSetAsync();
     }
 
@@ -45,7 +46,13 @@ Description
         try
         {
             await _api.SaveIngredientAsync(Ingredient);
+            PageBack();
         }
-        catch {}
+        catch { }
+    }
+
+    private async void PageBack()
+    {
+        _nav.NavigateTo("/ingredients/");
     }
 }

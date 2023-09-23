@@ -1,0 +1,14 @@
+﻿<button class="btn btn-@Colour btn-lg" @onclick="OnClickCall"><i class="@Icon"></i>&nbsp @Name</button>
+@code {
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public string Colour { get; set; }
+
+    [Parameter]
+    public string Icon { get; set; }
+
+    [Parameter]
+    public EventCallback OnClickCall { get; set; }
+}
