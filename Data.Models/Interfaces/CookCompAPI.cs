@@ -17,10 +17,22 @@ namespace Data.Models.Interfaces
 
         Task DeleteIngredientAsync(int id);
 
+
+
         ////////////////////////////
         // Recipe Interface Members
         ////////////////////////////
-        
+        Task<List<Recipe>?> GetRecipeListAsync(int recipeCount, int index);
+
+        Task<Recipe?> GetRecipeUniqueAsync(int id);
+
+        Task<int> GetRecipeCountAsync();
+
+        Task<Recipe?> SaveRecipeAsync(Recipe editedObj);
+
+        Task DeleteRecipeAsync(int id);
+
+
 
         /////////////////
         // Other Helpers

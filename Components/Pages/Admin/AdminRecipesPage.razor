@@ -1,0 +1,48 @@
+﻿@page "/admin/recipes"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+
+<PageTitle>CC - Recipe Manager</PageTitle>
+<h3>Recipes</h3>
+
+<AlertItem Style="AlertItem.AlertStyle.Info">
+    This page is for the management of recipes. You can add, edit, and delete recipes as well as modify their ingredient lists and steps.
+</AlertItem>
+
+<div class="container">
+    <div class="row">
+        @foreach (var r in recipes)
+        {
+            <RecipeCard Name="@r.Name" Description="@r.Description" ImgUrl="@r.ImgUrl"
+                            Duration="@r.Duration" OnClickCall="() => OnClickEvent(r.Id)" />
+        }
+    </div>
+</div>
+
+<ButtonControl Name="Add New" Colour="success" Icon="fas fa-edit" OnClickCall="AddNewRecipe" />
+<ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
+
+@code {
+    protected List<Recipe> recipes = new List<Recipe>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        recipes = await _api.GetRecipeListAsync(10, 0);
+        await base.OnInitializedAsync();
+    }
+
+    private void OnClickEvent(int recipeId)
+    {
+        _nav.NavigateTo("/admin/edit_recipe/" + recipeId);
+    }
+
+    private void AddNewRecipe ()
+    {
+        _nav.NavigateTo("/admin/edit_recipe/" + 0);
+    }
+
+    private void PageBack()
+    {
+        _nav.NavigateTo("/admin");
+    }
+}

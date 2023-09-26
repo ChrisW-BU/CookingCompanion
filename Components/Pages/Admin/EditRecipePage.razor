@@ -1,0 +1,97 @@
+﻿@page "/admin/edit_recipe/{CatchId}"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+<PageTitle>@PageTitleName</PageTitle>
+<h3>@TitleName</h3>
+
+<FormInputText Name="Name" @bind-Value="RecipeObj.Name" AutoComplete=false CssClass="form-control mb-3" />
+<FormInputTextArea Name="Description" @bind-Value="RecipeObj.Description" AutoComplete=false CssClass="form-control mb-3" />
+<FormInputText Name="Duration" @bind-Value="RecipeObj.Duration" AutoComplete=false CssClass="form-control mb-3" />
+<FormInputText Name="Image URL" @bind-Value="RecipeObj.ImgUrl" AutoComplete=false CssClass="form-control mb-3" />
+
+<ButtonControl Colour="success" Icon="fas fa-save" Name="Save" OnClickCall="Save" />
+<ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" OnClickCall="Delete" />
+<ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
+
+@code {
+    [Parameter]
+    public string CatchId { get; set; } = string.Empty;
+
+    [Parameter]
+    public int RecipeId { get; set; }
+
+    public Recipe? RecipeObj { get; set; }
+
+    public string PageTitleName
+    {
+        get
+        {
+            if (RecipeObj.Id > 0)
+            {
+                return "CC - " + RecipeObj.Name;
+            }
+            else
+            {
+                return "CC - New Recipe";
+            }
+        }
+    }
+
+    public string TitleName
+    {
+        get
+        {
+            if (RecipeObj.Id > 0)
+            {
+                return "Edit Recipe";
+            }
+            else
+            {
+                return "Add New Recipe";
+            }
+        }
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        int ingId = Int32.Parse(CatchId);
+        if (ingId > 0)
+        {
+            RecipeObj = await _api.GetRecipeUniqueAsync(ingId);
+        }
+        else
+        {
+            RecipeObj = new Recipe();
+        }
+        await base.OnParametersSetAsync();
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            RecipeObj.LastModified = DateTime.Now;
+            await _api.SaveRecipeAsync(RecipeObj);
+            PageBack();
+        }
+        catch { }
+    }
+
+    private async Task Delete()
+    {
+        try
+        {
+            await _api.DeleteRecipeAsync(RecipeObj.Id);
+            PageBack();
+        }
+        catch
+        {
+
+        }
+    }
+
+    private void PageBack()
+    {
+        _nav.NavigateTo("/admin/recipes");
+    }
+}

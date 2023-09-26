@@ -1,9 +1,9 @@
 ﻿@code {
     [Parameter]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [Parameter]
-    public string Value { get; set; }
+    public string Value { get; set; } = string.Empty;
 
     [Parameter]
     public bool AutoComplete { get; set; }
@@ -15,7 +15,7 @@
     public bool IsDisabled { get; set; }
 
     [Parameter]
-    public string CssClass { get; set; }
+    public string CssClass { get; set; } = string.Empty;
 
     public string AutoCompleteStr
     {
@@ -34,6 +34,6 @@
 
     public async void UpdateParentElementStr(ChangeEventArgs e)
     {
-        ValueChanged.InvokeAsync(e.Value.ToString());
+        await ValueChanged.InvokeAsync(e.Value.ToString());
     }
 }

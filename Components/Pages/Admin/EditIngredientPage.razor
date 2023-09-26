@@ -1,0 +1,96 @@
+﻿@page "/admin/edit_ingredient/{CatchId}"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+<PageTitle>@PageTitleName</PageTitle>
+<h3>@TitleName</h3>
+
+<FormInputText Name="Name" @bind-Value="IngredientObj.Name" AutoComplete=false CssClass="form-control mb-3" />
+<FormInputTextArea Name="Description" @bind-Value="IngredientObj.Description" AutoComplete=false CssClass="form-control mb-3" />
+<FormInputText Name="Image URL" @bind-Value="IngredientObj.ImgUrl" AutoComplete=false CssClass="form-control mb-3" />
+
+<ButtonControl Colour="success" Icon="fas fa-save" Name="Save" OnClickCall="Save" />
+<ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" OnClickCall="Delete" />
+<ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
+
+@code {
+    [Parameter]
+    public string CatchId { get; set; } = string.Empty;
+
+    [Parameter]
+    public int IngredientId { get; set; }
+
+    public Ingredient? IngredientObj { get; set; }
+
+    public string PageTitleName
+    {
+        get
+        {
+            if (IngredientObj.Id > 0)
+            {
+                return "CC - " + IngredientObj.Name;
+            }
+            else
+            {
+                return "CC - New Ingredient";
+            }
+        }
+    }
+
+    public string TitleName
+    {
+        get
+        {
+            if (IngredientObj.Id > 0)
+            {
+                return "Edit Ingredient";
+            }
+            else
+            {
+                return "Add New Ingredient";
+            }
+        }
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        int ingId = Int32.Parse(CatchId);
+        if (ingId > 0)
+        {
+            IngredientObj = await _api.GetIngredientUniqueAsync(ingId);
+        }
+        else
+        {
+            IngredientObj = new Ingredient();
+        }
+        await base.OnParametersSetAsync();
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            IngredientObj.LastModified = DateTime.Now;
+            await _api.SaveIngredientAsync(IngredientObj);
+            PageBack();
+        }
+        catch { }
+    }
+
+    private async Task Delete()
+    {
+        try
+        {
+            await _api.DeleteIngredientAsync(IngredientObj.Id);
+            PageBack();
+        }
+        catch
+        {
+
+        }
+    }
+
+    private void PageBack()
+    {
+        _nav.NavigateTo("/admin/ingredients");
+    }
+}

@@ -1,0 +1,51 @@
+﻿@page "/admin/ingredients"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+
+<PageTitle>CC - Ingredient Manager</PageTitle>
+
+<h1>Ingredients</h1>
+
+<AlertItem Style="AlertItem.AlertStyle.Info">
+    This page is for the management of ingredient information. You can add, edit, and delete ingredients.
+</AlertItem>
+
+<div class="container">
+    <div class="row">
+    @foreach (var i in ingredients)
+    {
+        @* <li @onclick="() => OnClickEvent(i.Id)">@i.Name - @i.Description</li> *@
+        <IngredientCard Name="@i.Name" Description="@i.Description" ImgUrl="@i.ImgUrl" 
+        LastModified="@i.LastModified" OnClickCall="() => OnClickEvent(i.Id)" />
+    }
+    </div>
+</div>
+
+
+<ButtonControl Name="Add New" Colour="success" Icon="fas fa-edit" OnClickCall="AddNewIngredient"/>
+<ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
+
+@code {
+    protected List<Ingredient> ingredients = new List<Ingredient>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ingredients = await _api.GetIngredientListAsync(10, 0);
+        await base.OnInitializedAsync();
+    }
+
+    private void OnClickEvent(int ingredientId)
+    {
+        _nav.NavigateTo("/admin/edit_ingredient/" + ingredientId);
+    }
+
+    private void AddNewIngredient ()
+    {
+        _nav.NavigateTo("/admin/edit_ingredient/" + 0);
+    }
+
+    private void PageBack()
+    {
+        _nav.NavigateTo("/admin");
+    }
+}

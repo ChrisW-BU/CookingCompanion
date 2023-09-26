@@ -1,0 +1,16 @@
+﻿@page "/admin"
+@inject NavigationManager _nav
+
+<PageTitle>CC - Admin Panel</PageTitle>
+<h3>Admin Panel</h3>
+<MenuItem Icon="fas fa-user" Title="Manage Users" Href="admin"></MenuItem>
+<MenuItem Icon="fas fa-carrot" Title="Manage Ingredients" Href="admin/ingredients"></MenuItem>
+<MenuItem Icon="fas fa-burger" Title="Manage Recipes" Href="admin/recipes"></MenuItem>
+<ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
+
+@code {
+    private async void PageBack()
+    {
+        _nav.NavigateTo("/");
+    }
+}
