@@ -1,0 +1,15 @@
+﻿@inherits FormInputBase
+<div>
+    <label>@Name</label><br />
+    <select class="@CssClass" value="@SelectValue"
+            hidden="@IsHidden" disabled="@IsDisabled">
+        @foreach (SelectListItem s in selectList)
+        {
+            <SelectControlOption Value="s.Id" Name="s.Name"/>
+        }
+    </select>
+</div>
+
+@code {
+    public List<SelectListItem> selectList { get; set; }
+}

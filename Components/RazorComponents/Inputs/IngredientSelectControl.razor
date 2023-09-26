@@ -1,0 +1,21 @@
+﻿@inherits SelectControl
+@inject CookCompAPI _api
+
+@code {
+    [Parameter]
+    public List<Ingredient> ingList { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        ingList = await _api.GetIngredientListAsync(10, 0);
+        selectList = new();
+        foreach (Ingredient i  in ingList)
+        {
+            SelectListItem s = new SelectListItem();
+            s.Id = i.Id;
+            s.Name = i.Name;
+            selectList.Add(s);
+        }
+        await base.OnInitializedAsync();
+    }
+}
