@@ -8,11 +8,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="RazorComponents\Inputs\FormInputSelect.razor" />
-    <Content Remove="RazorComponents\Inputs\FormInputSelectOption.razor" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
@@ -27,8 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="RazorComponents\Inputs\FormInputSelectOption.razor" />
-    <None Include="RazorComponents\Inputs\FormInputSelect.razor" />
     <None Include="RazorComponents\Inputs\FormInputText.razor" />
   </ItemGroup>
 
