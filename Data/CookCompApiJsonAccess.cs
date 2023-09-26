@@ -373,4 +373,103 @@ public class CookCompApiJsonAccess: CookCompAPI
         }
         return Task.CompletedTask;
     }
+
+
+
+    /////////////////////
+    // Recipe Ingredients
+    /////////////////////
+
+    /// <summary>
+    /// Load a list of all recipe ingredients.
+    /// </summary>
+    /// <returns></returns>
+    private Task LoadRecipeIngredientsAsync()
+    {
+        Load<RecipeIngredient>(ref _recipe_ingredients, _settings.RecipeIngredientFolder);
+        return Task.CompletedTask;
+    }
+
+    ///
+    /// <summary>
+    /// Load a list of recipe ingredients and return the list. The count and index will determine the range and amount returned.
+    /// </summary>
+    /// <param name="ingredientCount"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public async Task<List<RecipeIngredient>?> GetRecipeIngredientListAsync(int recipeIngCount, int index)
+    {
+        await LoadRecipeIngredientsAsync();
+        return _recipe_ingredients ?? new();
+    }
+
+    /// <summary>
+    /// Load a single unique recipe ingredient and return it. Requires a correct unique ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async Task<RecipeIngredient?> GetRecipeIngredientUniqueAsync(int id)
+    {
+        await LoadRecipeIngredientsAsync();
+        if (_recipe_ingredients == null)
+        {
+            throw new Exception("No recipe ingredients have been found");
+        }
+        return _recipe_ingredients.FirstOrDefault(b => b.Id == id);
+    }
+
+    /// <summary>
+    /// Return the count of all ingredients.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<int> GetRecipeIngredientCountAsync()
+    {
+        await LoadRecipeIngredientsAsync();
+        if (_recipe_ingredients == null)
+            return 0;
+        else
+            return _recipe_ingredients.Count();
+    }
+
+    /// <summary>
+    /// Save changes made to a recipe ingredient object.
+    /// </summary>
+    /// <param name="editedObj"></param>
+    /// <returns></returns>
+    public async Task<RecipeIngredient?> SaveRecipeIngredientAsync(RecipeIngredient editedObj)
+    {
+        if (editedObj.Id == 0)
+        {
+            if (_recipe_ingredients.Count > 0)
+            {
+                editedObj.Id = ((int)_recipe_ingredients.Max(b => b.Id)) + 1;
+            }
+            else
+            {
+                editedObj.Id = 1;
+            }
+        }
+        await SaveAsync<RecipeIngredient>(_recipe_ingredients, _settings.RecipeIngredientFolder, $"{editedObj.Id}.json", editedObj);
+        return editedObj;
+    }
+
+    /// <summary>
+    /// Delete a recipe ingredient using the specified ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public Task DeleteRecipeIngredientAsync(int id)
+    {
+        DeleteAsync(_recipe_ingredients, _settings.RecipeIngredientFolder, id);
+        if (_recipe_ingredients != null)
+        {
+            var editedObj = _recipe_ingredients.FirstOrDefault(b => b.Id == id);
+            if (editedObj != null)
+            {
+                _recipe_ingredients.Remove(editedObj);
+            }
+        }
+        return Task.CompletedTask;
+    }
 }
