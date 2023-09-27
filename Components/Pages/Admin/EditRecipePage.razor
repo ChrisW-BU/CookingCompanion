@@ -15,7 +15,11 @@
 <br /><br />
 <h3>Add/Edit Ingredients</h3>
 
-<IngredientSelectControl />
+<IngredientSelectControl @bind-Value="ReIngObj.IngredientId" />
+
+<FormInputText Name="Quantity"/>
+
+
 @code {
     [Parameter]
     public string CatchId { get; set; } = string.Empty;
@@ -24,6 +28,9 @@
     public int RecipeId { get; set; }
 
     public Recipe? RecipeObj { get; set; }
+
+    [Parameter]
+    public RecipeIngredient? ReIngObj { get; set; }
 
     public string PageTitleName
     {
@@ -66,6 +73,9 @@
         {
             RecipeObj = new Recipe();
         }
+
+        ReIngObj = new();
+
         await base.OnParametersSetAsync();
     }
 

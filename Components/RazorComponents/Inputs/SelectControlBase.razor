@@ -1,0 +1,24 @@
+﻿@code {
+    [Parameter]
+    public string Name { get; set; } = string.Empty;
+
+    [Parameter]
+    public int Value { get; set; }
+
+    [Parameter]
+    public bool IsHidden { get; set; }
+
+    [Parameter]
+    public bool IsDisabled { get; set; }
+
+    [Parameter]
+    public string CssClass { get; set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+
+    public async void UpdateParentElement(ChangeEventArgs e)
+    {
+        await ValueChanged.InvokeAsync(Value);
+    }
+}

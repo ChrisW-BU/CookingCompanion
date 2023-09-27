@@ -1,5 +1,15 @@
-﻿@inherits SelectControl
-@inject CookCompAPI _api
+﻿@inject CookCompAPI _api
+@inherits SelectControlBase
+<div>
+    <label>@Name</label><br />
+    <select class="form-select @CssClass" @onchange="OnChange"
+            hidden="@IsHidden" disabled="@IsDisabled">
+        @foreach (Ingredient i in ingList)
+        {
+            <SelectControlOption Value="@i.Id" Name="@i.Name" />
+        }
+    </select>
+</div>
 
 @code {
     [Parameter]
@@ -8,14 +18,14 @@
     protected override async Task OnInitializedAsync()
     {
         ingList = await _api.GetIngredientListAsync(10, 0);
-        selectList = new();
-        foreach (Ingredient i  in ingList)
-        {
-            SelectListItem s = new SelectListItem();
-            s.Id = i.Id;
-            s.Name = i.Name;
-            selectList.Add(s);
-        }
         await base.OnInitializedAsync();
+    }
+
+    [Parameter]
+    public RenderFragment ShowId { get; set; }
+
+    public void OnChange()
+    {
+        Console.WriteLine("The current value is: " + Value);
     }
 }

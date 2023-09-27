@@ -1,6 +1,6 @@
 ﻿namespace Data.Models
 {
-    public class RecipeStep
+    public class RecipeIngredient
     {
         public int Id { get; set; }
 
