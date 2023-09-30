@@ -1,0 +1,11 @@
+﻿@inherits NumberControlBase
+
+<div>
+    <label>@Name</label><br />
+    <input class="@CssClass" type="number"
+        @oninput="UpdateParentElement" hidden="@IsHidden" disabled="@IsDisabled"/>
+</div>
+
+@code {
+
+}

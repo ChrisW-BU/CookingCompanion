@@ -1,9 +1,11 @@
-﻿@code {
+﻿<h3>NumberControlBase</h3>
+
+@code {
     [Parameter]
     public string Name { get; set; } = string.Empty;
 
     [Parameter]
-    public int Value { get; set; }
+    public decimal Value { get; set; }
 
     [Parameter]
     public bool IsHidden { get; set; }
@@ -15,12 +17,11 @@
     public string CssClass { get; set; } = string.Empty;
 
     [Parameter]
-    public EventCallback<int> ValueChanged { get; set; }
+    public EventCallback<decimal> ValueChanged { get; set; }
 
     public async void UpdateParentElement(ChangeEventArgs e)
     {
-        Value = int.Parse(e?.Value?.ToString() ?? "0");
-        //System.Diagnostics.Debug.WriteLine("The current value is: " + Value);
+        Value = decimal.Parse(e?.Value?.ToString() ?? "0");
         await ValueChanged.InvokeAsync(Value);
     }
 }

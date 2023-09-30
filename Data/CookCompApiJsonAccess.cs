@@ -240,6 +240,11 @@ public class CookCompApiJsonAccess: CookCompAPI
     /// <returns></returns>
     public async Task<Ingredient?> SaveIngredientAsync(Ingredient editedObj)
     {
+        if(_ingredients == null)
+        {
+            LoadIngredientAsync();
+        }
+
         if (editedObj.Id == 0)
         {
             if (_ingredients.Count > 0)
@@ -340,6 +345,11 @@ public class CookCompApiJsonAccess: CookCompAPI
     /// <returns></returns>
     public async Task<Recipe?> SaveRecipeAsync(Recipe editedObj)
     {
+        if(_recipes == null)
+        {
+            LoadRecipesAsync();
+        }
+
         if (editedObj.Id == 0)
         {
             if (_recipes.Count > 0)
@@ -439,6 +449,11 @@ public class CookCompApiJsonAccess: CookCompAPI
     /// <returns></returns>
     public async Task<RecipeIngredient?> SaveRecipeIngredientAsync(RecipeIngredient editedObj)
     {
+        if(_recipe_ingredients == null)
+        {
+            LoadRecipeIngredientsAsync();
+        }
+
         if (editedObj.Id == 0)
         {
             if (_recipe_ingredients.Count > 0)

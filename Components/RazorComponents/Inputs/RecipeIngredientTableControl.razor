@@ -1,0 +1,59 @@
+﻿@inherits TableControlBase
+@inject CookCompAPI _api
+
+<table class="table table-striped align-middle">
+    <thead>
+        <tr>
+            <td><b>Ingredient Id</b></td>
+            <td><b>Quantity</b></td>
+            <td><b>Measurement</b></td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (RecipeIngredient r in TableData)
+        {
+            <tr>
+                <td>
+                    @r.IngredientId
+                </td>
+                <td>
+                    @r.Quantity
+                </td>
+                <td>
+                    @r.QuantityType
+                </td>
+                <td>
+                    <ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" OnClickCall="@(e => Delete(r.Id))"/>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public int RecipeId { get; set; }
+
+    [Parameter]
+    public List<RecipeIngredient> TableData { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        TableData = new();
+        return base.OnInitializedAsync();
+    }
+
+    private async Task Delete(int ingredientId)
+    {
+        try
+        {
+            await _api.DeleteRecipeAsync(ingredientId);
+        }
+        catch
+        {
+
+        }
+    }
+
+}

@@ -12,12 +12,17 @@
 <ButtonControl Colour="success" Icon="fas fa-save" Name="Save" OnClickCall="Save" />
 <ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" OnClickCall="Delete" />
 <ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
-<br /><br />
+<br />
+<br />
 <h3>Add/Edit Ingredients</h3>
 
-<IngredientSelectControl @bind-Value="ReIngObj.IngredientId" />
+<RecipeIngredientTableControl RecipeId="@RecipeObj.Id" TableData="IngredientList"/>
 
-<FormInputText Name="Quantity"/>
+<IngredientSelectControl Name="Select Ingredient" @bind-Value="ReIngObj.IngredientId" CssClass="mb-3" />
+<MeasurementTypeSelect Name="Select Measurement Type" @bind-Value="ReIngObj.QuantityType" CssClass="mb-3" />
+<NumberControl Name="Quantity" @bind-Value="ReIngObj.Quantity" CssClass="form-control mb-3" />
+
+<ButtonControl Colour="success" Icon="fas fa-circle-plus" Name="Add Ingredient" OnClickCall="AddIngredient" />
 
 
 @code {
@@ -31,6 +36,8 @@
 
     [Parameter]
     public RecipeIngredient? ReIngObj { get; set; }
+
+    public List<RecipeIngredient> IngredientList = new List<RecipeIngredient>();
 
     public string PageTitleName
     {
@@ -75,6 +82,7 @@
         }
 
         ReIngObj = new();
+        GetRecipeIngredients();
 
         await base.OnParametersSetAsync();
     }
@@ -86,6 +94,21 @@
             RecipeObj.LastModified = DateTime.Now;
             await _api.SaveRecipeAsync(RecipeObj);
             PageBack();
+        }
+        catch { }
+    }
+
+    private async Task AddIngredient()
+    {
+        try
+        {
+            if(RecipeObj.Id > 0)
+            //if (ReIngObj.IngredientId > 0 && RecipeObj.Id > 0)
+            {
+                ReIngObj.RecipeId = RecipeObj.Id;
+                await _api.SaveRecipeIngredientAsync(ReIngObj);
+                ReIngObj = new();
+            }
         }
         catch { }
     }
@@ -106,5 +129,18 @@
     private void PageBack()
     {
         _nav.NavigateTo("/admin/recipes");
+    }
+
+    private async Task GetRecipeIngredients()
+    {
+        try
+        {
+            IngredientList = await _api.GetRecipeIngredientListAsync(10, 0);
+        }
+        catch
+        {
+            
+        }
+       
     }
 }

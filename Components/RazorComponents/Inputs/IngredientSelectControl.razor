@@ -2,8 +2,9 @@
 @inherits SelectControlBase
 <div>
     <label>@Name</label><br />
-    <select class="form-select @CssClass" @onchange="OnChange"
-            hidden="@IsHidden" disabled="@IsDisabled">
+    <select class="form-select @CssClass"
+            hidden="@IsHidden" disabled="@IsDisabled" @onchange="UpdateParentElement">
+            <option value="0">Select Ingredient</option>
         @foreach (Ingredient i in ingList)
         {
             <SelectControlOption Value="@i.Id" Name="@i.Name" />
@@ -19,13 +20,5 @@
     {
         ingList = await _api.GetIngredientListAsync(10, 0);
         await base.OnInitializedAsync();
-    }
-
-    [Parameter]
-    public RenderFragment ShowId { get; set; }
-
-    public void OnChange()
-    {
-        Console.WriteLine("The current value is: " + Value);
     }
 }
