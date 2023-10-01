@@ -11,5 +11,7 @@
         public decimal Quantity { get; set; }
 
         public int QuantityType { get; set; }
+
+        public string IngredientName { get; set; } = string.Empty;
     }
 }

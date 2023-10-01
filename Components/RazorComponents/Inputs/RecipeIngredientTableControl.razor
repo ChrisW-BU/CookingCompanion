@@ -4,7 +4,7 @@
 <table class="table table-striped align-middle">
     <thead>
         <tr>
-            <td><b>Ingredient Id</b></td>
+            <td><b>Ingredient</b></td>
             <td><b>Quantity</b></td>
             <td><b>Measurement</b></td>
             <td></td>
@@ -15,7 +15,7 @@
         {
             <tr>
                 <td>
-                    @r.IngredientId
+                    @r.IngredientName
                 </td>
                 <td>
                     @r.Quantity
@@ -38,9 +38,30 @@
     [Parameter]
     public List<RecipeIngredient> TableData { get; set; }
 
+    public async Task GetIngredientNames()
+    {
+        if (TableData.Count > 0)
+        {
+            Ingredient? IngObj = new();
+            foreach (RecipeIngredient r in TableData)
+            {
+                try
+                {
+                    IngObj = await _api.GetIngredientUniqueAsync(r.IngredientId);
+                    r.IngredientName = IngObj.Name;
+                }
+                catch
+                {
+
+                }
+            }
+        }
+    }
+
     protected override Task OnInitializedAsync()
     {
-        TableData = new();
+        //TableData = new();
+        GetIngredientNames();
         return base.OnInitializedAsync();
     }
 
@@ -48,7 +69,7 @@
     {
         try
         {
-            await _api.DeleteRecipeAsync(ingredientId);
+            await _api.DeleteRecipeIngredientAsync(ingredientId);
         }
         catch
         {
