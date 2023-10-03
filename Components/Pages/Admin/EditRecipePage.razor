@@ -4,10 +4,12 @@
 <PageTitle>@PageTitleName</PageTitle>
 <h3>@TitleName</h3>
 
-<FormInputText Name="Name" @bind-Value="RecipeObj.Name" AutoComplete=false CssClass="form-control mb-3" />
-<FormInputTextArea Name="Description" @bind-Value="RecipeObj.Description" AutoComplete=false CssClass="form-control mb-3" />
-<FormInputText Name="Duration" @bind-Value="RecipeObj.Duration" AutoComplete=false CssClass="form-control mb-3" />
-<FormInputText Name="Image URL" @bind-Value="RecipeObj.ImgUrl" AutoComplete=false CssClass="form-control mb-3" />
+<FormBase>
+    <FormInputText Name="Name" @bind-Value="RecipeObj.Name" AutoComplete=false FieldWidth="4" />
+    <FormInputText Name="Image URL" @bind-Value="RecipeObj.ImgUrl" AutoComplete=false FieldWidth="4" />
+    <FormInputText Name="Duration" @bind-Value="RecipeObj.Duration" AutoComplete=false FieldWidth="4" />
+    <FormInputTextArea Name="Description" @bind-Value="RecipeObj.Description" AutoComplete=false FieldWidth="12" />
+</FormBase>
 
 <ButtonControl Colour="success" Icon="fas fa-save" Name="Save" OnClickCall="Save" />
 <ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" OnClickCall="Delete" />
@@ -16,14 +18,29 @@
 <br />
 <h3>Add/Edit Ingredients</h3>
 
-<RecipeIngredientTableControl RecipeId="@RecipeObj.Id" TableData="IngredientList"/>
+<RecipeIngredientTableControl RecipeId="@RecipeObj.Id" TableData="IngredientList" />
 
-<IngredientSelectControl Name="Select Ingredient" @bind-Value="ReIngObj.IngredientId" CssClass="mb-3" />
-<MeasurementTypeSelect Name="Select Measurement Type" @bind-Value="ReIngObj.MeasurementTypeId" CssClass="mb-3" />
-<NumberControl Name="Quantity" @bind-Value="ReIngObj.Quantity" CssClass="form-control mb-3" />
+<FormBase>
+    <IngredientSelectControl Name="Select Ingredient" @bind-Value="ReIngObj.IngredientId" FieldWidth="4" />
+    <MeasureSelectControl Name="Select Measurement Type" @bind-Value="ReIngObj.MeasurementTypeId" FieldWidth="4" />
+    <NumberControl Name="Quantity" @bind-Value="ReIngObj.Quantity" FieldWidth="4" />
+</FormBase>
 
 <ButtonControl Colour="success" Icon="fas fa-circle-plus" Name="Add Ingredient" OnClickCall="AddIngredient" />
 
+<br />
+<br />
+<h3>Add/Edit Steps</h3>
+<RecipeStepsTableControl RecipeId="@RecipeObj.Id" TableData="StepsList" />
+
+<FormBase>
+    <NumberControl Name="Step Number" @bind-Value="ReStepObj.StepNumber" FieldWidth="4" />
+    <FormInputText Name="Title" @bind-Value="ReStepObj.Title" AutoComplete=false FieldWidth="4"/>
+    <FormInputText Name="Image URL" @bind-Value="ReStepObj.ImgUrl" AutoComplete=false FieldWidth="4" />
+    <FormInputTextArea Name="Description" @bind-Value="ReStepObj.Description" AutoComplete=false FieldWidth="12" />
+</FormBase>
+
+<ButtonControl Colour="success" Icon="fas fa-circle-plus" Name="Add Step" OnClickCall="AddStep" />
 
 @code {
     [Parameter]
@@ -37,7 +54,12 @@
     [Parameter]
     public RecipeIngredient? ReIngObj { get; set; }
 
+    [Parameter]
+    public RecipeStep? ReStepObj { get; set; }
+
     public List<RecipeIngredient> IngredientList = new List<RecipeIngredient>();
+
+    public List<RecipeStep> StepsList = new List<RecipeStep>();
 
     public string PageTitleName
     {
@@ -84,6 +106,9 @@
         ReIngObj = new();
         GetRecipeIngredients();
 
+        ReStepObj = new();
+        GetRecipeSteps();
+
         await base.OnParametersSetAsync();
     }
 
@@ -102,12 +127,28 @@
     {
         try
         {
-            if(RecipeObj.Id > 0)
+            if (RecipeObj.Id > 0)
             //if (ReIngObj.IngredientId > 0 && RecipeObj.Id > 0)
             {
                 ReIngObj.RecipeId = RecipeObj.Id;
                 await _api.SaveRecipeIngredientAsync(ReIngObj);
                 ReIngObj = new();
+                GetRecipeIngredients();
+            }
+        }
+        catch { }
+    }
+
+    private async Task AddStep()
+    {
+        try
+        {
+            if (RecipeObj.Id > 0)
+            {
+                ReStepObj.RecipeId = RecipeObj.Id;
+                await _api.SaveRecipeStepAsync(ReStepObj);
+                ReStepObj = new();
+                GetRecipeSteps();
             }
         }
         catch { }
@@ -135,12 +176,27 @@
     {
         try
         {
-            IngredientList = await _api.GetRecipeIngredientListAsync(10, 0);
+            IngredientList = await _api.GetRecipeIngredientListAsync(RecipeObj.Id);
+            //IngredientList = await _api.GetRecipeIngredientListAsync(10, 0);
         }
         catch
         {
-            
+
         }
-       
+
+    }
+
+    private async Task GetRecipeSteps()
+    {
+        try
+        {
+            StepsList = await _api.GetRecipeStepListAsync(RecipeObj.Id);
+            //StepsList = await _api.GetRecipeStepListAsync(10, 0);
+        }
+        catch
+        {
+
+        }
+
     }
 }

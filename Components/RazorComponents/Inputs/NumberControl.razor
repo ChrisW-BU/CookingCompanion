@@ -1,8 +1,8 @@
 ﻿@inherits NumberControlBase
 
-<div>
+<div class="col-sm-@FieldWidth">
     <label>@Name</label><br />
-    <input class="@CssClass" type="number"
+    <input class="form-control mb-3 @CssClass" type="number"
         @oninput="UpdateParentElement" hidden="@IsHidden" disabled="@IsDisabled"/>
 </div>
 

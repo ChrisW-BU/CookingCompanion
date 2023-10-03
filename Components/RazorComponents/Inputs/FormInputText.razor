@@ -4,12 +4,12 @@
 </div>
 <br /> *@
 @inherits FormInputBase
-<div>
+<div class="col-sm-@FieldWidth">
     <label>@Name</label><br />
-    <input class="@CssClass" value="@Value" autocomplete="@AutoCompleteStr"
+    <input class="@CssClass form-control mb-3" value="@Value" autocomplete="@AutoCompleteStr"
     @oninput="UpdateParentElementStr" hidden="@IsHidden" disabled="@IsDisabled" />
 </div>
 
 @code {
-
+    
 }

@@ -1,6 +1,4 @@
-﻿<h3>NumberControlBase</h3>
-
-@code {
+﻿@code {
     [Parameter]
     public string Name { get; set; } = string.Empty;
 
@@ -15,6 +13,9 @@
 
     [Parameter]
     public string CssClass { get; set; } = string.Empty;
+
+    [Parameter]
+    public string FieldWidth { get; set; } = string.Empty;
 
     [Parameter]
     public EventCallback<decimal> ValueChanged { get; set; }

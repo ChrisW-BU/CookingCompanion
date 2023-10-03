@@ -1,7 +1,7 @@
 ﻿@inherits FormInputBase
-<div>
+<div class="col-sm-@FieldWidth">
     <label>@Name</label><br />
-    <textarea class="@CssClass" value="@Value"
+    <textarea class="@CssClass form-control mb-3" value="@Value"
     @oninput="UpdateParentElementStr" hidden="@IsHidden" disabled="@IsDisabled" />
 </div>
 

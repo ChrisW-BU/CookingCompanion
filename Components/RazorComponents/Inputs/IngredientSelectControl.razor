@@ -1,10 +1,11 @@
 ﻿@inject CookCompAPI _api
 @inherits SelectControlBase
-<div>
+<div class="col-sm-@FieldWidth">
     <label>@Name</label><br />
-    <select class="form-select @CssClass"
+    <select class="form-select mb-3 @CssClass"
             hidden="@IsHidden" disabled="@IsDisabled" @onchange="UpdateParentElement">
-            <option value="0">Select Ingredient</option>
+
+        <option value="0">Select Ingredient</option>
         @foreach (Ingredient i in ingList)
         {
             <SelectControlOption Value="@i.Id" Name="@i.Name" />

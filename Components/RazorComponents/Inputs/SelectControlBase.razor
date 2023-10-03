@@ -17,10 +17,16 @@
     [Parameter]
     public EventCallback<int> ValueChanged { get; set; }
 
+    [Parameter]
+    public string FieldWidth { get; set; } = string.Empty;
+
     public async void UpdateParentElement(ChangeEventArgs e)
     {
         Value = int.Parse(e?.Value?.ToString() ?? "0");
         //System.Diagnostics.Debug.WriteLine("The current value is: " + Value);
         await ValueChanged.InvokeAsync(Value);
     }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
 }

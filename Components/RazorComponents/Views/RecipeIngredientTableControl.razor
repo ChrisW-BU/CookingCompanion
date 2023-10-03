@@ -1,7 +1,7 @@
 ﻿@inherits TableControlBase
 @inject CookCompAPI _api
 
-<table class="table table-striped">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <td><b>Ingredient</b></td>
@@ -49,9 +49,17 @@
                 try
                 {
                     IngObj = await _api.GetIngredientUniqueAsync(r.IngredientId);
-                    r.IngredientName = IngObj.Name;
+                    if (IngObj != null)
+                    {
+                        r.IngredientName = IngObj.Name ?? "";
+                    }
+
                     MesObj = await _api.GetMeasurementTypeUniqueAsync(r.MeasurementTypeId);
-                    r.MeasurementName = MesObj.Name;
+                    if (MesObj != null)
+                    {
+                        r.MeasurementName = MesObj.Name ?? "";
+                    }
+
                 }
                 catch
                 {
@@ -63,7 +71,6 @@
 
     protected override Task OnInitializedAsync()
     {
-        //TableData = new();
         GetIngredientNames();
         return base.OnInitializedAsync();
     }
@@ -72,6 +79,7 @@
     {
         try
         {
+            StateHasChanged();
             await _api.DeleteRecipeIngredientAsync(ingredientId);
         }
         catch

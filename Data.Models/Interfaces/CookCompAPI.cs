@@ -33,6 +33,7 @@ namespace Data.Models.Interfaces
         Task DeleteRecipeAsync(int id);
 
 
+
         ////////////////////////////
         // Recipe Ingredient Interface Members
         ////////////////////////////
@@ -45,6 +46,25 @@ namespace Data.Models.Interfaces
         Task<RecipeIngredient?> SaveRecipeIngredientAsync(RecipeIngredient editedObj);
 
         Task DeleteRecipeIngredientAsync(int id);
+
+        Task<List<RecipeIngredient>?> GetRecipeIngredientListAsync(int recipeId);
+
+
+
+        ////////////////////////////
+        // Recipe Steps Interface Members
+        ////////////////////////////
+        Task<List<RecipeStep>?> GetRecipeStepListAsync(int recipeStepCount, int index);
+
+        Task<RecipeStep?> GetRecipeStepUniqueAsync(int id);
+
+        Task<int> GetRecipeStepCountAsync();
+
+        Task<RecipeStep?> SaveRecipeStepAsync(RecipeStep editedObj);
+
+        Task DeleteRecipeStepAsync(int id);
+
+        Task<List<RecipeStep>?> GetRecipeStepListAsync(int recipeId);
 
 
         /////////////////

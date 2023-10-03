@@ -1,9 +1,9 @@
 ﻿@inherits SelectControlBase
 @inject CookCompAPI _api
 
-<div>
+<div class="col-sm-@FieldWidth">
     <label>@Name</label><br />
-    <select class="form-select @CssClass" hidden="@IsHidden" 
+    <select class="form-select mb-3 @CssClass" hidden="@IsHidden" 
         disabled="@IsDisabled" @onchange="UpdateParentElement">
         @foreach (MeasurementType item in TypeList)
         {

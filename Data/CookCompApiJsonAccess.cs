@@ -178,6 +178,10 @@ public class CookCompApiJsonAccess: CookCompAPI
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Load measurement types JSON data.
+    /// </summary>
+    /// <returns></returns>
     private Task LoadMeasurementTypesAsync()
     {
         Load<MeasurementType>(ref _measurements, _settings.MeasurementTypeFolder);
@@ -194,6 +198,12 @@ public class CookCompApiJsonAccess: CookCompAPI
         return _measurements ?? new();
     }
 
+    /// <summary>
+    /// Return a single unique measurement type using the specified ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
     public async Task<MeasurementType?> GetMeasurementTypeUniqueAsync(int id)
     {
         await LoadMeasurementTypesAsync();
@@ -517,7 +527,143 @@ public class CookCompApiJsonAccess: CookCompAPI
             {
                 _recipe_ingredients.Remove(editedObj);
             }
+            
         }
         return Task.CompletedTask;
+    }
+
+    ///
+    /// <summary>
+    /// Load a list of recipe ingredients with the specified recipeId and return the list. The count and index will determine the range and amount returned.
+    /// </summary>
+    /// <param name="ingredientCount"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public async Task<List<RecipeIngredient>?> GetRecipeIngredientListAsync(int recipeId)
+    {
+        await LoadRecipeIngredientsAsync();
+
+        return _recipe_ingredients.Where(b => b.RecipeId == recipeId).ToList() ?? new();
+
+        //return _recipe_ingredients ?? new();
+    }
+
+
+    /////////////////////
+    // Recipe Steps
+    /////////////////////
+
+    /// <summary>
+    /// Load a list of all recipe steps.
+    /// </summary>
+    /// <returns></returns>
+    private Task LoadRecipeStepsAsync()
+    {
+        Load<RecipeStep>(ref _recipe_steps, _settings.RecipeStepFolder);
+        return Task.CompletedTask;
+    }
+
+    ///
+    /// <summary>
+    /// Load a list of recipe steps and return the list. The count and index will determine the range and amount returned.
+    /// </summary>
+    /// <param name="ingredientCount"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public async Task<List<RecipeStep>?> GetRecipeStepListAsync(int recipeStepCount, int index)
+    {
+        await LoadRecipeStepsAsync();
+        return _recipe_steps ?? new();
+    }
+
+    /// <summary>
+    /// Load a single unique recipe step and return it. Requires a correct unique ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async Task<RecipeStep?> GetRecipeStepUniqueAsync(int id)
+    {
+        await LoadRecipeStepsAsync();
+        if (_recipe_steps == null)
+        {
+            throw new Exception("No recipe steps have been found");
+        }
+        return _recipe_steps.FirstOrDefault(b => b.Id == id);
+    }
+
+    /// <summary>
+    /// Return the count of all recipe steps.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<int> GetRecipeStepCountAsync()
+    {
+        await LoadRecipeStepsAsync();
+        if (_recipe_steps == null)
+            return 0;
+        else
+            return _recipe_steps.Count();
+    }
+
+    /// <summary>
+    /// Save changes made to a recipe step object.
+    /// </summary>
+    /// <param name="editedObj"></param>
+    /// <returns></returns>
+    public async Task<RecipeStep?> SaveRecipeStepAsync(RecipeStep editedObj)
+    {
+        if (_recipe_steps == null)
+        {
+            LoadRecipeStepsAsync();
+        }
+
+        if (editedObj.Id == 0)
+        {
+            if (_recipe_steps.Count > 0)
+            {
+                editedObj.Id = ((int)_recipe_steps.Max(b => b.Id)) + 1;
+            }
+            else
+            {
+                editedObj.Id = 1;
+            }
+        }
+        await SaveAsync<RecipeStep>(_recipe_steps, _settings.RecipeStepFolder, $"{editedObj.Id}.json", editedObj);
+        return editedObj;
+    }
+
+    /// <summary>
+    /// Delete a recipe ingredient using the specified ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public Task DeleteRecipeStepAsync(int id)
+    {
+        DeleteAsync(_recipe_steps, _settings.RecipeStepFolder, id);
+        if (_recipe_steps != null)
+        {
+            var editedObj = _recipe_steps.FirstOrDefault(b => b.Id == id);
+            if (editedObj != null)
+            {
+                _recipe_steps.Remove(editedObj);
+            }
+        }
+        return Task.CompletedTask;
+    }
+
+    ///
+    /// <summary>
+    /// Load a list of recipe steps with the specified recipeId and return the list. The count and index will determine the range and amount returned.
+    /// </summary>
+    /// <param name="ingredientCount"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public async Task<List<RecipeStep>?> GetRecipeStepListAsync(int recipeId)
+    {
+        await LoadRecipeStepsAsync();
+
+        return _recipe_steps.Where(b => b.RecipeId == recipeId).ToList() ?? new();
+
+        //return _recipe_ingredients ?? new();
     }
 }

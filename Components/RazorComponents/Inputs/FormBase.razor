@@ -1,0 +1,8 @@
+﻿<form class="row g-3 align-items-center">
+    @ChildContent
+</form>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}
