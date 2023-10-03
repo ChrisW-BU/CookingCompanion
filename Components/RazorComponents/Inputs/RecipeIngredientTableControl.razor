@@ -1,7 +1,7 @@
 ﻿@inherits TableControlBase
 @inject CookCompAPI _api
 
-<table class="table table-striped align-middle">
+<table class="table table-striped">
     <thead>
         <tr>
             <td><b>Ingredient</b></td>
@@ -21,10 +21,10 @@
                     @r.Quantity
                 </td>
                 <td>
-                    @r.QuantityType
+                    @r.MeasurementName
                 </td>
                 <td>
-                    <ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" OnClickCall="@(e => Delete(r.Id))"/>
+                    <ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" NoMargin=true OnClickCall="@(e => Delete(r.Id))"/>
                 </td>
             </tr>
         }
@@ -43,12 +43,15 @@
         if (TableData.Count > 0)
         {
             Ingredient? IngObj = new();
+            MeasurementType? MesObj = new();
             foreach (RecipeIngredient r in TableData)
             {
                 try
                 {
                     IngObj = await _api.GetIngredientUniqueAsync(r.IngredientId);
                     r.IngredientName = IngObj.Name;
+                    MesObj = await _api.GetMeasurementTypeUniqueAsync(r.MeasurementTypeId);
+                    r.MeasurementName = MesObj.Name;
                 }
                 catch
                 {

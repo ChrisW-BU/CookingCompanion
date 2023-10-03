@@ -1,23 +1,23 @@
 ﻿@inherits SelectControlBase
+@inject CookCompAPI _api
 
 <div>
     <label>@Name</label><br />
     <select class="form-select @CssClass" hidden="@IsHidden" 
         disabled="@IsDisabled" @onchange="UpdateParentElement">
-        <option value="1">(ml) Millilitres</option>
-        <option value="2">(l) Litres</option>
-        <option value="3">(g) Grams</option>
-        <option value="4">(kg) Kilograms</option>
-        <option value="5">(mm) Millimetre</option>
-        <option value="6">(cm) Centimetre</option>
-        <option value="7">Teaspoon</option>
-        <option value="8">Tablespoon</option>
-        <option value="9">(fl) Fluid Ounce</option>
-        <option value="10">Cup</option>
-        <option value="11">Pint</option>
+        @foreach (MeasurementType item in TypeList)
+        {
+            <SelectControlOption Value="@item.Id" Name="@item.Name"/>
+        }
     </select>
 </div>
 
 @code {
+    public List<MeasurementType> TypeList { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        TypeList = await _api.GetMeasurementTypeListAsync();
+        await base.OnInitializedAsync();
+    }
 }

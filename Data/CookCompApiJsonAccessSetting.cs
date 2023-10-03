@@ -19,5 +19,7 @@
         public string FavouriteFolder { get; set; } = string.Empty;
 
         public string DataRootPath { get; set; } = string.Empty;
+
+        public string MeasurementTypeFolder { get; set; } = string.Empty;
     }
 }

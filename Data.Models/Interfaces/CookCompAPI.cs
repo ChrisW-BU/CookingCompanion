@@ -51,5 +51,8 @@ namespace Data.Models.Interfaces
         // Other Helpers
         /////////////////
         Task ClearCacheAsync();
+        Task<List<MeasurementType?>>GetMeasurementTypeListAsync();
+
+        Task<MeasurementType?> GetMeasurementTypeUniqueAsync(int id);
     }
 }

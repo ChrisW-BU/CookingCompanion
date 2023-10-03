@@ -16,6 +16,7 @@ public class CookCompApiJsonAccess: CookCompAPI
     private List<ShoppingList>? _shopping_list;
     private List<ShoppingListItem>? _shopping_list_item;
     private List<Favourite>? _favourites;
+    private List<MeasurementType>? _measurements;
 
     /// <summary>
     /// This allows the injection of IOptions and creates a settings structure for the data folders.
@@ -68,6 +69,11 @@ public class CookCompApiJsonAccess: CookCompAPI
         if (!Directory.Exists($@"{_settings.DataRootPath}\{_settings.FavouriteFolder}"))
         {
             Directory.CreateDirectory($@"{_settings.DataRootPath}\{_settings.FavouriteFolder}");
+        }
+
+        if (!Directory.Exists($@"{_settings.DataRootPath}\{_settings.MeasurementTypeFolder}"))
+        {
+            Directory.CreateDirectory($@"{_settings.DataRootPath}\{_settings.MeasurementTypeFolder}");
         }
     }
 
@@ -166,9 +172,36 @@ public class CookCompApiJsonAccess: CookCompAPI
         _shopping_list = null;
         _shopping_list_item = null;
         _favourites = null;
+        _measurements = null;
         //_users = null;
 
         return Task.CompletedTask;
+    }
+
+    private Task LoadMeasurementTypesAsync()
+    {
+        Load<MeasurementType>(ref _measurements, _settings.MeasurementTypeFolder);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Return a list of measurement types.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<MeasurementType>?> GetMeasurementTypeListAsync()
+    {
+        await LoadMeasurementTypesAsync();
+        return _measurements ?? new();
+    }
+
+    public async Task<MeasurementType?> GetMeasurementTypeUniqueAsync(int id)
+    {
+        await LoadMeasurementTypesAsync();
+        if (_measurements == null)
+        {
+            throw new Exception("No measurements have been found");
+        }
+        return _measurements.FirstOrDefault(b => b.Id == id);
     }
 
 

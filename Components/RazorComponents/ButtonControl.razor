@@ -1,4 +1,6 @@
-﻿<button class="btn btn-@Colour btn-lg mb-3" @onclick="OnClickCall"><i class="@Icon"></i>&nbsp @Name</button>
+﻿<button class="btn btn-@Colour @CssSize @CssMargin" @onclick="OnClickCall" 
+disabled="@IsDisabled" hidden="@IsHidden">
+<i class="@Icon"></i>&nbsp @Name</button>
 @code {
     [Parameter]
     public string Name { get; set; }
@@ -8,6 +10,48 @@
 
     [Parameter]
     public string Icon { get; set; }
+
+    [Parameter]
+    public bool IsLarge { get; set; }
+
+    [Parameter]
+    public string CssSize { 
+        get
+        {
+            if(IsLarge)
+            {
+                return "btn-lg";
+            }
+            return "btn-sm";
+        } 
+        set { } 
+    }
+
+    [Parameter]
+    public bool NoMargin { get; set; }
+
+    [Parameter]
+    public string CssMargin
+    {
+        get
+        {
+            if(NoMargin)
+            {
+                return "";
+            }
+            return "mb-3";
+        }
+        set
+        {
+            
+        }
+    }
+
+    [Parameter]
+    public bool IsDisabled { get; set; }
+
+    [Parameter]
+    public bool IsHidden { get; set; }
 
     [Parameter]
     public EventCallback OnClickCall { get; set; }

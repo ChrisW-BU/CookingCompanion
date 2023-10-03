@@ -19,7 +19,7 @@
 <RecipeIngredientTableControl RecipeId="@RecipeObj.Id" TableData="IngredientList"/>
 
 <IngredientSelectControl Name="Select Ingredient" @bind-Value="ReIngObj.IngredientId" CssClass="mb-3" />
-<MeasurementTypeSelect Name="Select Measurement Type" @bind-Value="ReIngObj.QuantityType" CssClass="mb-3" />
+<MeasurementTypeSelect Name="Select Measurement Type" @bind-Value="ReIngObj.MeasurementTypeId" CssClass="mb-3" />
 <NumberControl Name="Quantity" @bind-Value="ReIngObj.Quantity" CssClass="form-control mb-3" />
 
 <ButtonControl Colour="success" Icon="fas fa-circle-plus" Name="Add Ingredient" OnClickCall="AddIngredient" />

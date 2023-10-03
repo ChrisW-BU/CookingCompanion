@@ -10,8 +10,10 @@
 
         public decimal Quantity { get; set; }
 
-        public int QuantityType { get; set; }
+        public int MeasurementTypeId { get; set; }
 
         public string IngredientName { get; set; } = string.Empty;
+
+        public string MeasurementName { get; set; } = string.Empty;
     }
 }
