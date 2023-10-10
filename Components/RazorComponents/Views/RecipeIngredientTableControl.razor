@@ -75,12 +75,17 @@
         return base.OnInitializedAsync();
     }
 
+    public void Refresh()
+    {
+        GetIngredientNames();
+    }
+
     private async Task Delete(int ingredientId)
     {
         try
         {
-            StateHasChanged();
             await _api.DeleteRecipeIngredientAsync(ingredientId);
+            Refresh();
         }
         catch
         {
