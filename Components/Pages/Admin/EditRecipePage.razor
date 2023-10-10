@@ -18,7 +18,7 @@
 <br />
 <h3>Add/Edit Ingredients</h3>
 
-<RecipeIngredientTableControl @ref="_ingTable" RecipeId="@RecipeObj.Id" TableData="IngredientList" />
+<RecipeIngredientTableControl @ref="_ingTable" RecipeId="@RecipeObj.Id"/>
 
 <FormBase>
     <IngredientSelectControl Name="Select Ingredient" @bind-Value="ReIngObj.IngredientId" FieldWidth="4" />
@@ -31,7 +31,7 @@
 <br />
 <br />
 <h3>Add/Edit Steps</h3>
-<RecipeStepsTableControl RecipeId="@RecipeObj.Id" TableData="StepsList" />
+<RecipeStepsTableControl @ref="_stepsTable" RecipeId="@RecipeObj.Id"/>
 
 <FormBase>
     <NumberControl Name="Step Number" @bind-Value="ReStepObj.StepNumber" FieldWidth="4" />
@@ -48,6 +48,8 @@
 
     private RecipeIngredientTableControl _ingTable;
 
+    private RecipeStepsTableControl _stepsTable;
+
     [Parameter]
     public int RecipeId { get; set; }
 
@@ -59,7 +61,7 @@
     [Parameter]
     public RecipeStep? ReStepObj { get; set; }
 
-    public List<RecipeIngredient> IngredientList = new List<RecipeIngredient>();
+    //public List<RecipeIngredient> IngredientList = new List<RecipeIngredient>();
 
     public List<RecipeStep> StepsList = new List<RecipeStep>();
 
@@ -106,10 +108,7 @@
         }
 
         ReIngObj = new();
-        await GetRecipeIngredients();
-
         ReStepObj = new();
-        await GetRecipeSteps();
 
         await base.OnParametersSetAsync();
     }
@@ -143,33 +142,8 @@
         _nav.NavigateTo("/admin/recipes");
     }
 
-    private async Task GetRecipeIngredients()
-    {
-        try
-        {
-            IngredientList = await _api.GetRecipeIngredientListAsync(RecipeObj.Id);
-            //IngredientList = await _api.GetRecipeIngredientListAsync(10, 0);
-        }
-        catch
-        {
 
-        }
 
-    }
-
-    private async Task GetRecipeSteps()
-    {
-        try
-        {
-            StepsList = await _api.GetRecipeStepListAsync(RecipeObj.Id);
-            //StepsList = await _api.GetRecipeStepListAsync(10, 0);
-        }
-        catch
-        {
-
-        }
-
-    }
 
     private async Task AddIngredient()
     {
@@ -181,9 +155,7 @@
                 ReIngObj.RecipeId = RecipeObj.Id;
                 await _api.SaveRecipeIngredientAsync(ReIngObj);
                 ReIngObj = new();
-                await GetRecipeIngredients();
-                StateHasChanged();
-                _ingTable.Refresh();
+                await _ingTable.Refresh();
             }
         }
         catch { }
@@ -198,8 +170,7 @@
                 ReStepObj.RecipeId = RecipeObj.Id;
                 await _api.SaveRecipeStepAsync(ReStepObj);
                 ReStepObj = new();
-                await GetRecipeSteps();
-                StateHasChanged();
+                await _stepsTable.Refresh();
             }
         }
         catch { }

@@ -20,6 +20,6 @@
     protected override async Task OnInitializedAsync()
     {
         ingList = await _api.GetIngredientListAsync(10, 0);
-        await base.OnInitializedAsync();
+        //await base.OnInitializedAsync();
     }
 }

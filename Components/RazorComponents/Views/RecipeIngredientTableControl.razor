@@ -24,7 +24,7 @@
                     @r.MeasurementName
                 </td>
                 <td>
-                    <ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" NoMargin=true OnClickCall="@(e => Delete(r.Id))"/>
+                    <ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" NoMargin=true OnClickCall="@(e => Delete(r.Id))" />
                 </td>
             </tr>
         }
@@ -35,8 +35,7 @@
     [Parameter]
     public int RecipeId { get; set; }
 
-    [Parameter]
-    public List<RecipeIngredient> TableData { get; set; }
+    public List<RecipeIngredient> TableData { get; set; } = new();
 
     public async Task GetIngredientNames()
     {
@@ -69,15 +68,31 @@
         }
     }
 
-    protected override Task OnInitializedAsync()
+    private async Task GetRecipeIngredients()
     {
-        GetIngredientNames();
-        return base.OnInitializedAsync();
+        try
+        {
+            TableData = await _api.GetRecipeIngredientListAsync(RecipeId);
+        }
+        catch
+        {
+
+        }
+
     }
 
-    public void Refresh()
+    protected override async Task OnInitializedAsync()
     {
-        GetIngredientNames();
+        await Refresh();
+
+        //return base.OnInitializedAsync();
+    }
+
+    public async Task Refresh()
+    {
+        await GetRecipeIngredients();
+        await GetIngredientNames();
+        StateHasChanged();
     }
 
     private async Task Delete(int ingredientId)
@@ -85,7 +100,7 @@
         try
         {
             await _api.DeleteRecipeIngredientAsync(ingredientId);
-            Refresh();
+            await Refresh();
         }
         catch
         {

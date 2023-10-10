@@ -40,12 +40,31 @@
     public int RecipeId { get; set; }
 
     [Parameter]
-    public List<RecipeStep> TableData { get; set; }
+    public List<RecipeStep> TableData { get; set; } = new();
 
-
-    protected override Task OnInitializedAsync()
+    private async Task GetRecipeSteps()
     {
-        return base.OnInitializedAsync();
+        try
+        {
+            TableData = await _api.GetRecipeStepListAsync(RecipeId);
+        }
+        catch
+        {
+
+        }
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh();
+        //return base.OnInitializedAsync();
+    }
+
+    public async Task Refresh()
+    {
+        await GetRecipeSteps();
+        StateHasChanged();
     }
 
     private async Task Delete(int stepId)
@@ -53,6 +72,7 @@
         try
         {
             await _api.DeleteRecipeStepAsync(stepId);
+            await Refresh();
         }
         catch
         {
