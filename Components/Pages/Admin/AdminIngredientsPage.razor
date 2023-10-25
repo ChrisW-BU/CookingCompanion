@@ -10,16 +10,18 @@
     This page is for the management of ingredient information. You can add, edit, and delete ingredients.
 </AlertItem>
 
-<div class="container">
-    <div class="row">
-    @foreach (var i in ingredients)
-    {
-        @* <li @onclick="() => OnClickEvent(i.Id)">@i.Name - @i.Description</li> *@
-        <IngredientCard Name="@i.Name" Description="@i.Description" ImgUrl="@i.ImgUrl" 
-        LastModified="@i.LastModified" OnClickCall="() => OnClickEvent(i.Id)" />
-    }
-    </div>
-</div>
+
+<FormBase>
+    <ChildContent>
+        @foreach (var i in ingredients)
+        {
+            @* <li @onclick="() => OnClickEvent(i.Id)">@i.Name - @i.Description</li> *@
+            <IngredientCard Name="@i.Name" Description="@i.Description" ImgUrl="@i.ImgUrl"
+                            LastModified="@i.LastModified" OnClickCall="() => OnClickEvent(i.Id)" />
+        }
+    </ChildContent>
+</FormBase>
+
 
 
 <ButtonControl Name="Add New" Colour="success" Icon="fas fa-edit" OnClickCall="AddNewIngredient" />

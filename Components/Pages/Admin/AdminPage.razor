@@ -2,10 +2,17 @@
 @inject NavigationManager _nav
 
 <PageTitle>CC - Admin Panel</PageTitle>
-<h3>Admin Panel</h3>
-<MenuItem Icon="fas fa-user" Title="Manage Users" Href="admin"></MenuItem>
-<MenuItem Icon="fas fa-carrot" Title="Manage Ingredients" Href="admin/ingredients"></MenuItem>
-<MenuItem Icon="fas fa-burger" Title="Manage Recipes" Href="admin/recipes"></MenuItem>
+<h1>Admin Panel</h1>
+This is where all users, ingredients and recipes can be managed.<br /><br />
+
+<FormBase>
+    <ChildContent>
+        <MenuItem Icon="fas fa-user" Title="Manage Users" Href="admin"></MenuItem>
+        <MenuItem Icon="fas fa-carrot" Title="Manage Ingredients" Href="admin/ingredients"></MenuItem>
+        <MenuItem Icon="fas fa-burger" Title="Manage Recipes" Href="admin/recipes"></MenuItem>
+    </ChildContent>
+</FormBase>
+
 <ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
 
 @code {

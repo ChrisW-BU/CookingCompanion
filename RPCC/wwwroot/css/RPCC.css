@@ -1,0 +1,15 @@
+﻿body {
+
+}
+
+.w-menu-item {
+    border-style: solid;
+    border-color: #808080;
+    border-width: 2px;
+}
+
+    .w-menu-item:hover {
+        border-color: #0d6efd;
+        background-color: white;
+        color: #0d6efd;
+    }
