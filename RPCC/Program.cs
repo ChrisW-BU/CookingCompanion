@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
+//builder.Services.AddSingleton<WeatherForecastService>();
 
 // Setup JSON API
 builder.Services.AddOptions<CookCompApiJsonAccessSetting>().Configure(options =>

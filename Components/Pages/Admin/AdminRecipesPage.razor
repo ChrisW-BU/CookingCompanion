@@ -9,15 +9,15 @@
     This page is for the management of recipes. You can add, edit, and delete recipes as well as modify their ingredient lists and steps.
 </AlertItem>
 
-<div class="container">
-    <div class="row">
+<FormBase>
+    <ChildContent>
         @foreach (var r in recipes)
         {
             <RecipeCard Name="@r.Name" Description="@r.Description" ImgUrl="@r.ImgUrl"
-                            Duration="@r.Duration" OnClickCall="() => OnClickEvent(r.Id)" />
+                        Duration="@r.Duration" OnClickCall="() => OnClickEvent(r.Id)" />
         }
-    </div>
-</div>
+    </ChildContent>
+</FormBase>
 
 <ButtonControl Name="Add New" Colour="success" Icon="fas fa-edit" OnClickCall="AddNewRecipe" />
 <ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
@@ -36,7 +36,7 @@
         _nav.NavigateTo("/admin/edit_recipe/" + recipeId);
     }
 
-    private void AddNewRecipe ()
+    private void AddNewRecipe()
     {
         _nav.NavigateTo("/admin/edit_recipe/" + 0);
     }

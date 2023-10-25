@@ -13,3 +13,8 @@
         background-color: white;
         color: #0d6efd;
     }
+
+.row-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
