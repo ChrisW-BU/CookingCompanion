@@ -1,0 +1,24 @@
+﻿<i class="col-@ColSize @ClassStr"></i>
+
+@code {
+    [Parameter]
+    public bool IsVege { get; set; }
+
+    [Parameter]
+    public string ColSize { get; set; } = string.Empty;
+
+    public string ClassStr
+    {
+        get
+        {
+            if (IsVege)
+            {
+                return "fas fa-leaf text-success";
+            }
+            else
+            {
+                return "fas fa-leaf";
+            }
+        }
+    }
+}

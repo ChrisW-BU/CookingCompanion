@@ -9,6 +9,16 @@
     Please select a recipe from the list below to begin cooking
 </AlertItem>
 
+<FormBase>
+    <ChildContent>
+        @foreach (var r in recipes)
+        {
+            <RecipeCard Name="@r.Name" Description="@r.Description" ImgUrl="@r.ImgUrl"
+                        Duration="@r.Duration"  OnClickCall="() => OnClickEvent(r.Id)" />
+        }
+    </ChildContent>
+</FormBase>
+
 <ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
 
 @code {

@@ -1,0 +1,12 @@
+﻿<i class="col-@ColSize @ClassStr" @onmouseover="MouseOver" @onmouseout="MouseOut"></i>
+
+@code {
+    string ClassStr { get; set; } = "col-3 far fa-check-circle";
+
+    public void MouseOver(MouseEventArgs e) { ClassStr = "col-3 fas fa-check-circle"; }
+
+    public void MouseOut(MouseEventArgs e) { ClassStr = "col-3 far fa-check-circle"; }
+
+    [Parameter]
+    public string ColSize { get; set; } = string.Empty;
+}

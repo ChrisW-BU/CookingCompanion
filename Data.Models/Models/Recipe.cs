@@ -14,6 +14,8 @@
 
         public bool? IsCompleted { get; set; }
 
+        public bool IsVege { get; set; }
+
         public DateTime LastModified { get; set; }
 
         public DateTime DateAdded { get; set; }
