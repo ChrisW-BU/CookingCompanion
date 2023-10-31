@@ -22,10 +22,8 @@
     </ChildContent>
 </FormBase>
 
-
-
-<ButtonControl Name="Add New" Colour="success" Icon="fas fa-edit" OnClickCall="AddNewIngredient" />
-<ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
+<AddNewButtonControl OnClickCall="AddNewIngredient"/>
+<BackButtonControl OnClickCall="PageBack"/>
 
 @code {
     protected List<Ingredient> ingredients = new();

@@ -1,0 +1,7 @@
+﻿@inherits ButtonControl
+<ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" OnBaseClickCall="OnClickCall"/>
+
+@code {
+    [Parameter]
+    public EventCallback OnClickCall { get; set; }
+}

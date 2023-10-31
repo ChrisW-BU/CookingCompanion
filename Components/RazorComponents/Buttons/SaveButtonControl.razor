@@ -1,0 +1,7 @@
+﻿@inherits ButtonControl
+<ButtonControl Colour="success" Icon="fas fa-save" Name="Save" OnBaseClickCall="OnClickCall"/>
+
+@code {
+    [Parameter]
+    public EventCallback OnClickCall { get; set; }
+}

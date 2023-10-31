@@ -1,0 +1,7 @@
+﻿@inherits ButtonControl
+<ButtonControl Colour="primary" Icon="far fa-circle-left" Name="Go Back" OnBaseClickCall="OnClickCall" />
+
+@code {
+    [Parameter]
+    public EventCallback OnClickCall { get; set; }
+}

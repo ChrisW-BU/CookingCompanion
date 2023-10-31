@@ -1,5 +1,5 @@
-﻿<button class="btn btn-@Colour @CssSize @CssMargin text-truncate" @onclick="OnClickCall" 
-disabled="@IsDisabled" hidden="@IsHidden">
+﻿<button class="btn btn-@Colour @CssSize @CssMargin text-truncate" @onclick="OnBaseClickCall"
+        disabled="@IsDisabled" hidden="@IsHidden">
 <i class="@Icon"></i>&nbsp @Name</button>
 @code {
     [Parameter]
@@ -54,5 +54,5 @@ disabled="@IsDisabled" hidden="@IsHidden">
     public bool IsHidden { get; set; }
 
     [Parameter]
-    public EventCallback OnClickCall { get; set; }
+    public EventCallback OnBaseClickCall { get; set; }
 }

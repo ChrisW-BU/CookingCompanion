@@ -11,9 +11,10 @@
     <FormInputTextArea Name="Description" @bind-Value="RecipeObj.Description" AutoComplete=false FieldWidth="12" />
 </FormBase>
 
-<ButtonControl Colour="success" Icon="fas fa-save" Name="Save" OnClickCall="Save" />
-<ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" OnClickCall="Delete" />
-<ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
+<SaveButtonControl OnClickCall="Save"/>
+<DeleteButtonControl OnClickCall="Delete"/>
+<BackButtonControl OnClickCall="PageBack"/>
+
 <br />
 <br />
 <h3>Add/Edit Ingredients</h3>
@@ -26,7 +27,7 @@
     <NumberControl Name="Quantity" @bind-Value="ReIngObj.Quantity" FieldWidth="4" />
 </FormBase>
 
-<ButtonControl Colour="success" Icon="fas fa-circle-plus" Name="Add Ingredient" OnClickCall="AddIngredient" />
+<AddNewButtonControl Name="Add Ingredient" OnClickCall="AddIngredient"/>
 
 <br />
 <br />
@@ -40,7 +41,7 @@
     <FormInputTextArea Name="Description" @bind-Value="ReStepObj.Description" AutoComplete=false FieldWidth="12" />
 </FormBase>
 
-<ButtonControl Colour="success" Icon="fas fa-circle-plus" Name="Add Step" OnClickCall="AddStep" />
+<AddNewButtonControl Name="Add Step" OnClickCall="AddStep"/>
 
 @code {
     [Parameter]

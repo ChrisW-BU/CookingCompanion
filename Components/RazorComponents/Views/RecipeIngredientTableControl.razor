@@ -24,7 +24,7 @@
                     @r.MeasurementName
                 </td>
                 <td>
-                    <ButtonControl Colour="danger" Icon="fas fa-trash" Name="Delete" NoMargin=true OnClickCall="@(e => Delete(r.Id))" />
+                    <DeleteButtonControl OnClickCall="@(e => Delete(r.Id))" />
                 </td>
             </tr>
         }

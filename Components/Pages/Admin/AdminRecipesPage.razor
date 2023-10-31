@@ -19,8 +19,8 @@
     </ChildContent>
 </FormBase>
 
-<ButtonControl Name="Add New" Colour="success" Icon="fas fa-edit" OnClickCall="AddNewRecipe" />
-<ButtonControl Colour="primary" Icon="far fa-arrow-circle-left" Name="Go Back" OnClickCall="PageBack" />
+<AddNewButtonControl OnClickCall="AddNewRecipe"/>
+<BackButtonControl OnClickCall="PageBack"/>
 
 @code {
     protected List<Recipe> recipes = new List<Recipe>();
