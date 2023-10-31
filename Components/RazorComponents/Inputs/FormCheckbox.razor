@@ -1,0 +1,15 @@
+﻿@* <div>
+    <label>@Name</label><br />
+    <InputText @oninput="UpdateParent" @bind-Value="@Value" class="i" />
+</div>
+<br /> *@
+@inherits FormCheckboxBase
+<div class="col-sm-@FieldWidth">
+    <label class="form-check-label">@Name</label><br />
+    <input class="@CssClass form-check-input mb-3" type="checkbox" value="@Value" checked="@Value"
+           @onchange="UpdateParentElement" hidden="@IsHidden" disabled="@IsDisabled" />
+</div>
+
+@code {
+
+}

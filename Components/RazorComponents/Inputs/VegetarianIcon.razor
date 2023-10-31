@@ -1,4 +1,4 @@
-﻿<i class="col-@ColSize @ClassStr"></i>
+﻿<i class="col-@ColSize @ClassStr" title="@TitleStr"></i>
 
 @code {
     [Parameter]
@@ -6,6 +6,21 @@
 
     [Parameter]
     public string ColSize { get; set; } = string.Empty;
+
+    public string TitleStr
+    {
+        get
+        {
+            if(IsVege)
+            {
+                return "This recipe is vegetarian.";
+            }
+            else
+            {
+                return "This recipe is not vegetarian.";
+            }
+        }
+    }
 
     public string ClassStr
     {
@@ -17,7 +32,7 @@
             }
             else
             {
-                return "fas fa-leaf";
+                return "fas fa-leaf text-secondary";
             }
         }
     }

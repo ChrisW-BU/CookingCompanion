@@ -14,7 +14,7 @@
         @foreach (var r in recipes)
         {
             <RecipeCard Name="@r.Name" Description="@r.Description" ImgUrl="@r.ImgUrl"
-                        Duration="@r.Duration"  OnClickCall="() => OnClickEvent(r.Id)" />
+                        Duration="@r.Duration" IsVege="@r.IsVege" OnClickCall="() => OnClickEvent(r.Id)" />
         }
     </ChildContent>
 </FormBase>

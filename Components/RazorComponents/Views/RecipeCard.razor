@@ -1,12 +1,11 @@
-﻿<div style="height: 220px; overflow:hidden" class="card col-sm-0 col-md-0 col-lg-5 col-xl-3 col-xxl-3 p-3 mb-3 me-3 user-select-none" @onclick="OnClickCall">
-    <div class="row g-0">
+﻿<div style="height: 320px;" class="card col-sm-0 col-md-0 col-lg-5 col-xl-3 col-xxl-3 p-3 mb-3 me-3 user-select-none" @onclick="OnClickCall">
+    <div class="row g-0" style="overflow:hidden;">
         <div class="col-4">
             <img src="@ImgUrl" class="img-fluid rounded-start" alt="@Name">
         </div>
         <div class="col-8">
             <div class="card-body">
                 <h5 class="card-title">@Name</h5>
-                <p class="card-text text-truncate">@Description</p>
                 
                 <div>
                     <i class="fa-fw far fa-clock"></i>&nbsp<span class="card-text"><small class="text-body-secondary">@Duration minutes</small></span>
@@ -15,6 +14,9 @@
                      <FavouriteStarIcon ColSize="3" /> <CompletedIcon ColSize="3" /> <VegetarianIcon ColSize="3" IsVege="@IsVege"/>
                 </div>
             </div>
+        </div>
+        <div>
+            <p class="card-text">@Description</p>
         </div>
     </div>
 </div>
