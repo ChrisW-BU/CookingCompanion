@@ -3,15 +3,25 @@
 }
 
 .w-menu-item {
+    color: #393939;
     border-style: solid;
-    border-color: #808080;
-    border-width: 2px;
+    border-color: #cecece;
+    border-width: 1px;
 }
 
     .w-menu-item:hover {
-        border-color: #0d6efd;
-        background-color: white;
-        color: #0d6efd;
+        border-color: #808080;
+        background-color: #eff1f1;
+        color: #000000;
+    }
+
+.w-card-item {
+
+}
+
+    .w-card-item:hover {
+        border-color: #000000;
+        background-color: #eff1f1;
     }
 
 .row-flex {
