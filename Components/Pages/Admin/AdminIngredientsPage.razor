@@ -38,16 +38,19 @@
 
     private void OnClickEvent(int ingredientId)
     {
+        _api.ClearCacheAsync();
         _nav.NavigateTo("/admin/edit_ingredient/" + ingredientId);
     }
 
     private void AddNewIngredient()
     {
+        _api.ClearCacheAsync();
         _nav.NavigateTo("/admin/edit_ingredient/" + 0);
     }
 
     private void PageBack()
     {
+        _api.ClearCacheAsync();
         _nav.NavigateTo("/admin");
     }
 }

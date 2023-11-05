@@ -98,6 +98,7 @@
 
     private void PageBack()
     {
+        _api.ClearCacheAsync();
         _nav.NavigateTo("/admin/ingredients");
     }
 }

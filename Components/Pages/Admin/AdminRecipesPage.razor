@@ -34,16 +34,19 @@
 
     private void OnClickEvent(int recipeId)
     {
+        _api.ClearCacheAsync();
         _nav.NavigateTo("/admin/edit_recipe/" + recipeId);
     }
 
     private void AddNewRecipe()
     {
+        _api.ClearCacheAsync();
         _nav.NavigateTo("/admin/edit_recipe/" + 0);
     }
 
     private void PageBack()
     {
+        _api.ClearCacheAsync();
         _nav.NavigateTo("/admin");
     }
 }

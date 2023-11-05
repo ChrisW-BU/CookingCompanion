@@ -136,6 +136,7 @@
 
     private void PageBack()
     {
+        _api.ClearCacheAsync();
         _nav.NavigateTo("/recipes");
     }
 }
