@@ -1,0 +1,10 @@
+﻿<div class="container">
+    <form class="row align-items-center">
+        @ChildContent
+    </form>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

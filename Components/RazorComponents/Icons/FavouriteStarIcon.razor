@@ -1,0 +1,41 @@
+﻿
+<div class="col-@ColSize user-select-none" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i>@DescriptionStr</div>
+
+@code {
+    string ClassStr { get; set; } = "col-3 far fa-star";
+
+    public void MouseOver(MouseEventArgs e) { ClassStr = "col-3 fas fa-star"; }
+
+    public void MouseOut(MouseEventArgs e) { ClassStr = "col-3 far fa-star"; }
+
+    [Parameter]
+    public bool IsFavourite { get; set; }
+
+    [Parameter]
+    public string ColSize { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool IncludeStr { get; set; }
+
+    public string DescriptionStr
+    {
+        get
+        {
+            if (IncludeStr)
+            {
+                if (IsFavourite)
+                {
+                    return "Favourited";
+                }
+                else
+                {
+                    return "Favourite";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+    }
+}

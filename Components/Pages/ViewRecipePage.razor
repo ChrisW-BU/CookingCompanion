@@ -1,0 +1,141 @@
+﻿@page "/recipes/view_recipe/{CatchId}"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+<PageTitle>@PageTitleName</PageTitle>
+    <PageBase>
+        <h3>@TitleName</h3>
+    <FormBase>
+        <div class="row mb-3">
+            <div class="row p-3 col-lg-6 col-sm-0">
+                <div class="col-4"><img width="250px" src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" /></div>
+                <div class="col-8">
+                    <div class="p-3">@RecipeObj.Description</div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-4 p-3"><i class="far fa-clock"></i>&nbsp @RecipeObj.Duration mins</div>
+                    <div class="col-4 p-3"><VegetarianIcon ColSize="0" IsVege="@RecipeObj.IsVege" IncludeStr=true /></div>
+                    <div class="col-4 p-3"><FavouriteStarIcon ColSize="0" IncludeStr=true/></div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-sm-0">
+                <div class="w-shopping-list">
+                    <div class="position-relative">
+                        <div class=""><u>Ingredient List</u></div>
+                        <div class="position-absolute top-0 end-0"><ShoppingPinIcon ColSize="12"/></div>
+                    </div>
+                    <br />
+                    <div>
+                        <ul>
+                            @foreach (RecipeIngredient r in IngredientsObj)
+                            {
+                                <li>@r.IngredientName - @r.Quantity @r.MeasurementName</li>
+                            }
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <p>
+            <b>Page Notes:</b> There will be an option to resume or start the cooking process. You will be able to click an ingredient for overview (picture etc).<br />
+
+        </p>
+    </FormBase>
+</PageBase>
+
+<ButtonContainer>
+    <BackButtonControl OnClickCall="PageBack" />
+</ButtonContainer>
+
+
+@code {
+    [Parameter]
+    public string CatchId { get; set; } = string.Empty;
+
+    [Parameter]
+    public int RecipeId { get; set; }
+
+    public Recipe? RecipeObj { get; set; }
+
+    public List<RecipeIngredient> IngredientsObj { get; set; }
+
+    public string PageTitleName
+    {
+        get
+        {
+            if (RecipeObj.Id > 0)
+            {
+                return "CC - " + RecipeObj.Name;
+            }
+            else
+            {
+                return "Cooking Companion";
+            }
+        }
+    }
+
+    public string TitleName
+    {
+        get
+        {
+            if (RecipeObj.Id > 0)
+            {
+                return RecipeObj.Name;
+            }
+            else
+            {
+                return "Cooking Companion";
+            }
+        }
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        int recId = Int32.Parse(CatchId);
+        if (recId > 0)
+        {
+            RecipeObj = await _api.GetRecipeUniqueAsync(recId);
+            IngredientsObj = await _api.GetRecipeIngredientListAsync(recId);
+        }
+        else
+        {
+            RecipeObj = new();
+            IngredientsObj = new();
+        }
+
+        if(IngredientsObj.Count > 0)
+        {
+            Ingredient? IngObj = new();
+            MeasurementType? MesObj = new();
+            foreach (RecipeIngredient r in IngredientsObj)
+            {
+                try
+                {
+                    IngObj = await _api.GetIngredientUniqueAsync(r.IngredientId);
+                    if (IngObj != null)
+                    {
+                        r.IngredientName = IngObj.Name ?? "";
+                    }
+
+                    MesObj = await _api.GetMeasurementTypeUniqueAsync(r.MeasurementTypeId);
+                    if (MesObj != null)
+                    {
+                        r.MeasurementName = MesObj.Name ?? "";
+                    }
+
+                }
+                catch
+                {
+
+                }
+            }
+        }
+
+        await base.OnParametersSetAsync();
+    }
+
+    private void PageBack()
+    {
+        _nav.NavigateTo("/recipes");
+    }
+}

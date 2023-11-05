@@ -2,6 +2,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    /*background-color: #f8f0ce;*/
 }
 
 main {
@@ -15,13 +16,13 @@ main {
 }
 
 .top-row {
-    background-color: #f3dd93;
-    border-bottom: 1px solid #382200;
+    background-color: #ed8d07;
+    border-bottom: 1px solid #9f4b05;
     justify-content: flex-end;
     height: 3.0rem;
     display: flex;
     align-items: center;
-    color: #382200;
+    color: #fff;
 }
 
     .top-row ::deep a, .top-row ::deep .btn-link {

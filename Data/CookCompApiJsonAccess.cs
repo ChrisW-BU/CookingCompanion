@@ -159,6 +159,19 @@ public class CookCompApiJsonAccess: CookCompAPI
         catch { }
     }
 
+    public Task RefreshRepository()
+    {
+        ClearCacheAsync();
+
+        int recipeCount = GetRecipeCountAsync().Result;
+        GetRecipeListAsync(recipeCount, 0);
+
+        int ingredientCount = GetIngredientCountAsync().Result;
+        GetIngredientListAsync(ingredientCount, 0);
+
+        return Task.CompletedTask;
+    }
+
     /// <summary>
     /// Clear all JSON list data.
     /// </summary>

@@ -2,25 +2,26 @@
 @inject CookCompAPI _api
 @inject NavigationManager _nav
 
-<PageTitle>CC - Recipe Manager</PageTitle>
-<h3>Recipes</h3>
+<PageBase>
+    <PageTitle>CC - Recipe Manager</PageTitle>
+    <h3>Recipes</h3>
 
-<AlertItem Style="AlertItem.AlertStyle.Info">
-    This page is for the management of recipes. You can add, edit, and delete recipes as well as modify their ingredient lists and steps.
-</AlertItem>
+    <AlertItem Style="AlertItem.AlertStyle.Info">
+        This page is for the management of recipes. You can add, edit, and delete recipes as well as modify their ingredient lists and steps.
+    </AlertItem>
 
-<FormBase>
-    <ChildContent>
+    <FormBase>
         @foreach (var r in recipes)
         {
             <RecipeCard Name="@r.Name" Description="@r.Description" ImgUrl="@r.ImgUrl"
                         Duration="@r.Duration" IsVege="@r.IsVege" OnClickCall="() => OnClickEvent(r.Id)" />
         }
-    </ChildContent>
-</FormBase>
-
-<AddNewButtonControl OnClickCall="AddNewRecipe"/>
-<BackButtonControl OnClickCall="PageBack"/>
+    </FormBase>
+</PageBase>
+<ButtonContainer>
+    <AddNewButtonControl OnClickCall="AddNewRecipe" />
+    <BackButtonControl OnClickCall="PageBack" />
+</ButtonContainer>
 
 @code {
     protected List<Recipe> recipes = new List<Recipe>();

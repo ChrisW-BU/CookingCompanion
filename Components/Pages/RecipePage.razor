@@ -2,10 +2,11 @@
 @inject CookCompAPI _api
 @inject NavigationManager _nav
 
-<PageTitle>Recipe Selection</PageTitle>
+<PageTitle>CC - Select a recipe</PageTitle>
+<PageBase>
 <h3>Recipes</h3>
 
-<AlertItem Style="AlertItem.AlertStyle.Info">
+<AlertItem Style="AlertItem.AlertStyle.Warning">
     Please select a recipe from the list below to begin cooking
 </AlertItem>
 
@@ -19,7 +20,11 @@
     </ChildContent>
 </FormBase>
 
-<BackButtonControl OnClickCall="PageBack"/>
+</PageBase>
+<ButtonContainer>
+    <BackButtonControl OnClickCall="PageBack" />
+</ButtonContainer>
+
 
 @code {
     protected List<Recipe> recipes = new List<Recipe>();
@@ -32,7 +37,7 @@
 
     private void OnClickEvent(int recipeId)
     {
-        //_nav.NavigateTo("/admin/edit_recipe/" + recipeId);
+        _nav.NavigateTo("/recipes/view_recipe/" + recipeId);
     }
 
     private void PageBack()

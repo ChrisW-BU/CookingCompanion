@@ -2,18 +2,23 @@
 @inject NavigationManager _nav
 
 <PageTitle>CC - Admin Panel</PageTitle>
+
+<PageBase>
 <h1>Admin Panel</h1>
 This is where all users, ingredients and recipes can be managed.<br /><br />
 
 <FormBase>
-    <ChildContent>
         <MenuItem Icon="fas fa-user" Title="Manage Users" Href="admin"></MenuItem>
         <MenuItem Icon="fas fa-carrot" Title="Manage Ingredients" Href="admin/ingredients"></MenuItem>
         <MenuItem Icon="fas fa-burger" Title="Manage Recipes" Href="admin/recipes"></MenuItem>
-    </ChildContent>
 </FormBase>
+</PageBase>
 
-<BackButtonControl OnClickCall="PageBack"/>
+<ButtonContainer>
+    <BackButtonControl OnClickCall="PageBack" />
+</ButtonContainer>
+
+
 
 @code {
     private void PageBack()

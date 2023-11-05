@@ -3,27 +3,29 @@
 @inject NavigationManager _nav
 
 <PageTitle>CC - Ingredient Manager</PageTitle>
+<PageBase>
+    <h1>Ingredients</h1>
 
-<h1>Ingredients</h1>
-
-<AlertItem Style="AlertItem.AlertStyle.Info">
-    This page is for the management of ingredient information. You can add, edit, and delete ingredients.
-</AlertItem>
+    <AlertItem Style="AlertItem.AlertStyle.Info">
+        This page is for the management of ingredient information. You can add, edit, and delete ingredients.
+    </AlertItem>
 
 
-<FormBase>
-    <ChildContent>
+    <FormBase>
         @foreach (var i in ingredients)
         {
             @* <li @onclick="() => OnClickEvent(i.Id)">@i.Name - @i.Description</li> *@
             <IngredientCard Name="@i.Name" Description="@i.Description" ImgUrl="@i.ImgUrl"
                             LastModified="@i.LastModified" OnClickCall="() => OnClickEvent(i.Id)" />
         }
-    </ChildContent>
-</FormBase>
+    </FormBase>
+</PageBase>
 
-<AddNewButtonControl OnClickCall="AddNewIngredient"/>
-<BackButtonControl OnClickCall="PageBack"/>
+<ButtonContainer>
+    <AddNewButtonControl OnClickCall="AddNewIngredient" />
+    <BackButtonControl OnClickCall="PageBack" />
+</ButtonContainer>
+
 
 @code {
     protected List<Ingredient> ingredients = new();
@@ -39,7 +41,7 @@
         _nav.NavigateTo("/admin/edit_ingredient/" + ingredientId);
     }
 
-    private void AddNewIngredient ()
+    private void AddNewIngredient()
     {
         _nav.NavigateTo("/admin/edit_ingredient/" + 0);
     }

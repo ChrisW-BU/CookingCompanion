@@ -2,47 +2,61 @@
 @inject CookCompAPI _api
 @inject NavigationManager _nav
 <PageTitle>@PageTitleName</PageTitle>
-<h3>@TitleName</h3>
+    <PageBase>
+        <h3>@TitleName</h3>
 
-<FormBase>
-    <FormInputText Name="Name" @bind-Value="RecipeObj.Name" AutoComplete=false FieldWidth="4" />
-    <FormInputText Name="Image URL" @bind-Value="RecipeObj.ImgUrl" AutoComplete=false FieldWidth="4" />
-    <FormInputText Name="Duration" @bind-Value="RecipeObj.Duration" AutoComplete=false FieldWidth="4" />
-    <FormInputTextArea Name="Description" @bind-Value="RecipeObj.Description" AutoComplete=false FieldWidth="12" />
-    <FormCheckbox Name="Is Vegetarian" @bind-Value="RecipeObj.IsVege" FieldWidth="12" />
-</FormBase>
+    <FormBase>
+        <FormInputText Name="Name" @bind-Value="RecipeObj.Name" AutoComplete=false FieldWidth="4" />
+        <FormInputText Name="Image URL" @bind-Value="RecipeObj.ImgUrl" AutoComplete=false FieldWidth="4" />
+        <FormInputText Name="Duration" @bind-Value="RecipeObj.Duration" AutoComplete=false FieldWidth="4" />
+        <FormInputTextArea Name="Description" @bind-Value="RecipeObj.Description" AutoComplete=false FieldWidth="12" />
+        <FormCheckbox Name="Is Vegetarian" @bind-Value="RecipeObj.IsVege" FieldWidth="12" />
+    </FormBase>
+</PageBase>
 
-<SaveButtonControl OnClickCall="Save"/>
-<DeleteButtonControl OnClickCall="Delete"/>
-<BackButtonControl OnClickCall="PageBack"/>
+<ButtonContainer>
+    <SaveButtonControl OnClickCall="Save" />
+    <DeleteButtonControl OnClickCall="Delete" />
+    <BackButtonControl OnClickCall="PageBack" />
+</ButtonContainer>
 
-<br />
-<br />
-<h3>Add/Edit Ingredients</h3>
+<PageBase>
+    <br />
+    <br />
+    <h3>Add/Edit Ingredients</h3>
 
-<RecipeIngredientTableControl @ref="_ingTable" RecipeId="@RecipeObj.Id"/>
+    <RecipeIngredientTableControl @ref="_ingTable" RecipeId="@RecipeObj.Id" />
 
-<FormBase>
-    <IngredientSelectControl Name="Select Ingredient" @bind-Value="ReIngObj.IngredientId" FieldWidth="4" />
-    <MeasureSelectControl Name="Select Measurement Type" @bind-Value="ReIngObj.MeasurementTypeId" FieldWidth="4" />
-    <NumberControl Name="Quantity" @bind-Value="ReIngObj.Quantity" FieldWidth="4" />
-</FormBase>
+    <FormBase>
+        <IngredientSelectControl Name="Select Ingredient" @bind-Value="ReIngObj.IngredientId" FieldWidth="4" />
+        <MeasureSelectControl Name="Select Measurement Type" @bind-Value="ReIngObj.MeasurementTypeId" FieldWidth="4" />
+        <NumberControl Name="Quantity" @bind-Value="ReIngObj.Quantity" FieldWidth="4" />
+    </FormBase>
+</PageBase>
 
-<AddNewButtonControl Name="Add Ingredient" OnClickCall="AddIngredient"/>
+<ButtonContainer>
+    <AddNewButtonControl Name="Add Ingredient" OnClickCall="AddIngredient" />
+    <BackButtonControl OnClickCall="PageBack" />
+</ButtonContainer>
 
-<br />
-<br />
-<h3>Add/Edit Steps</h3>
-<RecipeStepsTableControl @ref="_stepsTable" RecipeId="@RecipeObj.Id"/>
+<PageBase>
+    <br />
+    <br />
+    <h3>Add/Edit Steps</h3>
+    <RecipeStepsTableControl @ref="_stepsTable" RecipeId="@RecipeObj.Id" />
 
-<FormBase>
-    <NumberControl Name="Step Number" @bind-Value="ReStepObj.StepNumber" FieldWidth="4" />
-    <FormInputText Name="Title" @bind-Value="ReStepObj.Title" AutoComplete=false FieldWidth="4"/>
-    <FormInputText Name="Image URL" @bind-Value="ReStepObj.ImgUrl" AutoComplete=false FieldWidth="4" />
-    <FormInputTextArea Name="Description" @bind-Value="ReStepObj.Description" AutoComplete=false FieldWidth="12" />
-</FormBase>
+    <FormBase>
+        <NumberControl Name="Step Number" @bind-Value="ReStepObj.StepNumber" FieldWidth="4" />
+        <FormInputText Name="Title" @bind-Value="ReStepObj.Title" AutoComplete=false FieldWidth="4" />
+        <FormInputText Name="Image URL" @bind-Value="ReStepObj.ImgUrl" AutoComplete=false FieldWidth="4" />
+        <FormInputTextArea Name="Description" @bind-Value="ReStepObj.Description" AutoComplete=false FieldWidth="12" />
+    </FormBase>
+</PageBase>
 
-<AddNewButtonControl Name="Add Step" OnClickCall="AddStep"/>
+<ButtonContainer>
+    <AddNewButtonControl Name="Add Step" OnClickCall="AddStep" />
+    <BackButtonControl OnClickCall="PageBack" />
+</ButtonContainer>
 
 @code {
     [Parameter]

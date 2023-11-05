@@ -1,0 +1,41 @@
+﻿
+<div class="col-@ColSize user-select-none" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i>@DescriptionStr</div>
+
+@code {
+    string ClassStr { get; set; } = "col-3 fas fa-thumbtack";
+
+    public void MouseOver(MouseEventArgs e) { ClassStr = "col-3 fas fa-thumbtack text-danger"; }
+
+    public void MouseOut(MouseEventArgs e) { ClassStr = "col-3 fas fa-thumbtack"; }
+
+    [Parameter]
+    public bool IsPinned { get; set; }
+
+    [Parameter]
+    public string ColSize { get; set; } = string.Empty;
+
+    [Parameter]
+    public bool IncludeStr { get; set; }
+
+    public string DescriptionStr
+    {
+        get
+        {
+            if (IncludeStr)
+            {
+                if (IsPinned)
+                {
+                    return "";
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            else
+            {
+                return "";
+            }
+        }
+    }
+}
