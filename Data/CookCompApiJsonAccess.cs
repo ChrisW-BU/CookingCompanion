@@ -679,4 +679,48 @@ public class CookCompApiJsonAccess: CookCompAPI
 
         //return _recipe_ingredients ?? new();
     }
+
+
+    /////////////////////
+    // Users
+    /////////////////////
+
+    /// <summary>
+    /// Load a list of all users.
+    /// </summary>
+    /// <returns></returns>
+    private Task LoadUsersAsync()
+    {
+        Load<User>(ref _users, _settings.UserFolder);
+        return Task.CompletedTask;
+    }
+
+    ///
+    /// <summary>
+    /// Load a list of users and return the list.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<User>?> GetUserListAsync()
+    {
+        await LoadUsersAsync();
+        return _users ?? new();
+    }
+
+    public async Task<User?> GetUser(string userName)
+    {
+        await GetUserListAsync();
+
+        if (_users != null)
+        {
+            foreach (User u in _users)
+            {
+                if (u.Name == userName)
+                {
+                    return u;
+                }
+            }
+        }
+
+        return null;
+    }
 }

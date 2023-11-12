@@ -1,4 +1,7 @@
 ﻿@inherits LayoutComponentBase
+@using Data.Models.Models;
+@inject CookCompAPI _api
+@inject UserGlobal userGlobal;
 
 <div class="page">
     <main>
@@ -7,8 +10,43 @@
             @* <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a> *@
         </div>
 
-        <article class="content px-3">
-            @Body
-        </article>
+        <LoginModal @ref="@loginModal" OnSuccessCallBack="SuccessfulCallBack" />
+        <div class="@divCSS">
+            <article class="content px-3">
+                @Body
+            </article>
+        </div>
+        
     </main>
 </div>
+
+@code {
+    string divCSS = "";
+    private LoginModal loginModal = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine(loginModal.LoginCSS);
+        if(userGlobal.LoggedIn)
+        {
+            divCSS = "d-block";
+            loginModal.Hide();
+        }
+        else
+        {
+            divCSS = "d-none";
+            loginModal.Show();
+        }
+        StateHasChanged();
+    }
+
+    public void SuccessfulCallBack()
+    {
+        if(userGlobal.LoggedIn && userGlobal.UserName.Length > 0)
+        {
+            divCSS = "d-block";
+            loginModal.Hide();
+            StateHasChanged();
+        }
+    }
+}

@@ -1,0 +1,58 @@
+﻿@using Data.Models.Models;
+@inject UserGlobal userGlobal;
+@inject CookCompAPI _api;
+<div class="@LoginCSS">
+    <PageBase>
+        <PageTitle>Welcome to CC!</PageTitle>
+        <h3>Login</h3>
+        <FormBase>
+            <FormInputText @bind-Value="UserField" Name="Username" CssClass="" FieldWidth="12" />
+        </FormBase>
+    </PageBase>
+
+    <ButtonContainer>
+        <SaveButtonControl Name="Login" Icon="fas fa-sign-in-alt" OnClickCall="Save" />
+    </ButtonContainer>
+</div>
+
+@code {
+    public string LoginCSS { get; set; }
+
+    [Parameter]
+    public EventCallback OnSuccessCallBack { get; set; }
+
+    private User? getUser = new();
+
+    private string UserField { get; set; }
+
+    private async Task Save()
+    {
+        try
+        {
+            getUser = await _api.GetUser(UserField);
+
+            if (getUser != null && getUser.Id > 0)
+            {
+                System.Diagnostics.Debug.WriteLine("User found");
+                userGlobal.UserName = getUser.Name;
+                userGlobal.LoggedIn = true;
+                await OnSuccessCallBack.InvokeAsync();
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("User NOT found");
+            }
+        }
+        catch { }
+    }
+
+    public void Hide()
+    {
+        LoginCSS = "d-none";
+    }
+
+    public void Show()
+    {
+        LoginCSS = "d-block";
+    }
+}

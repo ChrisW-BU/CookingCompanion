@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using RPCC.Data;
 using Data;
 using Data.Models.Interfaces;
+using Data.Models.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 //builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddSingleton<UserGlobal>();
 
 // Setup JSON API
 builder.Services.AddOptions<CookCompApiJsonAccessSetting>().Configure(options =>

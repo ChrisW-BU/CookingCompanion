@@ -67,6 +67,13 @@ namespace Data.Models.Interfaces
         Task<List<RecipeStep>?> GetRecipeStepListAsync(int recipeId);
 
 
+        ////////////////////////////
+        // User Interface Members
+        ////////////////////////////
+        Task<List<User>?> GetUserListAsync();
+        Task<User?> GetUser(string userName);
+
+
         /////////////////
         // Other Helpers
         /////////////////
