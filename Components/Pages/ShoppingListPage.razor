@@ -14,6 +14,7 @@
 </PageBase>
 
 <FormBase CenterItems=false>
+    @* Make it so you can unpin a shopping list from the page *@
     @foreach (var r in lists)
     {
         <div class="col-lg-6 col-sm-0 mb-4">
@@ -27,7 +28,7 @@
                     @foreach (ShoppingListItem s in r.ShoppingListItems)
                     {
                         var nameString = s.Details.IngredientName + " - " + s.Details.Quantity + " " + s.Details.MeasurementName;
-                        <FormCheckbox FieldWidth="0" Name="@nameString" @bind-Value="s.HasObtained" />
+                        <FormCheckbox IsLabelRight=true FieldWidth="0" Name="@nameString" @bind-Value="s.HasObtained" />
                     }
                 </div>
 
