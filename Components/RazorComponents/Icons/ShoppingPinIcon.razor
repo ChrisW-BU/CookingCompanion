@@ -1,12 +1,61 @@
 ﻿
-<div class="col-@ColSize user-select-none" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i>@DescriptionStr</div>
+<div class="col-@ColSize user-select-none" @onclick="OnClickCallback" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i>@DescriptionStr</div>
 
 @code {
-    string ClassStr { get; set; } = "col-3 fas fa-thumbtack";
+    private string? _classStr = string.Empty;
 
-    public void MouseOver(MouseEventArgs e) { ClassStr = "col-3 fas fa-thumbtack text-danger"; }
+    //string ClassStr { get; set; } = "col-3 fas fa-thumbtack";
 
-    public void MouseOut(MouseEventArgs e) { ClassStr = "col-3 fas fa-thumbtack"; }
+    string ClassStr
+    {
+        get
+        {
+            if(_classStr == string.Empty)
+            {
+                if(IsPinned)
+                {
+                    _classStr = "col-3 fas fa-thumbtack fa-rotate-90 text-danger";
+                }
+                else
+                {
+                    _classStr = "col-3 fas fa-thumbtack";
+                }
+            }
+
+            return _classStr;
+        }
+        set
+        {
+            _classStr = value;
+        }
+    }
+
+    public void MouseOver(MouseEventArgs e)
+    {
+        if(IsPinned)
+        {
+            ClassStr = "col-3 fas fa-thumbtack fa-rotate-90";
+        }
+        else
+        {
+            ClassStr = "col-3 fas fa-thumbtack text-danger";
+        }
+    }
+
+    public void MouseOut(MouseEventArgs e)
+    {
+        if (IsPinned)
+        {
+            ClassStr = "col-3 fas fa-thumbtack fa-rotate-90 text-danger";
+        }
+        else
+        {
+            ClassStr = "col-3 fas fa-thumbtack";
+        }
+    }
+
+    [Parameter]
+    public EventCallback OnClickCallback { get; set; }
 
     [Parameter]
     public bool IsPinned { get; set; }

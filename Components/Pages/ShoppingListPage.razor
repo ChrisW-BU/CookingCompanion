@@ -1,0 +1,91 @@
+﻿@page "/shoppinglist"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+@inject UserGlobal _user
+@inject PageHistory _page
+
+<PageTitle>CC - Shopping Lists</PageTitle>
+<PageBase>
+    <h3>Shopping Lists</h3>
+
+    <AlertItem Style="AlertItem.AlertStyle.Warning">
+        All saved recipes will be listed on this page.
+    </AlertItem>
+</PageBase>
+
+<FormBase CenterItems=false>
+    @foreach (var r in lists)
+    {
+        <div class="col-lg-6 col-sm-0 mb-4">
+            <div class="w-shopping-list">
+                <div class="position-relative">
+                    <div class=""><u>@r.Name - Ingredient List</u></div>
+                    <div class="position-absolute top-0 end-0"><ShoppingPinIcon IsPinned=true ColSize="12" /></div>
+                </div>
+                <br />
+                <div>
+                    @foreach (ShoppingListItem s in r.ShoppingListItems)
+                    {
+                        var nameString = s.Details.IngredientName + " - " + s.Details.Quantity + " " + s.Details.MeasurementName;
+                        <FormCheckbox FieldWidth="0" Name="@nameString" @bind-Value="s.HasObtained" />
+                    }
+                </div>
+
+            </div>
+        </div>
+    }
+</FormBase>
+
+
+<ButtonContainer>
+    <SaveButtonControl OnClickCall="Save" />
+    <BackButtonControl OnClickCall="PageBack" />
+</ButtonContainer>
+
+@code {
+    protected List<ShoppingList> lists = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        lists = await _api.GetShoppingListAsync(_user.Id);
+
+        if (lists != null && lists.Count > 0)
+        {
+            foreach(ShoppingList sList in lists)
+            {
+                await _api.CheckListHasItems(sList.Id, sList.RecipeId);
+                sList.ShoppingListItems = await _api.GetShoppingItemListAsync(sList.Id);
+            }
+        }
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            foreach(ShoppingList s in lists)
+            {
+                await _api.SaveShoppingListAsync(s);
+            }
+        }
+        catch
+        {
+            
+        }
+    }
+
+    private void OnClickEvent(int recipeId)
+    {
+        //_nav.NavigateTo("/recipes/view_recipe/" + recipeId);
+        _page.AddPage("shoppinglist");
+    }
+
+    private void PageBack()
+    {
+        if (_page.IsPrevious())
+        {
+            _api.ClearCacheAsync();
+            _nav.NavigateTo(_page.GetPreviousPage());
+        }
+    }
+}

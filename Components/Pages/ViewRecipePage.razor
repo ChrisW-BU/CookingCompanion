@@ -20,11 +20,12 @@
                     <div class="col-4 p-3"><FavouriteStarIcon IsInteractive=true IsFavourite="@FavObj.IsFavourite" OnClickCall="FavouriteClicked" ColSize="0" IncludeStr=true /></div>
                 </div>
             </div>
+
             <div class="col-lg-6 col-sm-0">
                 <div class="w-shopping-list">
                     <div class="position-relative">
                         <div class=""><u>Ingredient List</u></div>
-                        <div class="position-absolute top-0 end-0"><ShoppingPinIcon ColSize="12" /></div>
+                        <div class="position-absolute top-0 end-0"><ShoppingPinIcon IsPinned="ShopObj.IsPinned" OnClickCallback="PinClicked" ColSize="12" /></div>
                     </div>
                     <br />
                     <div>
@@ -38,6 +39,7 @@
 
                 </div>
             </div>
+
         </div>
         <p>
             <b>Page Notes:</b> There will be an option to resume or start the cooking process. You will be able to click an ingredient for overview (picture etc).<br />
@@ -63,6 +65,8 @@
     public List<RecipeIngredient> IngredientsObj { get; set; }
 
     public Favourite? FavObj { get; set; }
+
+    public ShoppingList ShopObj { get; set; }
 
     public string PageTitleName
     {
@@ -96,8 +100,6 @@
 
     public async Task FavouriteClicked()
     {
-        //System.Diagnostics.Debug.WriteLine("Favourite Clicked");
-
         if (FavObj != null && FavObj.Id > 0)
         {
             await _api.DeleteFavouriteAsync(FavObj.Id);
@@ -115,6 +117,29 @@
         StateHasChanged();
     }
 
+    public async Task PinClicked()
+    {
+        if(ShopObj != null && ShopObj.Id > 0)
+        {
+            await _api.DeleteShoppingListAsync(ShopObj.Id);
+            ShopObj = new();
+        }
+        else
+        {
+            if (RecipeObj != null && RecipeObj.Id > 0)
+            {
+                ShopObj = new();
+                ShopObj.UserId = _user.Id;
+                ShopObj.RecipeId = RecipeId;
+                ShopObj.Name = RecipeObj.Name;
+                ShopObj.IsPinned = true;
+                ShopObj = await _api.SaveShoppingListAsync(ShopObj);
+            }
+        }
+
+        StateHasChanged();
+    }
+
     protected async override Task OnParametersSetAsync()
     {
         int recId = Int32.Parse(CatchId);
@@ -124,7 +149,7 @@
             RecipeObj = await _api.GetRecipeUniqueAsync(RecipeId);
             IngredientsObj = await _api.GetRecipeIngredientListAsync(RecipeId);
             FavObj = await _api.CheckIsFavourite(RecipeId, _user.Id);
-            //System.Diagnostics.Debug.WriteLine("Favourite Object: " + FavObj.Id);
+            ShopObj = await _api.CheckIsPinned(RecipeId, _user.Id);
         }
         else
         {

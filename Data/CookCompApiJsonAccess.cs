@@ -838,6 +838,298 @@ public class CookCompApiJsonAccess: CookCompAPI
 
 
     /////////////////////
+    // Shopping List
+    /////////////////////
+
+    /// <summary>
+    /// Load all shopping lists.
+    /// </summary>
+    /// <returns></returns>
+    private Task LoadShoppingListsAsync()
+    {
+        Load<ShoppingList>(ref _shopping_list, _settings.ShoppingListFolder);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// This method will return any shopping lists associated with the specified user.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<List<ShoppingList>?> GetShoppingListAsync(int userId)
+    {
+        await LoadShoppingListsAsync();
+        List<ShoppingList> returnList = new();
+
+        foreach (ShoppingList s in _shopping_list)
+        {
+            if (s.UserId == userId)
+            {
+                returnList.Add(s);
+            }
+        }
+
+        return returnList;
+    }
+
+    /// <summary>
+    /// Load a single unique shopping list and return it. Requires a correct unique ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async Task<ShoppingList?> GetShoppingUniqueAsync(int id)
+    {
+        await LoadShoppingListsAsync();
+        if (_shopping_list == null)
+        {
+            throw new Exception("No shopping lists have been found");
+        }
+        return _shopping_list.FirstOrDefault(b => b.Id == id);
+    }
+
+    public async Task<ShoppingList?> CheckIsPinned(int recipeId, int userId)
+    {
+        if (_shopping_list == null)
+        {
+            await LoadShoppingListsAsync();
+        }
+
+        foreach (ShoppingList s in _shopping_list)
+        {
+            if (s.RecipeId == recipeId && s.UserId == userId)
+            {
+                return s;
+            }
+        }
+
+        return new ShoppingList();
+    }
+
+    /// <summary>
+    /// Return the count of all shopping lists.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<int> GetShoppingCountAsync()
+    {
+        await LoadShoppingListsAsync();
+        if (_shopping_list == null)
+            return 0;
+        else
+            return _shopping_list.Count();
+    }
+
+    /// <summary>
+    /// Save changes made to a shopping list object.
+    /// </summary>
+    /// <param name="editedObj"></param>
+    /// <returns></returns>
+    public async Task<ShoppingList?> SaveShoppingListAsync(ShoppingList editedObj)
+    {
+        if (_shopping_list == null)
+        {
+            LoadShoppingListsAsync();
+        }
+
+        if (editedObj.Id == 0)
+        {
+            if (_shopping_list.Count > 0)
+            {
+                editedObj.Id = ((int)_shopping_list.Max(b => b.Id)) + 1;
+            }
+            else
+            {
+                editedObj.Id = 1;
+            }
+        }
+        await SaveAsync<ShoppingList>(_shopping_list, _settings.ShoppingListFolder, $"{editedObj.Id}.json", editedObj);
+
+        // Save any list items that are attached
+        if(editedObj.ShoppingListItems != null)
+        {
+            foreach(ShoppingListItem sItem in editedObj.ShoppingListItems)
+            {
+                await SaveShoppingItemListAsync(sItem);
+            }
+        }
+
+        return editedObj;
+    }
+
+    /// <summary>
+    /// Delete a shopping list using the specified ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public Task DeleteShoppingListAsync(int id)
+    {
+        DeleteAsync(_shopping_list, _settings.ShoppingListFolder, id);
+        if (_shopping_list != null)
+        {
+            var editedObj = _shopping_list.FirstOrDefault(b => b.Id == id);
+            if (editedObj != null)
+            {
+                _shopping_list.Remove(editedObj);
+            }
+        }
+        return Task.CompletedTask;
+    }
+
+
+    /////////////////////
+    // Shopping List
+    /////////////////////
+
+    /// <summary>
+    /// Load all shopping list items.
+    /// </summary>
+    /// <returns></returns>
+    private Task LoadShoppingItemListsAsync()
+    {
+        Load<ShoppingListItem>(ref _shopping_list_item, _settings.ShoppingListItemFolder);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// This method will return any shopping items associated with the specified list.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<List<ShoppingListItem>?> GetShoppingItemListAsync(int listId)
+    {
+        await LoadShoppingItemListsAsync();
+        List<ShoppingListItem> returnList = new();
+
+        foreach (ShoppingListItem s in _shopping_list_item)
+        {
+            if (s.ListId == listId)
+            {
+                returnList.Add(s);
+            }
+        }
+
+        return returnList;
+    }
+
+    /// <summary>
+    /// Load a single unique shopping list item and return it. Requires a correct unique ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async Task<ShoppingListItem?> GetShoppingItemUniqueAsync(int id)
+    {
+        await LoadShoppingItemListsAsync();
+        if (_shopping_list_item == null)
+        {
+            throw new Exception("No shopping items have been found");
+        }
+        return _shopping_list_item.FirstOrDefault(b => b.Id == id);
+    }
+
+    /// <summary>
+    /// Return the count of all shopping list items.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<int> GetShoppingItemCountAsync()
+    {
+        await LoadShoppingItemListsAsync();
+        if (_shopping_list_item == null)
+            return 0;
+        else
+            return _shopping_list_item.Count();
+    }
+
+    /// <summary>
+    /// Save changes made to a shopping item object.
+    /// </summary>
+    /// <param name="editedObj"></param>
+    /// <returns></returns>
+    public async Task<ShoppingListItem?> SaveShoppingItemListAsync(ShoppingListItem editedObj)
+    {
+        if (_shopping_list_item == null)
+        {
+            LoadShoppingItemListsAsync();
+        }
+
+        if (editedObj.Id == 0)
+        {
+            if (_shopping_list_item.Count > 0)
+            {
+                editedObj.Id = ((int)_shopping_list_item.Max(b => b.Id)) + 1;
+            }
+            else
+            {
+                editedObj.Id = 1;
+            }
+        }
+        await SaveAsync<ShoppingListItem>(_shopping_list_item, _settings.ShoppingListItemFolder, $"{editedObj.Id}.json", editedObj);
+        return editedObj;
+    }
+
+    /// <summary>
+    /// Delete a shopping list item using the specified ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public Task DeleteShoppingItemAsync(int id)
+    {
+        DeleteAsync(_shopping_list_item, _settings.ShoppingListItemFolder, id);
+        if (_shopping_list_item != null)
+        {
+            var editedObj = _shopping_list_item.FirstOrDefault(b => b.Id == id);
+            if (editedObj != null)
+            {
+                _shopping_list_item.Remove(editedObj);
+            }
+        }
+        return Task.CompletedTask;
+    }
+
+    public async Task CheckListHasItems(int listId, int recipeId)
+    {
+        if(_shopping_list_item == null)
+        {
+            LoadShoppingItemListsAsync();
+        }
+        bool hasItems = false;
+
+        foreach (ShoppingListItem s in _shopping_list_item)
+        {
+            if(s.ListId == listId)
+            {
+                hasItems = true;
+                break;
+            }
+        }
+
+        if(!hasItems)
+        {
+            List<RecipeIngredient> ingList = await GetRecipeIngredientListAsync(recipeId);
+
+            foreach(RecipeIngredient ing in ingList)
+            {
+                ShoppingListItem listItem = new();
+                listItem.ListId = listId;
+                listItem.RecipeIngId = ing.Id;
+                
+
+                Ingredient ingItem = await GetIngredientUniqueAsync(ing.IngredientId);
+                ing.IngredientName = ingItem.Name;
+
+                MeasurementType mType = await GetMeasurementTypeUniqueAsync(ing.MeasurementTypeId);
+                ing.MeasurementName = mType.Name;
+
+                listItem.Details = ing;
+                await SaveShoppingItemListAsync(listItem);
+            }
+        }
+
+        System.Diagnostics.Debug.WriteLine("Hold here.....");
+    }
+
+
+    /////////////////////
     // Users
     /////////////////////
 

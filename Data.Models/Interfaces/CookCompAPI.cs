@@ -71,7 +71,7 @@ namespace Data.Models.Interfaces
 
 
         ////////////////////////////
-        // Recipe Interface Members
+        // Favourites Interface Members
         ////////////////////////////
         Task<List<Favourite>?> GetFavouriteListAsync();
 
@@ -84,6 +84,40 @@ namespace Data.Models.Interfaces
         Task<Favourite?> SaveFavouriteAsync(Favourite editedObj);
 
         Task DeleteFavouriteAsync(int id);
+
+
+
+        ////////////////////////////
+        // Shopping Interface Members
+        ////////////////////////////
+        Task<List<ShoppingList>?> GetShoppingListAsync(int userId);
+
+        Task<ShoppingList?> GetShoppingUniqueAsync(int id);
+
+        Task<ShoppingList?> CheckIsPinned(int recipeId, int userId);
+
+        Task<int> GetShoppingCountAsync();
+
+        Task<ShoppingList?> SaveShoppingListAsync(ShoppingList editedObj);
+
+        Task DeleteShoppingListAsync(int id);
+
+
+
+        ////////////////////////////
+        // ShoppingListItem Interface Members
+        ////////////////////////////
+        Task<List<ShoppingListItem>?> GetShoppingItemListAsync(int listId);
+
+        Task<ShoppingListItem?> GetShoppingItemUniqueAsync(int id);
+
+        Task<int> GetShoppingItemCountAsync();
+
+        Task<ShoppingListItem?> SaveShoppingItemListAsync(ShoppingListItem editedObj);
+
+        Task DeleteShoppingItemAsync(int id);
+
+        Task CheckListHasItems(int listId, int recipeId);
 
 
 

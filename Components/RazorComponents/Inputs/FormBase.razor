@@ -1,5 +1,5 @@
 ﻿<div class="container">
-    <form class="row align-items-center">
+    <form class="@ClassCss">
         @ChildContent
     </form>
 </div>
@@ -7,4 +7,21 @@
 @code {
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public bool CenterItems { get; set; } = true;
+
+    public string ClassCss { 
+        get
+        {
+            if(CenterItems)
+            {
+                return "row align-items-center";
+            }
+            else
+            {
+                return "row";
+            }
+        }
+    }
 }
