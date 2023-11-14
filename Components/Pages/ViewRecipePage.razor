@@ -1,6 +1,8 @@
 ﻿@page "/recipes/view_recipe/{CatchId}"
 @inject CookCompAPI _api
 @inject NavigationManager _nav
+@inject UserGlobal _user
+
 <PageTitle>@PageTitleName</PageTitle>
     <PageBase>
         <h3>@TitleName</h3>
@@ -14,7 +16,7 @@
                 <div class="row text-center">
                     <div class="col-4 p-3"><i class="far fa-clock"></i>&nbsp @RecipeObj.Duration mins</div>
                     <div class="col-4 p-3"><VegetarianIcon ColSize="0" IsVege="@RecipeObj.IsVege" IncludeStr=true /></div>
-                    <div class="col-4 p-3"><FavouriteStarIcon OnClickCall="FavouriteClicked" ColSize="0" IncludeStr=true /></div>
+                    <div class="col-4 p-3"><FavouriteStarIcon IsFavourite="@FavObj.IsFavourite" OnClickCall="FavouriteClicked" ColSize="0" IncludeStr=true /></div>
                 </div>
             </div>
             <div class="col-lg-6 col-sm-0">
@@ -91,14 +93,25 @@
         }
     }
 
-    public void FavouriteClicked()
+    public async Task FavouriteClicked()
     {
-        System.Diagnostics.Debug.WriteLine("Favourite Clicked");
+        //System.Diagnostics.Debug.WriteLine("Favourite Clicked");
 
-        // if favObj is already favourite
-        // set as not fav and save
-        // else
-        // set as fav and save
+        if (FavObj != null && FavObj.Id > 0)
+        {
+            await _api.DeleteFavouriteAsync(FavObj.Id);
+            FavObj = new();
+        }
+        else
+        {
+            FavObj = new();
+            FavObj.RecipeId = RecipeId;
+            FavObj.UserId = _user.Id;
+            FavObj.IsFavourite = true;
+            FavObj = await _api.SaveFavouriteAsync(FavObj);
+        }
+
+        StateHasChanged();
     }
 
     protected async override Task OnParametersSetAsync()
@@ -106,8 +119,11 @@
         int recId = Int32.Parse(CatchId);
         if (recId > 0)
         {
-            RecipeObj = await _api.GetRecipeUniqueAsync(recId);
-            IngredientsObj = await _api.GetRecipeIngredientListAsync(recId);
+            RecipeId = recId;
+            RecipeObj = await _api.GetRecipeUniqueAsync(RecipeId);
+            IngredientsObj = await _api.GetRecipeIngredientListAsync(RecipeId);
+            FavObj = await _api.CheckIsFavourite(RecipeId, _user.Id);
+            //System.Diagnostics.Debug.WriteLine("Favourite Object: " + FavObj.Id);
         }
         else
         {
@@ -144,11 +160,6 @@
         }
 
         await base.OnParametersSetAsync();
-    }
-
-    public void LoadFavouriteDetails()
-    {
-        // Find a favourite record matching recipeId and userId
     }
 
     private void Refresh()
