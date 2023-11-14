@@ -1,52 +1,89 @@
 ﻿@inherits LayoutComponentBase
-@using Data.Models.Models;
 @inject CookCompAPI _api
-@inject UserGlobal userGlobal;
+@inject UserGlobal _user;
+@inject NavigationManager _nav;
 
 <div class="page">
     <main>
-        <div class="top-row px-4 user-select-none">
-            <div><i class="fa-fw fas fa-bowl-food pb-2"></i>&nbsp</div><span><h5>Cooking Companion</h5></span>
+        <div class="top-row px-4">
+            <div class="user-select-none">
+                @titleStr &nbsp @if (_user.LoggedIn)
+                {
+                    <div style="display:inline" @onclick="LogOut">
+                        <i class="fas fa-right-from-bracket"></i>
+                        <span>Log Out</span>
+                    </div>
+                }
+            </div>
+            <div class="user-select-none" style="display:flex; align-items:center"><i class="fa-fw fas fa-bowl-food pb-2"></i>&nbsp<span><h5 class="d-sm-none">CC</h5><h5 class="d-none d-sm-block">Cooking Companion</h5></span></div>
+            
             @* <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a> *@
         </div>
 
-        <LoginModal @ref="@loginModal" OnSuccessCallBack="SuccessfulCallBack" />
-        <div class="@divCSS">
+        <div class="@loginCSS">
+            <LoginForm @ref="@loginObj" OnSuccessCallBack="SuccessfulCallBack" />
+        </div>
+        <div class="@bodyCSS">
             <article class="content px-3">
                 @Body
             </article>
         </div>
-        
+
     </main>
 </div>
 
 @code {
-    string divCSS = "";
-    private LoginModal loginModal = new();
+    string loginCSS = "";
+    string bodyCSS = "";
+    private LoginForm loginObj = new();
+    string titleStr = "";
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine(loginModal.LoginCSS);
-        if(userGlobal.LoggedIn)
+        //loginObj = new();
+
+        System.Diagnostics.Debug.WriteLine("Login CSS: " + loginObj.LoginCSS);
+        if (_user.LoggedIn)
         {
-            divCSS = "d-block";
-            loginModal.Hide();
+            bodyCSS = "d-block";
+            titleStr = "Welcome, " + _user.UserName + ". ";
+            loginCSS = "d-none";
+            //loginObj.Hide();
         }
         else
         {
-            divCSS = "d-none";
-            loginModal.Show();
+            bodyCSS = "d-none";
+            titleStr = "";
+            loginCSS = "d-block";
+            //loginObj.Show();
         }
+        System.Diagnostics.Debug.WriteLine("Login CSS: " + loginObj.LoginCSS);
         StateHasChanged();
     }
 
     public void SuccessfulCallBack()
     {
-        if(userGlobal.LoggedIn && userGlobal.UserName.Length > 0)
+        if (_user.LoggedIn && _user.UserName.Length > 0)
         {
-            divCSS = "d-block";
-            loginModal.Hide();
-            StateHasChanged();
+            bodyCSS = "d-block";
+            titleStr = "Welcome " + _user.UserName;
+            loginCSS = "d-none";
+            //loginObj.Hide();
         }
+        else
+        {
+            bodyCSS = "d-none";
+            titleStr = "";
+            loginCSS = "d-block";
+            //loginObj.Show();
+        }
+        StateHasChanged();
+        _nav.NavigateTo("/", true);
+    }
+
+    public void LogOut()
+    {
+        _user.ResetUserInfo();
+        _nav.NavigateTo("/", true);
     }
 }

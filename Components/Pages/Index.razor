@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject CookCompAPI _api
+@inject UserGlobal _user
 
 <PageTitle>Cooking Companion</PageTitle>
 
@@ -10,10 +11,13 @@
     and text.<br /><br />
 
     <FormBase>
-        <MenuItem Icon="fas fa-tools" Title="Admin Panel" Href="admin"></MenuItem>
+        @if(_user.IsAdmin) {
+            <MenuItem Icon="fas fa-tools" Title="Admin Panel" Href="admin"></MenuItem>
+        }
         <MenuItem Icon="fas fa-burger" Title="Recipes" Href="recipes"></MenuItem>
         <MenuItem Icon="fas fa-list-check" Title="Shopping Lists" Href=""></MenuItem>
         <MenuItem Icon="fas fa-star" Title="Favourites" Href=""></MenuItem>
     </FormBase>
     
 </PageBase>
+

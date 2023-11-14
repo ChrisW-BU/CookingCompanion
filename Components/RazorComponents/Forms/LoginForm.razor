@@ -1,19 +1,17 @@
 ﻿@using Data.Models.Models;
-@inject UserGlobal userGlobal;
+@inject UserGlobal _user;
 @inject CookCompAPI _api;
-<div class="@LoginCSS">
-    <PageBase>
-        <PageTitle>Welcome to CC!</PageTitle>
-        <h3>Login</h3>
-        <FormBase>
-            <FormInputText @bind-Value="UserField" Name="Username" CssClass="" FieldWidth="12" />
-        </FormBase>
-    </PageBase>
+<PageBase>
+    <PageTitle>Welcome to CC!</PageTitle>
+    <h3>Welcome!</h3>
+    <FormBase>
+        <FormInputText @bind-Value="UserField" Name="Please enter your provided username..." CssClass="" FieldWidth="12" />
+    </FormBase>
+</PageBase>
 
-    <ButtonContainer>
-        <SaveButtonControl Name="Login" Icon="fas fa-sign-in-alt" OnClickCall="Save" />
-    </ButtonContainer>
-</div>
+<ButtonContainer>
+    <SubmitButtonControl Name="Login" Icon="fas fa-sign-in-alt" OnClickCall="Save" />
+</ButtonContainer>
 
 @code {
     public string LoginCSS { get; set; }
@@ -34,8 +32,8 @@
             if (getUser != null && getUser.Id > 0)
             {
                 System.Diagnostics.Debug.WriteLine("User found");
-                userGlobal.UserName = getUser.Name;
-                userGlobal.LoggedIn = true;
+                _user.SetUserInfo(getUser);
+
                 await OnSuccessCallBack.InvokeAsync();
             }
             else
@@ -49,10 +47,12 @@
     public void Hide()
     {
         LoginCSS = "d-none";
+        System.Diagnostics.Debug.WriteLine("Hiding Login");
     }
 
     public void Show()
     {
         LoginCSS = "d-block";
+        System.Diagnostics.Debug.WriteLine("Showing Login");
     }
 }
