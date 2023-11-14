@@ -440,6 +440,38 @@ public class CookCompApiJsonAccess: CookCompAPI
         return Task.CompletedTask;
     }
 
+    ///
+    /// <summary>
+    /// Load a list of favourites recipes for stated user and return the list.
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <returns></returns>
+    public async Task<List<Recipe>?> GetFavouriteRecipes(int userId)
+    {
+        await LoadRecipesAsync();
+        await LoadFavouritesAsync();
+
+        List<Recipe> returnList = new();
+        List<Favourite> favList = await GetFavouriteListAsync();
+
+        if(favList != null && favList.Count > 0)
+        {
+            foreach(Favourite f in favList)
+            {
+                if(f.UserId == userId)
+                {
+                    Recipe r = await GetRecipeUniqueAsync(f.RecipeId);
+
+                    if(r != null && r.Id > 0)
+                    {
+                        returnList.Add(r);
+                    }
+                }
+            }
+        }
+        return returnList ?? new();
+    }
+
 
 
     /////////////////////

@@ -1,6 +1,8 @@
 ﻿@page "/admin/edit_ingredient/{CatchId}"
 @inject CookCompAPI _api
 @inject NavigationManager _nav
+@inject PageHistory _page
+
 <PageTitle>@PageTitleName</PageTitle>
     <PageBase>
         <h3>@TitleName</h3>
@@ -98,7 +100,10 @@
 
     private void PageBack()
     {
-        _api.ClearCacheAsync();
-        _nav.NavigateTo("/admin/ingredients");
+        if (_page.IsPrevious())
+        {
+            _api.ClearCacheAsync();
+            _nav.NavigateTo(_page.GetPreviousPage());
+        }
     }
 }

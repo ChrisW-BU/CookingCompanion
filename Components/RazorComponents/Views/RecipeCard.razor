@@ -1,4 +1,6 @@
-﻿<div style="height: 320px;" class="card w-card-item col-sm-0 col-md-0 col-lg-5 col-xl-3 col-xxl-3 p-3 mb-3 me-3 user-select-none" @onclick="OnClickCall">
+﻿@inject CookCompAPI _api
+
+<div style="height: 320px;" class="card w-card-item col-sm-0 col-md-0 col-lg-5 col-xl-3 col-xxl-3 p-3 mb-3 me-3 user-select-none" @onclick="OnClickCall">
     <div class="row g-0" style="overflow:hidden;">
         <div class="col-4">
             <img src="@ImgUrl" class="img-fluid rounded-start" alt="@Name">
@@ -11,7 +13,7 @@
                     <i class="fa-fw far fa-clock"></i>&nbsp<span class="card-text"><small class="text-body-secondary">@Duration minutes</small></span>
                 </div>
                 <div class="mt-3 mb-3 row">
-                     <FavouriteStarIcon ColSize="3" /> <CompletedIcon ColSize="3" /> <VegetarianIcon ColSize="3" IsVege="@IsVege"/>
+                     <FavouriteStarIcon IsFavourite="FavObj.IsFavourite" IsInteractive=false ColSize="3" /> <CompletedIcon ColSize="3" /> <VegetarianIcon ColSize="3" IsVege="@IsVege"/>
                 </div>
             </div>
         </div>
@@ -22,6 +24,11 @@
 </div>
 
 @code {
+    [Parameter]
+    public int UserId { get; set; }
+
+    public Favourite FavObj = new();
+
     [Parameter]
     public int Id { get; set; }
 
@@ -47,6 +54,18 @@
     public EventCallback OnClickCall { get; set; }
 
     public string ImgPath { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        FavObj = new();
+
+        if(UserId > 0)
+        {
+            FavObj = await _api.CheckIsFavourite(Id, UserId);
+        }
+
+        StateHasChanged();
+    }
 
     public int GetMinsSinceModified()
     {

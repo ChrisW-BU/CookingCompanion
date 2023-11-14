@@ -2,6 +2,7 @@
 @inject CookCompAPI _api
 @inject NavigationManager _nav
 @inject UserGlobal _user
+@inject PageHistory _page
 
 <PageTitle>@PageTitleName</PageTitle>
     <PageBase>
@@ -16,7 +17,7 @@
                 <div class="row text-center">
                     <div class="col-4 p-3"><i class="far fa-clock"></i>&nbsp @RecipeObj.Duration mins</div>
                     <div class="col-4 p-3"><VegetarianIcon ColSize="0" IsVege="@RecipeObj.IsVege" IncludeStr=true /></div>
-                    <div class="col-4 p-3"><FavouriteStarIcon IsFavourite="@FavObj.IsFavourite" OnClickCall="FavouriteClicked" ColSize="0" IncludeStr=true /></div>
+                    <div class="col-4 p-3"><FavouriteStarIcon IsInteractive=true IsFavourite="@FavObj.IsFavourite" OnClickCall="FavouriteClicked" ColSize="0" IncludeStr=true /></div>
                 </div>
             </div>
             <div class="col-lg-6 col-sm-0">
@@ -170,7 +171,10 @@
 
     private void PageBack()
     {
-        _api.ClearCacheAsync();
-        _nav.NavigateTo("/recipes");
+        if(_page.IsPrevious())
+        {
+            _api.ClearCacheAsync();
+            _nav.NavigateTo(_page.GetPreviousPage());
+        }
     }
 }

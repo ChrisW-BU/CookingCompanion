@@ -1,6 +1,7 @@
 ﻿@page "/admin/ingredients"
 @inject CookCompAPI _api
 @inject NavigationManager _nav
+@inject PageHistory _page
 
 <PageTitle>CC - Ingredient Manager</PageTitle>
 <PageBase>
@@ -40,17 +41,22 @@
     {
         _api.ClearCacheAsync();
         _nav.NavigateTo("/admin/edit_ingredient/" + ingredientId);
+        _page.AddPage("admin/ingredients");
     }
 
     private void AddNewIngredient()
     {
         _api.ClearCacheAsync();
         _nav.NavigateTo("/admin/edit_ingredient/" + 0);
+        _page.AddPage("admin/ingredients");
     }
 
     private void PageBack()
     {
-        _api.ClearCacheAsync();
-        _nav.NavigateTo("/admin");
+        if (_page.IsPrevious())
+        {
+            _api.ClearCacheAsync();
+            _nav.NavigateTo(_page.GetPreviousPage());
+        }
     }
 }

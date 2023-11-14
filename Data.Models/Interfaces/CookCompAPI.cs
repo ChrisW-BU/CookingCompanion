@@ -32,6 +32,8 @@ namespace Data.Models.Interfaces
 
         Task DeleteRecipeAsync(int id);
 
+        Task<List<Recipe>?> GetFavouriteRecipes(int userId);
+
 
 
         ////////////////////////////

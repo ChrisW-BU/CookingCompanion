@@ -1,7 +1,17 @@
-﻿
-<div class="col-@ColSize user-select-none" @onclick="OnClickCall" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i>@DescriptionStr</div>
+﻿@if(IsInteractive)
+{
+    <div class="col-@ColSize user-select-none" @onclick="OnClickCall" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i>@DescriptionStr</div>
+}
+else
+{
+    <div class="col-@ColSize user-select-none"><i class="@ClassStr"></i>@DescriptionStr</div>
+}
+
 
 @code {
+    [Parameter]
+    public bool IsInteractive { get; set; }
+
     private string? _classStr = string.Empty;
 
     public string ClassStr { 
@@ -71,11 +81,11 @@
             {
                 if (IsFavourite)
                 {
-                    return "Saved";
+                    return "Recipe Saved";
                 }
                 else
                 {
-                    return "Favourite";
+                    return "Save Recipe";
                 }
             }
             else

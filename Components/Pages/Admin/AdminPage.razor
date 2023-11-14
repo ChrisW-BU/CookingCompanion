@@ -1,5 +1,6 @@
 ﻿@page "/admin"
 @inject NavigationManager _nav
+@inject PageHistory _page
 
 <PageTitle>CC - Admin Panel</PageTitle>
 
@@ -8,9 +9,9 @@
 This is where all users, ingredients and recipes can be managed.<br /><br />
 
 <FormBase>
-        <MenuItem Icon="fas fa-user" Title="Manage Users" Href="admin"></MenuItem>
-        <MenuItem Icon="fas fa-carrot" Title="Manage Ingredients" Href="admin/ingredients"></MenuItem>
-        <MenuItem Icon="fas fa-burger" Title="Manage Recipes" Href="admin/recipes"></MenuItem>
+        <MenuItem IsAdmin=true Icon="fas fa-user" Title="Manage Users" Href="admin"></MenuItem>
+        <MenuItem IsAdmin=true Icon="fas fa-carrot" Title="Manage Ingredients" Href="admin/ingredients"></MenuItem>
+        <MenuItem IsAdmin=true Icon="fas fa-burger" Title="Manage Recipes" Href="admin/recipes"></MenuItem>
 </FormBase>
 </PageBase>
 
@@ -23,6 +24,9 @@ This is where all users, ingredients and recipes can be managed.<br /><br />
 @code {
     private void PageBack()
     {
-        _nav.NavigateTo("/");
+        if (_page.IsPrevious())
+        {
+            _nav.NavigateTo(_page.GetPreviousPage());
+        }
     }
 }

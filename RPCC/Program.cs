@@ -13,6 +13,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 //builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<UserGlobal>();
+builder.Services.AddSingleton<PageHistory>();
 
 // Setup JSON API
 builder.Services.AddOptions<CookCompApiJsonAccessSetting>().Configure(options =>
