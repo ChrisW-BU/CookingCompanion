@@ -682,6 +682,130 @@ public class CookCompApiJsonAccess: CookCompAPI
 
 
     /////////////////////
+    // Favourites
+    /////////////////////
+
+    /// <summary>
+    /// Load a list of all favourites.
+    /// </summary>
+    /// <returns></returns>
+    private Task LoadFavouritesAsync()
+    {
+        Load<Favourite>(ref _favourites, _settings.FavouriteFolder);
+        return Task.CompletedTask;
+    }
+
+    ///
+    /// <summary>
+    /// Load a list of favourites and return the list.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<List<Favourite>?> GetFavouriteListAsync()
+    {
+        await LoadFavouritesAsync();
+        return _favourites ?? new();
+    }
+
+    /// <summary>
+    /// Load a single unique favourite and return it. Requires a correct unique ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async Task<Favourite?> GetFavouriteUniqueAsync(int id)
+    {
+        await LoadFavouritesAsync();
+        if (_favourites == null)
+        {
+            throw new Exception("No favourites have been found");
+        }
+        return _favourites.FirstOrDefault(b => b.Id == id);
+    }
+
+    /// <summary>
+    /// Check if the logged in user has set a favourites record for this recipe.
+    /// </summary>
+    /// <param name="editedObj"></param>
+    /// <returns></returns>
+    public async Task<Favourite?> CheckIsFavourite(int recipeId, int userId)
+    {
+        if (_favourites == null)
+        {
+            await LoadFavouritesAsync();
+        }
+
+        foreach(Favourite f in _favourites)
+        {
+            if(f.RecipeId == recipeId && f.UserId == userId)
+            {
+                return f;
+            }
+        }
+
+        return new Favourite();
+    }
+
+    /// <summary>
+    /// Return the count of all favourites.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<int> GetFavouriteCountAsync()
+    {
+        await LoadFavouritesAsync();
+        if (_favourites == null)
+            return 0;
+        else
+            return _favourites.Count();
+    }
+
+    /// <summary>
+    /// Save changes made to a favourites object.
+    /// </summary>
+    /// <param name="editedObj"></param>
+    /// <returns></returns>
+    public async Task<Favourite?> SaveFavouriteAsync(Favourite editedObj)
+    {
+        if (_favourites == null)
+        {
+            LoadFavouritesAsync();
+        }
+
+        if (editedObj.Id == 0)
+        {
+            if (_favourites.Count > 0)
+            {
+                editedObj.Id = ((int)_favourites.Max(b => b.Id)) + 1;
+            }
+            else
+            {
+                editedObj.Id = 1;
+            }
+        }
+        await SaveAsync<Favourite>(_favourites, _settings.FavouriteFolder, $"{editedObj.Id}.json", editedObj);
+        return editedObj;
+    }
+
+    /// <summary>
+    /// Delete a favourite using the specified ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public Task DeleteFavouriteAsync(int id)
+    {
+        DeleteAsync(_favourites, _settings.FavouriteFolder, id);
+        if (_favourites != null)
+        {
+            var editedObj = _favourites.FirstOrDefault(b => b.Id == id);
+            if (editedObj != null)
+            {
+                _favourites.Remove(editedObj);
+            }
+        }
+        return Task.CompletedTask;
+    }
+
+
+    /////////////////////
     // Users
     /////////////////////
 

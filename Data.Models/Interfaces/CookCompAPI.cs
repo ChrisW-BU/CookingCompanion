@@ -67,6 +67,24 @@ namespace Data.Models.Interfaces
         Task<List<RecipeStep>?> GetRecipeStepListAsync(int recipeId);
 
 
+
+        ////////////////////////////
+        // Recipe Interface Members
+        ////////////////////////////
+        Task<List<Favourite>?> GetFavouriteListAsync();
+
+        Task<Favourite?> GetFavouriteUniqueAsync(int id);
+
+        Task<Favourite?> CheckIsFavourite(int recipeId, int userId);
+
+        Task<int> GetFavouriteCountAsync();
+
+        Task<Favourite?> SaveFavouriteAsync(Favourite editedObj);
+
+        Task DeleteFavouriteAsync(int id);
+
+
+
         ////////////////////////////
         // User Interface Members
         ////////////////////////////

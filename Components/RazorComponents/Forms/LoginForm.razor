@@ -31,14 +31,14 @@
 
             if (getUser != null && getUser.Id > 0)
             {
-                System.Diagnostics.Debug.WriteLine("User found");
+                //System.Diagnostics.Debug.WriteLine("User found");
                 _user.SetUserInfo(getUser);
 
                 await OnSuccessCallBack.InvokeAsync();
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("User NOT found");
+                //System.Diagnostics.Debug.WriteLine("User NOT found");
             }
         }
         catch { }
@@ -47,12 +47,12 @@
     public void Hide()
     {
         LoginCSS = "d-none";
-        System.Diagnostics.Debug.WriteLine("Hiding Login");
+        //System.Diagnostics.Debug.WriteLine("Hiding Login");
     }
 
     public void Show()
     {
         LoginCSS = "d-block";
-        System.Diagnostics.Debug.WriteLine("Showing Login");
+        //System.Diagnostics.Debug.WriteLine("Showing Login");
     }
 }

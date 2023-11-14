@@ -14,14 +14,14 @@
                 <div class="row text-center">
                     <div class="col-4 p-3"><i class="far fa-clock"></i>&nbsp @RecipeObj.Duration mins</div>
                     <div class="col-4 p-3"><VegetarianIcon ColSize="0" IsVege="@RecipeObj.IsVege" IncludeStr=true /></div>
-                    <div class="col-4 p-3"><FavouriteStarIcon ColSize="0" IncludeStr=true/></div>
+                    <div class="col-4 p-3"><FavouriteStarIcon OnClickCall="FavouriteClicked" ColSize="0" IncludeStr=true /></div>
                 </div>
             </div>
             <div class="col-lg-6 col-sm-0">
                 <div class="w-shopping-list">
                     <div class="position-relative">
                         <div class=""><u>Ingredient List</u></div>
-                        <div class="position-absolute top-0 end-0"><ShoppingPinIcon ColSize="12"/></div>
+                        <div class="position-absolute top-0 end-0"><ShoppingPinIcon ColSize="12" /></div>
                     </div>
                     <br />
                     <div>
@@ -32,7 +32,7 @@
                             }
                         </ul>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
@@ -58,6 +58,8 @@
     public Recipe? RecipeObj { get; set; }
 
     public List<RecipeIngredient> IngredientsObj { get; set; }
+
+    public Favourite? FavObj { get; set; }
 
     public string PageTitleName
     {
@@ -89,6 +91,16 @@
         }
     }
 
+    public void FavouriteClicked()
+    {
+        System.Diagnostics.Debug.WriteLine("Favourite Clicked");
+
+        // if favObj is already favourite
+        // set as not fav and save
+        // else
+        // set as fav and save
+    }
+
     protected async override Task OnParametersSetAsync()
     {
         int recId = Int32.Parse(CatchId);
@@ -103,7 +115,7 @@
             IngredientsObj = new();
         }
 
-        if(IngredientsObj.Count > 0)
+        if (IngredientsObj.Count > 0)
         {
             Ingredient? IngObj = new();
             MeasurementType? MesObj = new();
@@ -132,6 +144,17 @@
         }
 
         await base.OnParametersSetAsync();
+    }
+
+    public void LoadFavouriteDetails()
+    {
+        // Find a favourite record matching recipeId and userId
+    }
+
+    private void Refresh()
+    {
+        _api.ClearCacheAsync();
+        _nav.NavigateTo("/recipes/view_recipe/" + RecipeId);
     }
 
     private void PageBack()

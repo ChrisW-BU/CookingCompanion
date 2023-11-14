@@ -1,5 +1,5 @@
 ﻿
-<div class="col-@ColSize user-select-none" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i>@DescriptionStr</div>
+<div class="col-@ColSize user-select-none" @onclick="OnClickCall" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i>@DescriptionStr</div>
 
 @code {
     string ClassStr { get; set; } = "col-3 far fa-star";
@@ -16,6 +16,9 @@
 
     [Parameter]
     public bool IncludeStr { get; set; }
+
+    [Parameter]
+    public EventCallback OnClickCall { get; set; }
 
     public string DescriptionStr
     {
