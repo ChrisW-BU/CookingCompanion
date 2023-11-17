@@ -12,8 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 //builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddSingleton<UserGlobal>();
-builder.Services.AddSingleton<PageHistory>();
+builder.Services.AddScoped<UserGlobal>();
+builder.Services.AddScoped<PageHistory>();
 
 // Setup JSON API
 builder.Services.AddOptions<CookCompApiJsonAccessSetting>().Configure(options =>
