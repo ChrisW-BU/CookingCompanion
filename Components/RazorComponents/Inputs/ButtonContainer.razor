@@ -1,8 +1,11 @@
-﻿<div class="container mt-3 mb-3">
+﻿<div class="container mt-3 mb-3 @CustomCSS">
     @ChildContent
 </div>
 
 @code {
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? CustomCSS { get; set; } = string.Empty;
 }

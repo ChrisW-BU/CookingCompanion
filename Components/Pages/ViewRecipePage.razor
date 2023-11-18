@@ -5,14 +5,14 @@
 @inject PageHistory _page
 
 <PageTitle>@PageTitleName</PageTitle>
-    <PageBase>
-        <h3>@TitleName</h3>
+<PageBase>
+    <h3>@TitleName</h3>
     <FormBase>
         <div class="row mb-3">
             <div class="row p-3 col-lg-6 col-sm-0">
                 <div class="col-4"><img width="250px" src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" /></div>
                 <div class="col-8">
-                    <div class="p-3">@RecipeObj.Description</div>
+                    <div class="">@RecipeObj.Description</div>
                 </div>
                 <div class="row text-center">
                     <div class="col-4 p-3"><i class="far fa-clock"></i>&nbsp @RecipeObj.Duration mins</div>
@@ -35,6 +35,10 @@
                                 <li>@r.IngredientName - @r.Quantity @r.MeasurementName</li>
                             }
                         </ul>
+                        @if (ShopObj.IsPinned)
+                        {
+                            <a href="" @onclick="GoToShoppingListPage">Go to shopping list</a>
+                        }
                     </div>
 
                 </div>
@@ -45,8 +49,16 @@
             <b>Page Notes:</b> There will be an option to resume or start the cooking process. You will be able to click an ingredient for overview (picture etc).<br />
 
         </p>
+        @* if this recipe/user ID combination has a record already, be "resume recipe" and add another button for restart recipe *@
+
     </FormBase>
 </PageBase>
+
+<div class="container">
+    <div class="row align-items-center mt-4">
+        <StartCookButton OnClickCall="GoToCookingPage" />
+    </div>
+</div>
 
 <ButtonContainer>
     <BackButtonControl OnClickCall="PageBack" />
@@ -119,7 +131,7 @@
 
     public async Task PinClicked()
     {
-        if(ShopObj != null && ShopObj.Id > 0)
+        if (ShopObj != null && ShopObj.Id > 0)
         {
             await _api.DeleteShoppingListAsync(ShopObj.Id);
             ShopObj = new();
@@ -194,9 +206,23 @@
         _nav.NavigateTo("/recipes/view_recipe/" + RecipeId);
     }
 
+    private void GoToCookingPage()
+    {
+        _page.AddPage("recipes/view_recipe/" + RecipeId);
+        _api.ClearCacheAsync();
+        _nav.NavigateTo("/recipes/cooking/" + RecipeId);
+    }
+
+    private void GoToShoppingListPage()
+    {
+        _page.AddPage("recipes/view_recipe/" + RecipeId);
+        _api.ClearCacheAsync();
+        _nav.NavigateTo("/shoppinglist");
+    }
+
     private void PageBack()
     {
-        if(_page.IsPrevious())
+        if (_page.IsPrevious())
         {
             _api.ClearCacheAsync();
             _nav.NavigateTo(_page.GetPreviousPage());

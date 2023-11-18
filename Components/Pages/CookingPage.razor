@@ -1,0 +1,95 @@
+﻿@page "/recipes/cooking/{CatchId}"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+@inject UserGlobal _user
+@inject PageHistory _page
+
+<PageTitle>@PageTitleName</PageTitle>
+<PageBase>
+    <h3>@TitleName</h3>
+    <FormBase>
+
+    </FormBase>
+</PageBase>
+
+<ButtonContainer>
+    <BackButtonControl OnClickCall="PageBack" />
+</ButtonContainer>
+
+@code {
+    [Parameter]
+    public string CatchId { get; set; } = string.Empty;
+
+    [Parameter]
+    public int RecipeId { get; set; }
+
+    public Recipe? RecipeObj { get; set; }
+
+    //Page loads and catches the recipeID
+
+    // When go off to check whether there is already a "Cooking" record for this recipe/user ID.
+
+    // If there is - we skip to the latest step that has not been completed
+
+    // Else we create a new cooking record along with it's cooking steps and return the first step
+
+    protected async override Task OnParametersSetAsync()
+    {
+        int recId = Int32.Parse(CatchId);
+        if (recId > 0)
+        {
+            RecipeId = recId;
+            RecipeObj = await _api.GetRecipeUniqueAsync(RecipeId);
+        }
+        else
+        {
+            RecipeObj = new();
+        }
+
+        await base.OnParametersSetAsync();
+    }
+
+    public string PageTitleName
+    {
+        get
+        {
+            // if (RecipeObj.Id > 0)
+            // {
+            //     return "CC - " + RecipeObj.Name;
+            // }
+            // else
+            // {
+            //     return "Cooking Companion";
+            // }
+
+            return "CC - Cooking (recipe name)";
+        }
+    }
+
+    public string TitleName
+    {
+        get
+        {
+            // if (RecipeObj.Id > 0)
+            // {
+            //     return RecipeObj.Name;
+            // }
+            // else
+            // {
+            //     return "Cooking Companion";
+            // }
+
+            return "Cooking a recipe";
+        }
+    }
+
+
+    private void PageBack()
+    {
+        if (_page.IsPrevious())
+        {
+            _api.ClearCacheAsync();
+            _nav.NavigateTo(_page.GetPreviousPage());
+        }
+    }
+}

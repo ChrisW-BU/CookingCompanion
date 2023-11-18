@@ -18,7 +18,7 @@ namespace Data.Models.Models
         {
             string pageStr = pageName;
             pageList.Add(pageStr);
-            System.Diagnostics.Debug.WriteLine(pageStr + " Added");
+            //System.Diagnostics.Debug.WriteLine(pageStr + " Added");
         }
 
         public string GetPreviousPage()
