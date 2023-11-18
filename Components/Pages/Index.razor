@@ -21,3 +21,13 @@
     
 </PageBase>
 
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        if(_user.LoggedIn)
+        {
+            StateHasChanged();
+        }
+    }
+}
+

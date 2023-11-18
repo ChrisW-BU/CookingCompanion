@@ -1171,4 +1171,22 @@ public class CookCompApiJsonAccess: CookCompAPI
 
         return null;
     }
+
+    public async Task<User?> GetUser(int userId)
+    {
+        await GetUserListAsync();
+
+        if (_users != null)
+        {
+            foreach (User u in _users)
+            {
+                if (u.Id == userId)
+                {
+                    return u;
+                }
+            }
+        }
+
+        return null;
+    }
 }

@@ -1,6 +1,8 @@
 ﻿@using Data.Models.Models;
 @inject UserGlobal _user;
 @inject CookCompAPI _api;
+@inject ILocalStorageService _ls;
+
 <PageBase>
     <PageTitle>Welcome to CC!</PageTitle>
     <h3>Welcome!</h3>
@@ -34,7 +36,11 @@
                 //System.Diagnostics.Debug.WriteLine("User found");
                 _user.SetUserInfo(getUser);
 
-                await OnSuccessCallBack.InvokeAsync();
+                if (_user.Id > 0)
+                {
+                    _ls.SetItemAsync("uls", _user.Id);
+                    await OnSuccessCallBack.InvokeAsync();
+                }
             }
             else
             {

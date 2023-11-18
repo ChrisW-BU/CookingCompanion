@@ -2,6 +2,7 @@
 @inject CookCompAPI _api
 @inject UserGlobal _user;
 @inject NavigationManager _nav;
+@inject ILocalStorageService _ls;
 
 <div class="page">
     <main>
@@ -21,41 +22,61 @@
         <div class="@loginCSS">
             <LoginForm @ref="@loginObj" OnSuccessCallBack="SuccessfulCallBack" />
         </div>
-        <div class="@bodyCSS">
-            <article class="content px-3">
+        @if (_user.LoggedIn)
+        {
+            <div class="@bodyCSS
+            ">
+                <article class="content px-3">
                 @Body
             </article>
         </div>
+        }
 
     </main>
 </div>
 
 @code {
     string loginCSS = "";
-    string bodyCSS = "";
+    string bodyCSS = "d-none";
     private LoginForm loginObj = new();
     string titleStr = "";
 
     protected override async Task OnInitializedAsync()
     {
-        //loginObj = new();
+        await CheckLoggedInUser();
+    }
 
-        System.Diagnostics.Debug.WriteLine("Login CSS: " + loginObj.LoginCSS);
+    public async Task CheckLoggedInUser()
+    {
+        // Check local storage for user
+        string lsu = "";
+        try
+        {
+            lsu = await _ls.GetItemAsStringAsync("uls");
+
+            int uId = Int32.Parse(lsu);
+
+            if (uId > 0)
+            {
+                User? getUser = await _api.GetUser(uId);
+                _user.SetUserInfo(getUser);
+            }
+        }
+        catch { }
+
+        //System.Diagnostics.Debug.WriteLine("Login CSS: " + loginObj.LoginCSS);
         if (_user.LoggedIn)
         {
             bodyCSS = "d-block";
             titleStr = "Welcome, " + _user.UserName + ". ";
             loginCSS = "d-none";
-            //loginObj.Hide();
         }
         else
         {
             bodyCSS = "d-none";
             titleStr = "";
             loginCSS = "d-block";
-            //loginObj.Show();
         }
-        //System.Diagnostics.Debug.WriteLine("Login CSS: " + loginObj.LoginCSS);
         StateHasChanged();
     }
 
@@ -66,22 +87,28 @@
             bodyCSS = "d-block";
             titleStr = "Welcome " + _user.UserName;
             loginCSS = "d-none";
-            //loginObj.Hide();
         }
         else
         {
             bodyCSS = "d-none";
             titleStr = "";
             loginCSS = "d-block";
-            //loginObj.Show();
         }
+        Refresh();
         StateHasChanged();
         _nav.NavigateTo("/", false);
+    }
+
+    public void Refresh()
+    {
+        // Hacky, but achieves the component refresh we need.
+        //_nav.NavigateTo("api/cc");
     }
 
     public void LogOut()
     {
         _user.ResetUserInfo();
+        _ls.SetItemAsync("uls", 0);
         _nav.NavigateTo("/", true);
     }
 }

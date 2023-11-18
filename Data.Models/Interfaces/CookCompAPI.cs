@@ -127,6 +127,8 @@ namespace Data.Models.Interfaces
         Task<List<User>?> GetUserListAsync();
         Task<User?> GetUser(string userName);
 
+        Task<User?> GetUser(int userId);
+
 
         /////////////////
         // Other Helpers

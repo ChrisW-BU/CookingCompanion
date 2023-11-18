@@ -5,6 +5,7 @@ using Data;
 using Data.Models.Interfaces;
 using Data.Models.Models;
 using Components.RazorComponents.Forms;
+using Blazored.LocalStorage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddServerSideBlazor();
 //builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddScoped<UserGlobal>();
 builder.Services.AddScoped<PageHistory>();
+builder.Services.AddBlazoredLocalStorage();
 
 // Setup JSON API
 builder.Services.AddOptions<CookCompApiJsonAccessSetting>().Configure(options =>
