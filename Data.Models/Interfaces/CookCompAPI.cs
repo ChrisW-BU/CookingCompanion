@@ -96,13 +96,14 @@ namespace Data.Models.Interfaces
         Task<int> GetCookingCountAsync();
         Task<Cooking?> SaveCookingAsync(Cooking editedObj);
         Task DeleteCookingAsync(int id);
+        Task<List<CookingStep>?> CheckCookingStatus(int recipeId, int userId);
 
 
 
         ////////////////////////////////
         // Cooking Steps Members
         ////////////////////////////////
-        Task<List<CookingStep>?> GetCookingStepListAsync(int cookingStepCount, int index);
+        Task<List<CookingStep>?> GetCookingStepListAsync(int cookingId);
         Task<CookingStep?> GetCookingStepUniqueAsync(int id);
         Task<int> GetCookingStepCountAsync();
         Task<CookingStep?> SaveCookingStepAsync(CookingStep editedObj);

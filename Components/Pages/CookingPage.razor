@@ -8,7 +8,15 @@
 <PageBase>
     <h3>@TitleName</h3>
     <FormBase>
-
+        @if (!IsLoading)
+        {
+            <div>@rStepObj.Title</div>
+            <div>@rStepObj.Description</div>
+        }
+        else
+        {
+            <div>Content is loading...</div>
+        }
     </FormBase>
 </PageBase>
 
@@ -23,7 +31,15 @@
     [Parameter]
     public int RecipeId { get; set; }
 
-    public Recipe? RecipeObj { get; set; }
+    private bool IsLoading { get; set; } = true;
+
+    private Recipe? RecipeObj { get; set; }
+
+    private List<CookingStep> stepList { get; set; }
+
+    private RecipeStep? rStepObj { get; set; }
+
+    private CookingStep? cStepObj { get; set; }
 
     protected async override Task OnParametersSetAsync()
     {
@@ -33,11 +49,22 @@
             RecipeId = recId;
             RecipeObj = await _api.GetRecipeUniqueAsync(RecipeId);
 
-            // When go off to check whether there is already a "Cooking" record for this recipe/user ID.
+            stepList = await _api.CheckCookingStatus(RecipeId, _user.Id);
 
-            // If there is - we skip to the latest step that has not been completed
+            foreach (CookingStep cs in stepList)
+            {
+                if (!cs.IsCompleted)
+                {
+                    cStepObj = cs;
+                    rStepObj = await _api.GetRecipeStepUniqueAsync(cs.StepId);
+                    break;
+                }
+            }
 
-            // Else we create a new cooking record along with it's cooking steps and return the first step
+            System.Diagnostics.Debug.WriteLine("C Step: " + cStepObj.StepNumber);
+            System.Diagnostics.Debug.WriteLine("R Step: " + rStepObj.Title);
+
+            IsLoading = false;
         }
         else
         {
@@ -51,16 +78,14 @@
     {
         get
         {
-            // if (RecipeObj.Id > 0)
-            // {
-            //     return "CC - " + RecipeObj.Name;
-            // }
-            // else
-            // {
-            //     return "Cooking Companion";
-            // }
-
-            return "CC - Cooking (recipe name)";
+            if (RecipeObj.Id > 0)
+            {
+                return "CC - Cooking " + RecipeObj.Name;
+            }
+            else
+            {
+                return "Cooking Companion";
+            }
         }
     }
 
@@ -68,16 +93,14 @@
     {
         get
         {
-            // if (RecipeObj.Id > 0)
-            // {
-            //     return RecipeObj.Name;
-            // }
-            // else
-            // {
-            //     return "Cooking Companion";
-            // }
-
-            return "Cooking a recipe";
+            if (RecipeObj.Id > 0)
+            {
+                return "Cooking " + RecipeObj.Name;
+            }
+            else
+            {
+                return "Cooking Companion";
+            }
         }
     }
 

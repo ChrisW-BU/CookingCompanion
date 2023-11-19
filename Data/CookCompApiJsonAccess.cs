@@ -1276,6 +1276,59 @@ public class CookCompApiJsonAccess: CookCompAPI
         return Task.CompletedTask;
     }
 
+    public async Task<List<CookingStep>?> CheckCookingStatus(int recipeId, int userId)
+    {
+        if (_cooking == null)
+        {
+            await LoadCookingAsync();
+        }
+        bool recipeStarted = false;
+
+        Cooking cookObj = new();
+
+        foreach (Cooking c in _cooking)
+        {
+            if (c.RecipeId == recipeId && c.UserId == userId)
+            {
+                cookObj = c;
+                List<CookingStep> cSteps = await GetCookingStepListAsync(c.Id);
+
+                if(cSteps.Count > 0)
+                {
+                    recipeStarted = true;
+                }
+                break;
+            }
+        }
+
+        // Create our cooking obj and cooking steps
+        if(!recipeStarted)
+        {
+            if (cookObj.Id == 0)
+            {
+                cookObj.RecipeId = recipeId;
+                cookObj.UserId = userId;
+                cookObj.TimeStarted = DateTime.Now;
+                await SaveCookingAsync(cookObj);
+            }
+
+            List<RecipeStep> recipeSteps = await GetRecipeStepListAsync(recipeId);
+
+            foreach (RecipeStep rs in recipeSteps)
+            {
+                CookingStep cookStep = new();
+                cookStep.CookingId = cookObj.Id;
+                cookStep.StepId = rs.Id;
+                cookStep.StepNumber = rs.StepNumber;
+                await SaveCookingStepAsync(cookStep);
+            }
+        }
+
+        List<CookingStep> stepList = await GetCookingStepListAsync(cookObj.Id);
+
+        return stepList ?? new();
+    }
+
 
 
     /////////////////////
@@ -1299,10 +1352,20 @@ public class CookCompApiJsonAccess: CookCompAPI
     /// <param name="ingredientCount"></param>
     /// <param name="index"></param>
     /// <returns></returns>
-    public async Task<List<CookingStep>?> GetCookingStepListAsync(int cookingStepCount, int index)
+    public async Task<List<CookingStep>?> GetCookingStepListAsync(int cookingId)
     {
         await LoadCookingStepAsync();
-        return _cooking_steps ?? new();
+        List<CookingStep> stepList = new();
+
+        foreach(CookingStep cs in _cooking_steps)
+        {
+            if(cs.CookingId == cookingId)
+            {
+                stepList.Add(cs);
+            }
+        }
+
+        return stepList ?? new();
     }
 
     /// <summary>

@@ -19,9 +19,5 @@
         public bool HasTimer { get; set; }
 
         public int TimerDuration { get; set; }
-
-        public DateTime? TimerStarted { get; set; }
-
-        public DateTime? TimerEnded { get; set; }
     }
 }
