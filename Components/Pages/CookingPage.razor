@@ -25,14 +25,6 @@
 
     public Recipe? RecipeObj { get; set; }
 
-    //Page loads and catches the recipeID
-
-    // When go off to check whether there is already a "Cooking" record for this recipe/user ID.
-
-    // If there is - we skip to the latest step that has not been completed
-
-    // Else we create a new cooking record along with it's cooking steps and return the first step
-
     protected async override Task OnParametersSetAsync()
     {
         int recId = Int32.Parse(CatchId);
@@ -40,6 +32,12 @@
         {
             RecipeId = recId;
             RecipeObj = await _api.GetRecipeUniqueAsync(RecipeId);
+
+            // When go off to check whether there is already a "Cooking" record for this recipe/user ID.
+
+            // If there is - we skip to the latest step that has not been completed
+
+            // Else we create a new cooking record along with it's cooking steps and return the first step
         }
         else
         {

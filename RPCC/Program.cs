@@ -30,6 +30,8 @@ builder.Services.AddOptions<CookCompApiJsonAccessSetting>().Configure(options =>
     options.ShoppingListItemFolder = "ShoppingListItems";
     options.FavouriteFolder = "Favourites";
     options.MeasurementTypeFolder = "MeasurementTypes";
+    options.CookingFolder = "Cooking";
+    options.CookingStepFolder = "CookingSteps";
 }
 );
 

@@ -21,5 +21,9 @@
         public string DataRootPath { get; set; } = string.Empty;
 
         public string MeasurementTypeFolder { get; set; } = string.Empty;
+
+        public string CookingFolder { get; set; } = string.Empty;
+
+        public string CookingStepFolder { get; set; } = string.Empty;
     }
 }

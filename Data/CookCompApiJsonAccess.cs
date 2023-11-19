@@ -17,6 +17,8 @@ public class CookCompApiJsonAccess: CookCompAPI
     private List<ShoppingListItem>? _shopping_list_item;
     private List<Favourite>? _favourites;
     private List<MeasurementType>? _measurements;
+    private List<Cooking>? _cooking;
+    private List<CookingStep>? _cooking_steps;
 
     /// <summary>
     /// This allows the injection of IOptions and creates a settings structure for the data folders.
@@ -74,6 +76,16 @@ public class CookCompApiJsonAccess: CookCompAPI
         if (!Directory.Exists($@"{_settings.DataRootPath}\{_settings.MeasurementTypeFolder}"))
         {
             Directory.CreateDirectory($@"{_settings.DataRootPath}\{_settings.MeasurementTypeFolder}");
+        }
+
+        if (!Directory.Exists($@"{_settings.DataRootPath}\{_settings.CookingFolder}"))
+        {
+            Directory.CreateDirectory($@"{_settings.DataRootPath}\{_settings.CookingFolder}");
+        }
+
+        if (!Directory.Exists($@"{_settings.DataRootPath}\{_settings.CookingStepFolder}"))
+        {
+            Directory.CreateDirectory($@"{_settings.DataRootPath}\{_settings.CookingStepFolder}");
         }
     }
 
@@ -1004,9 +1016,9 @@ public class CookCompApiJsonAccess: CookCompAPI
     }
 
 
-    /////////////////////
-    // Shopping List
-    /////////////////////
+    ////////////////////////
+    // Shopping List Items
+    ////////////////////////
 
     /// <summary>
     /// Load all shopping list items.
@@ -1153,8 +1165,225 @@ public class CookCompApiJsonAccess: CookCompAPI
             }
         }
 
-        System.Diagnostics.Debug.WriteLine("Hold here.....");
+        //System.Diagnostics.Debug.WriteLine("Hold here.....");
     }
+
+
+
+    /////////////////////
+    // Cooking
+    /////////////////////
+
+    /// <summary>
+    /// Load a list of all cooking objects.
+    /// </summary>
+    /// <returns></returns>
+    private Task LoadCookingAsync()
+    {
+        Load<Cooking>(ref _cooking, _settings.CookingFolder);
+        return Task.CompletedTask;
+    }
+
+    ///
+    /// <summary>
+    /// Load a list of cooking objects and return the list. The count and index will determine the range and amount returned.
+    /// </summary>
+    /// <param name="ingredientCount"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public async Task<List<Cooking>?> GetCookingListAsync(int cookingCount, int index)
+    {
+        await LoadCookingAsync();
+        return _cooking ?? new();
+    }
+
+    /// <summary>
+    /// Load a single unique cooking object and return it. Requires a correct unique ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async Task<Cooking?> GetCookingUniqueAsync(int id)
+    {
+        await LoadCookingAsync();
+        if (_cooking == null)
+        {
+            throw new Exception("No cooking objects have been found");
+        }
+        return _cooking.FirstOrDefault(b => b.Id == id);
+    }
+
+    /// <summary>
+    /// Return the count of all cooking objects.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<int> GetCookingCountAsync()
+    {
+        await LoadCookingAsync();
+        if (_cooking == null)
+        {
+            return 0;
+        }
+        else
+        {
+            return _cooking.Count();
+        }
+    }
+
+    /// <summary>
+    /// Save changes made to a cooking object.
+    /// </summary>
+    /// <param name="editedObj"></param>
+    /// <returns></returns>
+    public async Task<Cooking?> SaveCookingAsync(Cooking editedObj)
+    {
+        if (_cooking == null)
+        {
+            LoadCookingAsync();
+        }
+
+        if (editedObj.Id == 0)
+        {
+            if (_cooking.Count > 0)
+            {
+                editedObj.Id = ((int)_cooking.Max(b => b.Id)) + 1;
+            }
+            else
+            {
+                editedObj.Id = 1;
+            }
+        }
+        await SaveAsync<Cooking>(_cooking, _settings.CookingFolder, $"{editedObj.Id}.json", editedObj);
+        return editedObj;
+    }
+
+    /// <summary>
+    /// Delete an cooking object using the specified ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public Task DeleteCookingAsync(int id)
+    {
+        DeleteAsync(_cooking, _settings.CookingFolder, id);
+        if (_cooking != null)
+        {
+            var editedObj = _cooking.FirstOrDefault(b => b.Id == id);
+            if (editedObj != null)
+            {
+                _cooking.Remove(editedObj);
+            }
+        }
+        return Task.CompletedTask;
+    }
+
+
+
+    /////////////////////
+    // Cooking Step
+    /////////////////////
+
+    /// <summary>
+    /// Load a list of all cooking step objects.
+    /// </summary>
+    /// <returns></returns>
+    private Task LoadCookingStepAsync()
+    {
+        Load<CookingStep>(ref _cooking_steps, _settings.CookingStepFolder);
+        return Task.CompletedTask;
+    }
+
+    ///
+    /// <summary>
+    /// Load a list of cooking steps and return the list. The count and index will determine the range and amount returned.
+    /// </summary>
+    /// <param name="ingredientCount"></param>
+    /// <param name="index"></param>
+    /// <returns></returns>
+    public async Task<List<CookingStep>?> GetCookingStepListAsync(int cookingStepCount, int index)
+    {
+        await LoadCookingStepAsync();
+        return _cooking_steps ?? new();
+    }
+
+    /// <summary>
+    /// Load a single unique cooking step and return it. Requires a correct unique ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public async Task<CookingStep?> GetCookingStepUniqueAsync(int id)
+    {
+        await LoadCookingStepAsync();
+        if (_cooking_steps == null)
+        {
+            throw new Exception("No cooking steps have been found");
+        }
+        return _cooking_steps.FirstOrDefault(b => b.Id == id);
+    }
+
+    /// <summary>
+    /// Return the count of all cooking steps.
+    /// </summary>
+    /// <returns></returns>
+    public async Task<int> GetCookingStepCountAsync()
+    {
+        await LoadCookingStepAsync();
+        if (_cooking_steps == null)
+        {
+            return 0;
+        }
+        else
+        {
+            return _cooking_steps.Count();
+        }
+    }
+
+    /// <summary>
+    /// Save changes made to a cooking step.
+    /// </summary>
+    /// <param name="editedObj"></param>
+    /// <returns></returns>
+    public async Task<CookingStep?> SaveCookingStepAsync(CookingStep editedObj)
+    {
+        if (_cooking_steps == null)
+        {
+            LoadCookingStepAsync();
+        }
+
+        if (editedObj.Id == 0)
+        {
+            if (_cooking_steps.Count > 0)
+            {
+                editedObj.Id = ((int)_cooking_steps.Max(b => b.Id)) + 1;
+            }
+            else
+            {
+                editedObj.Id = 1;
+            }
+        }
+        await SaveAsync<CookingStep>(_cooking_steps, _settings.CookingStepFolder, $"{editedObj.Id}.json", editedObj);
+        return editedObj;
+    }
+
+    /// <summary>
+    /// Delete an cooking object using the specified ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public Task DeleteCookingStepAsync(int id)
+    {
+        DeleteAsync(_cooking_steps, _settings.CookingStepFolder, id);
+        if (_cooking_steps != null)
+        {
+            var editedObj = _cooking_steps.FirstOrDefault(b => b.Id == id);
+            if (editedObj != null)
+            {
+                _cooking_steps.Remove(editedObj);
+            }
+        }
+        return Task.CompletedTask;
+    }
+
 
 
     /////////////////////
