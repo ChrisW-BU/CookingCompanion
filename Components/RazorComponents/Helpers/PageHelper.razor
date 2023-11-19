@@ -1,0 +1,61 @@
+﻿@inject NavigationManager _nav
+
+@code {
+    private List<string> pageList = new();
+
+    public void AddPage(string pageName)
+    {
+        string pageStr = pageName;
+        pageList.Add(pageStr);
+        //System.Diagnostics.Debug.WriteLine(pageStr + " Added");
+    }
+
+    public void PageBack(string defaultPage)
+    {
+        //_api.ClearCacheAsync();
+        if (IsPrevious())
+        {
+            string returnStr = pageList[pageList.Count - 1];
+            pageList.RemoveAt(pageList.Count - 1);
+            _nav.NavigateTo(returnStr);
+        }
+        else
+        {
+            _nav.NavigateTo(defaultPage);
+        }
+    }
+
+    public void ChangePage(string currentPage, string changePage)
+    {
+        // Add a page to history stack
+        if (currentPage.Length > 0)
+        {
+            AddPage(currentPage);
+        }
+
+        //_api.ClearCacheAsync();
+
+        _nav.NavigateTo(changePage);
+    }
+
+    public void RefreshPage(string refreshPage)
+    {
+        if(refreshPage.Length > 0)
+        {
+            _nav.NavigateTo(refreshPage);
+        }
+        else
+        {
+            _nav.NavigateTo("/");
+        }
+    }
+
+    public bool IsPrevious()
+    {
+        if (pageList.Count > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+}

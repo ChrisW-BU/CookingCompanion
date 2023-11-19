@@ -102,6 +102,8 @@ namespace Data.Models.Interfaces
 
         Task DeleteShoppingListAsync(int id);
 
+        Task ClearShoppingList(int listId);
+
 
 
         ////////////////////////////

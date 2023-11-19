@@ -975,6 +975,34 @@ public class CookCompApiJsonAccess: CookCompAPI
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Delete a shopping list using the specified ID.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    public async Task ClearShoppingList(int listId)
+    {
+        if (_shopping_list != null)
+        {
+            foreach(ShoppingList s in _shopping_list)
+            {
+                if(s.Id == listId)
+                {
+                    List<ShoppingListItem> getList = await GetShoppingItemListAsync(s.Id);
+
+                    if(getList != null && getList.Count > 0)
+                    {
+                        foreach(ShoppingListItem sl in getList)
+                        {
+                            sl.HasObtained = false;
+                            SaveShoppingItemListAsync(sl);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     /////////////////////
     // Shopping List

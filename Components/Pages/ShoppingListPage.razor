@@ -28,10 +28,10 @@
                     @foreach (ShoppingListItem s in r.ShoppingListItems)
                     {
                         var nameString = s.Details.IngredientName + " - " + s.Details.Quantity + " " + s.Details.MeasurementName;
-                        <FormCheckbox IsLabelRight=true FieldWidth="0" Name="@nameString" @bind-Value="s.HasObtained" />
+                        <FormCheckbox OnClick="Save" IsLabelRight=true FieldWidth="0" Name="@nameString" @bind-Value="s.HasObtained" />
                     }
                 </div>
-
+                <a href="" @onclick="() => GoToRecipe(r.RecipeId)">Go to recipe</a> <a style="float:right" href="shoppinglist" @onclick="() => ClearList(r.Id)">Clear list</a>
             </div>
         </div>
     }
@@ -39,7 +39,6 @@
 
 
 <ButtonContainer>
-    <SaveButtonControl OnClickCall="Save" />
     <BackButtonControl OnClickCall="PageBack" />
 </ButtonContainer>
 
@@ -71,7 +70,7 @@
         }
         catch
         {
-            
+
         }
     }
 
@@ -79,6 +78,16 @@
     {
         //_nav.NavigateTo("/recipes/view_recipe/" + recipeId);
         _page.AddPage("shoppinglist");
+    }
+
+    private void GoToRecipe(int recipeId)
+    {
+        _nav.NavigateTo("recipes/view_recipe/" + recipeId);
+    }
+
+    private void ClearList(int listId)
+    {
+        _api.ClearShoppingList(listId);
     }
 
     private void PageBack()
