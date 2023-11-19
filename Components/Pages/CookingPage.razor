@@ -10,8 +10,8 @@
     <FormBase>
         @if (!IsLoading)
         {
-            <div>@rStepObj.Title</div>
-            <div>@rStepObj.Description</div>
+            <div>@Title</div>
+            <div>@Description</div>
         }
         else
         {
@@ -19,6 +19,13 @@
         }
     </FormBase>
 </PageBase>
+
+<div class="container">
+    <div class="row align-items-center mt-4">
+        <PreviousStepButton OnClickCall="PreviousStep" SetIsLarge=true />
+        <NextStepButton OnClickCall="NextStep" SetIsLarge=true />
+    </div>
+</div>
 
 <ButtonContainer>
     <BackButtonControl OnClickCall="PageBack" />
@@ -35,11 +42,15 @@
 
     private Recipe? RecipeObj { get; set; }
 
-    private List<CookingStep> stepList { get; set; }
+    private List<CookingStep> StepList { get; set; }
 
-    private RecipeStep? rStepObj { get; set; }
+    private RecipeStep? RStepObj { get; set; }
 
-    private CookingStep? cStepObj { get; set; }
+    private CookingStep? CStepObj { get; set; }
+
+    private string Title { get; set; } = string.Empty;
+
+    private string Description { get; set; } = string.Empty;
 
     protected async override Task OnParametersSetAsync()
     {
@@ -48,21 +59,24 @@
         {
             RecipeId = recId;
             RecipeObj = await _api.GetRecipeUniqueAsync(RecipeId);
+            StepList = await _api.CheckCookingStatus(RecipeId, _user.Id);
 
-            stepList = await _api.CheckCookingStatus(RecipeId, _user.Id);
-
-            foreach (CookingStep cs in stepList)
+            foreach (CookingStep cs in StepList)
             {
                 if (!cs.IsCompleted)
                 {
-                    cStepObj = cs;
-                    rStepObj = await _api.GetRecipeStepUniqueAsync(cs.StepId);
+                    CStepObj = cs;
+                    RStepObj = await _api.GetRecipeStepUniqueAsync(cs.StepId);
+
+                    Title = RStepObj.Title;
+                    Description = RStepObj.Description;
+
                     break;
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine("C Step: " + cStepObj.StepNumber);
-            System.Diagnostics.Debug.WriteLine("R Step: " + rStepObj.Title);
+            //System.Diagnostics.Debug.WriteLine("C Step: " + cStepObj.StepNumber);
+            //System.Diagnostics.Debug.WriteLine("R Step: " + rStepObj.Title);
 
             IsLoading = false;
         }
@@ -72,6 +86,24 @@
         }
 
         await base.OnParametersSetAsync();
+    }
+
+    private void PreviousStep()
+    {
+        if(CStepObj.StepNumber > 1)
+        {
+            CStepObj = StepList.Find(x => x.StepNumber == CStepObj.StepNumber - 1);
+            StateHasChanged();
+        }
+    }
+
+    private void NextStep()
+    {
+        if(CStepObj.StepNumber +1 <= StepList.Count)
+        {
+            CStepObj = StepList.Find(x => x.StepNumber == CStepObj.StepNumber + 1);
+            StateHasChanged();
+        }
     }
 
     public string PageTitleName
