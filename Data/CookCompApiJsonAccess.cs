@@ -5,7 +5,7 @@ using Data.Models;
 
 namespace Data;
 
-public class CookCompApiJsonAccess: CookCompAPI
+public class CookCompApiJsonAccess : CookCompAPI
 {
     CookCompApiJsonAccessSetting _settings;
     private List<Recipe>? _recipes;
@@ -24,7 +24,7 @@ public class CookCompApiJsonAccess: CookCompAPI
     /// This allows the injection of IOptions and creates a settings structure for the data folders.
     /// </summary>
     /// <param name="option"></param>
-    public CookCompApiJsonAccess(IOptions<CookCompApiJsonAccessSetting>option)
+    public CookCompApiJsonAccess(IOptions<CookCompApiJsonAccessSetting> option)
     {
         // Check if we have the correct directories, and create them if not
         _settings = option.Value;
@@ -308,7 +308,7 @@ public class CookCompApiJsonAccess: CookCompAPI
     /// <returns></returns>
     public async Task<Ingredient?> SaveIngredientAsync(Ingredient editedObj)
     {
-        if(_ingredients == null)
+        if (_ingredients == null)
         {
             LoadIngredientAsync();
         }
@@ -413,7 +413,7 @@ public class CookCompApiJsonAccess: CookCompAPI
     /// <returns></returns>
     public async Task<Recipe?> SaveRecipeAsync(Recipe editedObj)
     {
-        if(_recipes == null)
+        if (_recipes == null)
         {
             LoadRecipesAsync();
         }
@@ -466,15 +466,15 @@ public class CookCompApiJsonAccess: CookCompAPI
         List<Recipe> returnList = new();
         List<Favourite> favList = await GetFavouriteListAsync();
 
-        if(favList != null && favList.Count > 0)
+        if (favList != null && favList.Count > 0)
         {
-            foreach(Favourite f in favList)
+            foreach (Favourite f in favList)
             {
-                if(f.UserId == userId)
+                if (f.UserId == userId)
                 {
                     Recipe r = await GetRecipeUniqueAsync(f.RecipeId);
 
-                    if(r != null && r.Id > 0)
+                    if (r != null && r.Id > 0)
                     {
                         returnList.Add(r);
                     }
@@ -549,7 +549,7 @@ public class CookCompApiJsonAccess: CookCompAPI
     /// <returns></returns>
     public async Task<RecipeIngredient?> SaveRecipeIngredientAsync(RecipeIngredient editedObj)
     {
-        if(_recipe_ingredients == null)
+        if (_recipe_ingredients == null)
         {
             LoadRecipeIngredientsAsync();
         }
@@ -584,7 +584,7 @@ public class CookCompApiJsonAccess: CookCompAPI
             {
                 _recipe_ingredients.Remove(editedObj);
             }
-            
+
         }
         return Task.CompletedTask;
     }
@@ -778,9 +778,9 @@ public class CookCompApiJsonAccess: CookCompAPI
             await LoadFavouritesAsync();
         }
 
-        foreach(Favourite f in _favourites)
+        foreach (Favourite f in _favourites)
         {
-            if(f.RecipeId == recipeId && f.UserId == userId)
+            if (f.RecipeId == recipeId && f.UserId == userId)
             {
                 return f;
             }
@@ -957,9 +957,9 @@ public class CookCompApiJsonAccess: CookCompAPI
         await SaveAsync<ShoppingList>(_shopping_list, _settings.ShoppingListFolder, $"{editedObj.Id}.json", editedObj);
 
         // Save any list items that are attached
-        if(editedObj.ShoppingListItems != null)
+        if (editedObj.ShoppingListItems != null)
         {
-            foreach(ShoppingListItem sItem in editedObj.ShoppingListItems)
+            foreach (ShoppingListItem sItem in editedObj.ShoppingListItems)
             {
                 await SaveShoppingItemListAsync(sItem);
             }
@@ -996,15 +996,15 @@ public class CookCompApiJsonAccess: CookCompAPI
     {
         if (_shopping_list != null)
         {
-            foreach(ShoppingList s in _shopping_list)
+            foreach (ShoppingList s in _shopping_list)
             {
-                if(s.Id == listId)
+                if (s.Id == listId)
                 {
                     List<ShoppingListItem> getList = await GetShoppingItemListAsync(s.Id);
 
-                    if(getList != null && getList.Count > 0)
+                    if (getList != null && getList.Count > 0)
                     {
-                        foreach(ShoppingListItem sl in getList)
+                        foreach (ShoppingListItem sl in getList)
                         {
                             sl.HasObtained = false;
                             SaveShoppingItemListAsync(sl);
@@ -1128,7 +1128,7 @@ public class CookCompApiJsonAccess: CookCompAPI
 
     public async Task CheckListHasItems(int listId, int recipeId)
     {
-        if(_shopping_list_item == null)
+        if (_shopping_list_item == null)
         {
             LoadShoppingItemListsAsync();
         }
@@ -1136,23 +1136,23 @@ public class CookCompApiJsonAccess: CookCompAPI
 
         foreach (ShoppingListItem s in _shopping_list_item)
         {
-            if(s.ListId == listId)
+            if (s.ListId == listId)
             {
                 hasItems = true;
                 break;
             }
         }
 
-        if(!hasItems)
+        if (!hasItems)
         {
             List<RecipeIngredient> ingList = await GetRecipeIngredientListAsync(recipeId);
 
-            foreach(RecipeIngredient ing in ingList)
+            foreach (RecipeIngredient ing in ingList)
             {
                 ShoppingListItem listItem = new();
                 listItem.ListId = listId;
                 listItem.RecipeIngId = ing.Id;
-                
+
 
                 Ingredient ingItem = await GetIngredientUniqueAsync(ing.IngredientId);
                 ing.IngredientName = ingItem.Name;
@@ -1276,6 +1276,24 @@ public class CookCompApiJsonAccess: CookCompAPI
         return Task.CompletedTask;
     }
 
+    public async Task<bool> CheckRecipeStarted(int recipeId, int userId)
+    {
+        if (_cooking == null)
+        {
+            await LoadCookingAsync();
+        }
+
+        foreach (Cooking c in _cooking)
+        {
+            if (c.RecipeId == recipeId && c.UserId == userId)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public async Task<List<CookingStep>?> CheckCookingStatus(int recipeId, int userId)
     {
         if (_cooking == null)
@@ -1293,7 +1311,7 @@ public class CookCompApiJsonAccess: CookCompAPI
                 cookObj = c;
                 List<CookingStep> cSteps = await GetCookingStepListAsync(c.Id);
 
-                if(cSteps.Count > 0)
+                if (cSteps.Count > 0)
                 {
                     recipeStarted = true;
                 }
@@ -1302,7 +1320,7 @@ public class CookCompApiJsonAccess: CookCompAPI
         }
 
         // Create our cooking obj and cooking steps
-        if(!recipeStarted)
+        if (!recipeStarted)
         {
             if (cookObj.Id == 0)
             {
@@ -1327,6 +1345,47 @@ public class CookCompApiJsonAccess: CookCompAPI
         List<CookingStep> stepList = await GetCookingStepListAsync(cookObj.Id);
 
         return stepList ?? new();
+    }
+
+    public async Task RestartCookingRecipe(int recipeId, int userId)
+    {
+        if (_cooking == null)
+        {
+            await LoadCookingAsync();
+        }
+
+        if (_cooking_steps == null)
+        {
+            await LoadCookingStepAsync();
+        }
+
+        List<CookingStep> deleteList = new();
+        int cookId = 0;
+
+        foreach (Cooking c in _cooking)
+        {
+            if (c.RecipeId == recipeId && c.UserId == userId)
+            {
+                foreach (CookingStep cs in _cooking_steps)
+                {
+                    if (cs.CookingId == c.Id)
+                    {
+                        deleteList.Add(cs);
+                    }
+                }
+                cookId = c.Id;
+            }
+        }
+
+        if (cookId > 0)
+        {
+            foreach (CookingStep cs in deleteList)
+            {
+                await DeleteCookingStepAsync(cs.Id);
+            }
+
+            await DeleteCookingAsync(cookId);
+        }
     }
 
 
@@ -1357,9 +1416,9 @@ public class CookCompApiJsonAccess: CookCompAPI
         await LoadCookingStepAsync();
         List<CookingStep> stepList = new();
 
-        foreach(CookingStep cs in _cooking_steps)
+        foreach (CookingStep cs in _cooking_steps)
         {
-            if(cs.CookingId == cookingId)
+            if (cs.CookingId == cookingId)
             {
                 stepList.Add(cs);
             }

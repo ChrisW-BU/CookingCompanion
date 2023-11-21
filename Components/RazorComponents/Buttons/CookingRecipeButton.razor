@@ -1,0 +1,10 @@
+﻿@inherits ButtonControl
+<ButtonControl IsLarge=SetIsLarge Colour="warning" Icon="fas fa-burger" Name="Recipe" OnBaseClickCall="OnClickCall" />
+
+@code {
+    [Parameter]
+    public EventCallback OnClickCall { get; set; }
+
+    [Parameter]
+    public bool SetIsLarge { get; set; }
+}

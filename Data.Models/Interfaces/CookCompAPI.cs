@@ -96,7 +96,9 @@ namespace Data.Models.Interfaces
         Task<int> GetCookingCountAsync();
         Task<Cooking?> SaveCookingAsync(Cooking editedObj);
         Task DeleteCookingAsync(int id);
+        Task<bool> CheckRecipeStarted(int recipeId, int userId);
         Task<List<CookingStep>?> CheckCookingStatus(int recipeId, int userId);
+        Task RestartCookingRecipe(int recipeId, int userId);
 
 
 

@@ -2,21 +2,46 @@
 @inject CookCompAPI _api
 @inject UserGlobal _user;
 @inject NavigationManager _nav;
+@inject PageHistory _page;
 @inject ILocalStorageService _ls;
 
 <div class="page">
     <main>
         <div class="top-row px-4">
-            <div class="user-select-none">
-                @titleStr &nbsp @if (_user.LoggedIn)
-                {
-                    <div style="display:inline" @onclick="LogOut">
-                        <i class="fas fa-right-from-bracket"></i>
-                        <span>Log Out</span>
-                    </div>
-                }
+        <div class="user-select-none">
+        @titleStr &nbsp @if (_user.LoggedIn)
+        {
+        <div style="display:inline" @onclick="LogOut">
+        <i class="fas fa-right-from-bracket"></i>
+        <span>Log Out</span>
+        </div>
+        }
+        </div>
+            <div class="user-select-none" style="display:flex; align-items:center">
+                <button class="navbar-toggler" type="button" title="Navigation" data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                    <span class="fas fa-bars"></span>
+                </button>&nbsp
+        <span class="d-none d-sm-block">Cooking Companion</span></div>
+        </div>
+
+        @* Offcanvas *@
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="user-select-none" style="display:flex; align-items:center"><i class="fa-fw fas fa-bowl-food"></i>&nbsp<span class="d-sm-none">CC</span><span class="d-none d-sm-block">Cooking Companion</span></div>
+            <div class="offcanvas-body">
+                <FormBase>
+                    @if (_user.IsAdmin)
+                    {
+                        <MenuItem Icon="fas fa-tools" Title="Admin Panel" Href="admin"></MenuItem>
+                    }
+                    <MenuItem Icon="fas fa-burger" Title="Recipes" Href="recipes"></MenuItem>
+                    <MenuItem Icon="fas fa-list-check" Title="Shopping Lists" Href="shoppinglist"></MenuItem>
+                    <MenuItem Icon="fas fa-star" Title="Favourites" Href="favourites"></MenuItem>
+                </FormBase>
+            </div>
         </div>
 
         <div class="@loginCSS">
@@ -25,11 +50,11 @@
         @if (_user.LoggedIn)
         {
             <div class="@bodyCSS
-            ">
+                    ">
                 <article class="content px-3">
-                @Body
-            </article>
-        </div>
+                    @Body
+                </article>
+            </div>
         }
 
     </main>
@@ -40,6 +65,8 @@
     string bodyCSS = "d-none";
     private LoginForm loginObj = new();
     string titleStr = "";
+
+    
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,6 +124,22 @@
         Refresh();
         StateHasChanged();
         _nav.NavigateTo("/", false);
+    }
+
+    public void GoToMenu()
+    {
+        if (_user.LoggedIn && _user.UserName.Length > 0)
+        {
+            if (_page.IsPrevious())
+            {
+                _nav.NavigateTo(_page.GetPreviousPage());
+            }
+            else
+            {
+                _page.AddPage(_nav.BaseUri);
+                _nav.NavigateTo("/");
+            }
+        }
     }
 
     public void Refresh()

@@ -20,19 +20,10 @@
     </FormBase>
 </PageBase>
 
-<div class="container">
-    <div class="row align-items-center mt-4">
-        <div style="width: 50%">
-            <PreviousStepButton OnClickCall="PreviousStep" SetIsLarge=true />
-        </div>
-        <div style="width: 50%">
-            <NextStepButton OnClickCall="NextStep" SetIsLarge=true />
-        </div>
-    </div>
-</div>
-
 <ButtonContainer>
-    <BackButtonControl OnClickCall="PageBack" />
+    <CookingRecipeButton OnClickCall="PageBack" SetIsLarge=true/>
+    <PreviousStepButton OnClickCall="PreviousStep" SetIsLarge=true />
+    <NextStepButton OnClickCall="NextStep" SetIsLarge=true />
 </ButtonContainer>
 
 @code {
