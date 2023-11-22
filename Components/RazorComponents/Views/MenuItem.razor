@@ -1,7 +1,7 @@
 ﻿@inject NavigationManager NavManager
 @inject PageHistory _page
 
-<div @onclick="OnClickEvent" style="height: 80px;" class="text-truncate w-menu-item p-3 me-3 mb-3 col-md-5 text-center fs-3 rounded-3 user-select-none">
+<div @onclick="OnClickEvent" style="height: 80px;" class="@MenuItemSize w-menu-item p-3 me-3 mb-3 fs-3 text-center rounded-3 user-select-none">
         <span class="@Icon align-middle">
 
         </span>
@@ -11,6 +11,11 @@
 </div>
 
 @code {
+    [Parameter]
+    public bool IsOffCanvas { get; set; }
+
+    private string MenuItemSize { get; set; } = "col-md-5";
+
     [Parameter]
     public bool IsAdmin { get; set; }
 
@@ -22,6 +27,20 @@
 
     [Parameter]
     public string Href { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(IsOffCanvas)
+        {
+            MenuItemSize = "col-md-12";
+        }
+        else
+        {
+            MenuItemSize = "col-md-5";
+        }
+
+
+    }
 
     private void OnClickEvent()
     {

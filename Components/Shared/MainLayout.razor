@@ -28,19 +28,19 @@
         @* Offcanvas *@
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
             <div class="offcanvas-header">
-                <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h5>
+                <h1 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
-                <FormBase>
+                <div class="row">
                     @if (_user.IsAdmin)
                     {
-                        <MenuItem Icon="fas fa-tools" Title="Admin Panel" Href="admin"></MenuItem>
+                        <MenuItem IsOffCanvas=true Icon="fas fa-tools" Title="Admin Panel" Href="admin"></MenuItem>
                     }
-                    <MenuItem Icon="fas fa-burger" Title="Recipes" Href="recipes"></MenuItem>
-                    <MenuItem Icon="fas fa-list-check" Title="Shopping Lists" Href="shoppinglist"></MenuItem>
-                    <MenuItem Icon="fas fa-star" Title="Favourites" Href="favourites"></MenuItem>
-                </FormBase>
+                    <MenuItem IsOffCanvas=true Icon="fas fa-burger" Title="Recipes" Href="recipes"></MenuItem>
+                    <MenuItem IsOffCanvas=true Icon="fas fa-list-check" Title="Shopping Lists" Href="shoppinglist"></MenuItem>
+                    <MenuItem IsOffCanvas=true Icon="fas fa-star" Title="Favourites" Href="favourites"></MenuItem>
+                </div>
             </div>
         </div>
 

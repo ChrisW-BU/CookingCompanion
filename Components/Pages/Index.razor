@@ -10,14 +10,16 @@
     Below we will begin with some high contrast clear buttons. These will use icons
     and text.<br /><br />
 
-    <FormBase>
-        @if(_user.IsAdmin) {
+    <div class="row">
+        @if (_user.IsAdmin)
+        {
             <MenuItem Icon="fas fa-tools" Title="Admin Panel" Href="admin"></MenuItem>
         }
         <MenuItem Icon="fas fa-burger" Title="Recipes" Href="recipes"></MenuItem>
         <MenuItem Icon="fas fa-list-check" Title="Shopping Lists" Href="shoppinglist"></MenuItem>
         <MenuItem Icon="fas fa-star" Title="Favourites" Href="favourites"></MenuItem>
-    </FormBase>
+    </div>
+    
     
 </PageBase>
 
