@@ -1,12 +1,15 @@
-﻿<div class="btn-group mt-4">
-    @ChildContent
-    
+﻿<div class="d-none d-md-grid">
+    <div class="btn-group mt-4">
+        @ChildContent
+    </div>
+</div>
+<div class="d-grid d-md-none">
+    <div class="btn-group-vertical mt-4">
+        @ChildContent
+    </div>
 </div>
 
 @code {
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
-
-    [Parameter]
-    public string? CustomCSS { get; set; } = string.Empty;
 }

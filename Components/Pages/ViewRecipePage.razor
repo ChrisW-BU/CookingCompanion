@@ -52,8 +52,7 @@
         @* if this recipe/user ID combination has a record already, be "resume recipe" and add another button for restart recipe *@
 
     </FormBase>
-
-    <div class="btn-group-sm btn-group-vertical mt-4">
+    <ButtonContainer>
         @if (PageLoaded)
         {
             if (RecipeStarted)
@@ -67,7 +66,7 @@
                 <StartCookButton OnClickCall="GoToCookingPage" />
             }
         }
-    </div>
+    </ButtonContainer>
 </PageBase>
 
 
