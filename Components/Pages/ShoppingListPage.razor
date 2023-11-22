@@ -37,10 +37,11 @@
     }
 </FormBase>
 
-
-<ButtonContainer>
-    <BackButtonControl OnClickCall="PageBack" />
-</ButtonContainer>
+<PageBase>
+    <div class="btn-group mt-4">
+        <BackButtonControl OnClickCall="PageBack" />
+    </div>
+</PageBase>
 
 @code {
     protected List<ShoppingList> lists = new();

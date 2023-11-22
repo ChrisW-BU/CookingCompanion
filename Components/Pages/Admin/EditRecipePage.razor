@@ -14,13 +14,12 @@
         <FormInputTextArea Name="Description" @bind-Value="RecipeObj.Description" AutoComplete=false FieldWidth="12" />
         <FormCheckbox Name="Is Vegetarian" @bind-Value="RecipeObj.IsVege" FieldWidth="12" />
     </FormBase>
+    <div class="btn-group mt-4">
+        <SaveButtonControl OnClickCall="Save" />
+        <DeleteButtonControl OnClickCall="Delete" />
+        <BackButtonControl OnClickCall="PageBack" />
+    </div>
 </PageBase>
-
-<ButtonContainer>
-    <SaveButtonControl OnClickCall="Save" />
-    <DeleteButtonControl OnClickCall="Delete" />
-    <BackButtonControl OnClickCall="PageBack" />
-</ButtonContainer>
 
 <PageBase>
     <br />
@@ -34,12 +33,11 @@
         <MeasureSelectControl Name="Select Measurement Type" @bind-Value="ReIngObj.MeasurementTypeId" FieldWidth="4" />
         <NumberControl Name="Quantity" @bind-Value="ReIngObj.Quantity" FieldWidth="4" />
     </FormBase>
+    <div class="btn-group mt-4">
+        <AddNewButtonControl Name="Add Ingredient" OnClickCall="AddIngredient" />
+        <BackButtonControl OnClickCall="PageBack" />
+    </div>
 </PageBase>
-
-<ButtonContainer>
-    <AddNewButtonControl Name="Add Ingredient" OnClickCall="AddIngredient" />
-    <BackButtonControl OnClickCall="PageBack" />
-</ButtonContainer>
 
 <PageBase>
     <br />
@@ -53,12 +51,12 @@
         <FormInputText Name="Image URL" @bind-Value="ReStepObj.ImgUrl" AutoComplete=false FieldWidth="4" />
         <FormInputTextArea Name="Description" @bind-Value="ReStepObj.Description" AutoComplete=false FieldWidth="12" />
     </FormBase>
-</PageBase>
 
-<ButtonContainer>
-    <AddNewButtonControl Name="Add Step" OnClickCall="AddStep" />
-    <BackButtonControl OnClickCall="PageBack" />
-</ButtonContainer>
+    <div class="btn-group mt-4">
+        <AddNewButtonControl Name="Add Step" OnClickCall="AddStep" />
+        <BackButtonControl OnClickCall="PageBack" />
+    </div>
+</PageBase>
 
 @code {
     [Parameter]

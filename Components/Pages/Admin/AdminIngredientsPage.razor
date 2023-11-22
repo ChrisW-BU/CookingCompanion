@@ -18,13 +18,12 @@
                             LastModified="@i.LastModified" OnClickCall="() => OnClickEvent(i.Id)" />
         }
     </div>
+    <div class="btn-group mt-4">
+        <AddNewButtonControl OnClickCall="AddNewIngredient" />
+        <BackButtonControl OnClickCall="PageBack" />
+    </div>
     
 </PageBase>
-
-<ButtonContainer>
-    <AddNewButtonControl OnClickCall="AddNewIngredient" />
-    <BackButtonControl OnClickCall="PageBack" />
-</ButtonContainer>
 
 
 @code {

@@ -52,16 +52,15 @@
         @* if this recipe/user ID combination has a record already, be "resume recipe" and add another button for restart recipe *@
 
     </FormBase>
-</PageBase>
 
-<div class="container">
-    <div class="row align-items-center mt-4">
+    <div class="btn-group mt-4">
         @if (PageLoaded)
         {
-            if(RecipeStarted)
+            if (RecipeStarted)
             {
-                <ButtonControl IsLarge=true Colour="success" Name="Resume Cooking" Icon="fas fa-circle-play" OnBaseClickCall="GoToCookingPage"/>
-                <ButtonControl IsLarge=true Colour="danger" Name="Restart Recipe" Icon="fas fa-rotate" OnBaseClickCall="RestartRecipe"/>
+                <BackButtonControl OnClickCall="PageBack" />
+                <ButtonControl Colour="success" Name="Resume Cooking" Icon="fas fa-circle-play" OnBaseClickCall="GoToCookingPage" />
+                <ButtonControl Colour="danger" Name="Restart Recipe" Icon="fas fa-rotate" OnBaseClickCall="RestartRecipe" />
             }
             else
             {
@@ -69,11 +68,7 @@
             }
         }
     </div>
-</div>
-
-<ButtonContainer>
-    <BackButtonControl OnClickCall="PageBack" />
-</ButtonContainer>
+</PageBase>
 
 
 @code {

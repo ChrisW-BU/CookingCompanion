@@ -12,14 +12,12 @@
         <FormInputTextArea Name="Description" @bind-Value="IngredientObj.Description" AutoComplete=false CssClass="form-control mb-3" />
         <FormInputText Name="Image URL" @bind-Value="IngredientObj.ImgUrl" AutoComplete=false CssClass="form-control mb-3" />
     </FormBase>
-
+    <div class="btn-group mt-4">
+        <SaveButtonControl OnClickCall="Save" />
+        <DeleteButtonControl OnClickCall="Delete" />
+        <BackButtonControl OnClickCall="PageBack" />
+    </div>
 </PageBase>
-
-<ButtonContainer>
-    <SaveButtonControl OnClickCall="Save" />
-    <DeleteButtonControl OnClickCall="Delete" />
-    <BackButtonControl OnClickCall="PageBack" />
-</ButtonContainer>
 
 @code {
     [Parameter]

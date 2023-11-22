@@ -18,11 +18,12 @@
                         Duration="@r.Duration" IsVege="@r.IsVege" OnClickCall="() => OnClickEvent(r.Id)" />
         }
     </div>
+
+    <div class="btn-group mt-4">
+        <AddNewButtonControl OnClickCall="AddNewRecipe" />
+        <BackButtonControl OnClickCall="PageBack" />
+    </div>
 </PageBase>
-<ButtonContainer>
-    <AddNewButtonControl OnClickCall="AddNewRecipe" />
-    <BackButtonControl OnClickCall="PageBack" />
-</ButtonContainer>
 
 @code {
     protected List<Recipe> recipes = new List<Recipe>();

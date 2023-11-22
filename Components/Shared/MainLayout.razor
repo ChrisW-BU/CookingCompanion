@@ -18,10 +18,13 @@
         }
         </div>
             <div class="user-select-none" style="display:flex; align-items:center">
-                <button class="navbar-toggler" type="button" title="Navigation" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                @if (_user.LoggedIn) {
+                    <button class="navbar-toggler" type="button" title="Navigation" data-bs-toggle="offcanvas"
+                    data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
                     <span class="fas fa-bars"></span>
-                </button>&nbsp
+                </button>
+                }
+                &nbsp
         <span class="d-none d-sm-block">Cooking Companion</span></div>
         </div>
 

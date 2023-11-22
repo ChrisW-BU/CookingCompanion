@@ -18,13 +18,12 @@
             <div>Content is loading...</div>
         }
     </FormBase>
+    <div class="btn-group mt-4">
+        <CookingRecipeButton OnClickCall="PageBack"/>
+        <PreviousStepButton OnClickCall="PreviousStep"/>
+        <NextStepButton OnClickCall="NextStep"/>
+    </div>
 </PageBase>
-
-<ButtonContainer>
-    <CookingRecipeButton OnClickCall="PageBack" SetIsLarge=true/>
-    <PreviousStepButton OnClickCall="PreviousStep" SetIsLarge=true />
-    <NextStepButton OnClickCall="NextStep" SetIsLarge=true />
-</ButtonContainer>
 
 @code {
     [Parameter]
