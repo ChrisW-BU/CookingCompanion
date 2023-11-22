@@ -1,11 +1,11 @@
-﻿<div class="col-@ColSize" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i></div>
+﻿<div class="g-col-4 p-2" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i></div>
 
 @code {
-    string ClassStr { get; set; } = "col-3 far fa-check-circle";
+    string ClassStr { get; set; } = "g-col-4 far fa-check-circle";
 
-    public void MouseOver(MouseEventArgs e) { ClassStr = "col-3 fas fa-check-circle"; }
+    public void MouseOver(MouseEventArgs e) { ClassStr = "fas fa-check-circle"; }
 
-    public void MouseOut(MouseEventArgs e) { ClassStr = "col-3 far fa-check-circle"; }
+    public void MouseOut(MouseEventArgs e) { ClassStr = "far fa-check-circle"; }
 
     [Parameter]
     public string ColSize { get; set; } = string.Empty;

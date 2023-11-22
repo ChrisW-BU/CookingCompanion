@@ -14,10 +14,10 @@
                 <div class="col-8">
                     <div class="">@RecipeObj.Description</div>
                 </div>
-                <div class="row text-center">
-                    <div class="col-4 p-3"><i class="far fa-clock"></i>&nbsp @RecipeObj.Duration mins</div>
-                    <div class="col-3 p-3"><VegetarianIcon IsVege="@RecipeObj.IsVege" IncludeStr=true /></div>
-                    <div class="col-5 p-3"><FavouriteStarIcon IsInteractive=true IsFavourite="@FavObj.IsFavourite" OnClickCall="FavouriteClicked" IncludeStr=true /></div>
+                <div class="grid gap-3 text-center">
+                    <div class="g-col-4 p-2"><i class="far fa-clock"></i>&nbsp @RecipeObj.Duration mins</div>
+                    <VegetarianIcon IsVege="@RecipeObj.IsVege" IncludeStr=true />
+                    <FavouriteStarIcon IsInteractive=true IsFavourite="@FavObj.IsFavourite" OnClickCall="FavouriteClicked" IncludeStr=true />
                 </div>
             </div>
 

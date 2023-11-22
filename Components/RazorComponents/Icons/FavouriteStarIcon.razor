@@ -1,11 +1,11 @@
 ﻿@if(IsInteractive)
 {
-    <div class="col-@ColSize user-select-none" @onclick="OnClickCall" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i>&nbsp @DescriptionStr</div>
+    <div class="g-col-4 p-2 user-select-none" @onclick="OnClickCall" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i>&nbsp @DescriptionStr</div>
     @* @ontouchend="TouchEnd"  *@
 }
 else
 {
-    <div class="col-@ColSize user-select-none"><i class="@ClassStr"></i>&nbsp @DescriptionStr</div>
+    <div class="g-col-4 p-2 user-select-none"><i class="@ClassStr"></i>&nbsp @DescriptionStr</div>
 }
 
 
@@ -22,11 +22,11 @@ else
             {
                 if (IsFavourite)
                 {
-                    _classStr = "col-3 fas fa-star text-warning";
+                    _classStr = "g-col-4 fas fa-star text-warning";
                 }
                 else
                 {
-                    _classStr = "col-3 far fa-star";
+                    _classStr = "g-col-4 far fa-star";
                 }
             }
 
@@ -42,11 +42,11 @@ else
     {
         if (IsFavourite)
         {
-            ClassStr = "col-3 fas fa-star";
+            ClassStr = "g-col-4 fas fa-star";
         }
         else
         {
-            ClassStr = "col-3 fas fa-star text-warning";
+            ClassStr = "g-col-4 fas fa-star text-warning";
         }
     }
 
@@ -54,11 +54,11 @@ else
     {
         if (IsFavourite)
         {
-            ClassStr = "col-3 fas fa-star text-warning";
+            ClassStr = "g-col-4 fas fa-star text-warning";
         }
         else
         {
-            ClassStr = "col-3 far fa-star";
+            ClassStr = "g-col-4 far fa-star";
         }
     }
 
@@ -66,11 +66,11 @@ else
     {
         if (IsFavourite)
         {
-            ClassStr = "col-3 fas fa-star text-warning";
+            ClassStr = "g-col-4 fas fa-star text-warning";
         }
         else
         {
-            ClassStr = "col-3 far fa-star";
+            ClassStr = "g-col-4 far fa-star";
         }
     }
 
