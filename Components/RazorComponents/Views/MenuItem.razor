@@ -1,7 +1,7 @@
 ﻿@inject NavigationManager NavManager
 @inject PageHistory _page
 
-<div @onclick="OnClickEvent" style="height: 80px;" class="@MenuItemSize w-menu-item p-3 me-3 mb-3 fs-3 text-center rounded-3 user-select-none">
+<div @onclick="OnClickEvent" style="height: 4rem;" class="p-2 @MenuItemSize w-menu-item fs-3 text-center rounded-3 user-select-none">
         <span class="@Icon align-middle">
 
         </span>
@@ -14,7 +14,7 @@
     [Parameter]
     public bool IsOffCanvas { get; set; }
 
-    private string MenuItemSize { get; set; } = "col-md-5";
+    private string MenuItemSize { get; set; } = "g-col-6";
 
     [Parameter]
     public bool IsAdmin { get; set; }
@@ -32,11 +32,11 @@
     {
         if(IsOffCanvas)
         {
-            MenuItemSize = "col-md-12";
+            MenuItemSize = "g-col-12";
         }
         else
         {
-            MenuItemSize = "col-md-5";
+            MenuItemSize = " g-col-12 g-col-md-6";
         }
 
 

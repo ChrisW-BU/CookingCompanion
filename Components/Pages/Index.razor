@@ -3,14 +3,13 @@
 @inject UserGlobal _user
 
 <PageTitle>Cooking Companion</PageTitle>
-
 <PageBase>
     <h1>Main Menu</h1>
 
     Below we will begin with some high contrast clear buttons. These will use icons
     and text.<br /><br />
 
-    <div class="row">
+    <div class="grid gap-3">
         @if (_user.IsAdmin)
         {
             <MenuItem Icon="fas fa-tools" Title="Admin Panel" Href="admin"></MenuItem>
@@ -19,8 +18,6 @@
         <MenuItem Icon="fas fa-list-check" Title="Shopping Lists" Href="shoppinglist"></MenuItem>
         <MenuItem Icon="fas fa-star" Title="Favourites" Href="favourites"></MenuItem>
     </div>
-    
-    
 </PageBase>
 
 @code {

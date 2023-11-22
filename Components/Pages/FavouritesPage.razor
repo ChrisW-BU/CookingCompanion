@@ -12,13 +12,14 @@
         All saved recipes will be listed on this page.
     </AlertItem>
 
-    <FormBase>
+    <div class="grid gap-3">
         @foreach (var r in recipes)
         {
             <RecipeCard Id="r.Id" UserId="_user.Id" Name="@r.Name" Description="@r.Description" ImgUrl="@r.ImgUrl"
                         Duration="@r.Duration" IsVege="@r.IsVege" OnClickCall="() => OnClickEvent(r.Id)" />
         }
-    </FormBase>
+    </div>
+
 </PageBase>
 
 <ButtonContainer>

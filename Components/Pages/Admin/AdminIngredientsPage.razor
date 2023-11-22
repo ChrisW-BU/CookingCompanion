@@ -11,15 +11,14 @@
         This page is for the management of ingredient information. You can add, edit, and delete ingredients.
     </AlertItem>
 
-
-    <FormBase>
+    <div class="grid gap-3">
         @foreach (var i in ingredients)
         {
-            @* <li @onclick="() => OnClickEvent(i.Id)">@i.Name - @i.Description</li> *@
             <IngredientCard Name="@i.Name" Description="@i.Description" ImgUrl="@i.ImgUrl"
                             LastModified="@i.LastModified" OnClickCall="() => OnClickEvent(i.Id)" />
         }
-    </FormBase>
+    </div>
+    
 </PageBase>
 
 <ButtonContainer>

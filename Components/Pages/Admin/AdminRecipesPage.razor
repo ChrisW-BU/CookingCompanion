@@ -11,13 +11,13 @@
         This page is for the management of recipes. You can add, edit, and delete recipes as well as modify their ingredient lists and steps.
     </AlertItem>
 
-    <FormBase>
+    <div class="grid gap-3">
         @foreach (var r in recipes)
         {
             <RecipeCard Name="@r.Name" Description="@r.Description" ImgUrl="@r.ImgUrl"
                         Duration="@r.Duration" IsVege="@r.IsVege" OnClickCall="() => OnClickEvent(r.Id)" />
         }
-    </FormBase>
+    </div>
 </PageBase>
 <ButtonContainer>
     <AddNewButtonControl OnClickCall="AddNewRecipe" />
