@@ -1,0 +1,113 @@
+﻿@page "/admin/edit_recipe/edit_step/{CatchId}"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+@inject PageHistory _page
+
+<PageTitle>@PageTitleName</PageTitle>
+<PageBase>
+    <h3>@TitleName</h3>
+
+    <FormBase>
+        <NumberControl Name="Step Number" @bind-Value="RecipeObj.StepNumber" FieldWidth="6"/>
+        <FormInputText Name="Title" @bind-Value="RecipeObj.Title" AutoComplete=false FieldWidth="6" />
+        <FormCheckbox Name="Has Timer" @bind-Value="RecipeObj.HasTimer" FieldWidth="1" />
+        <NumberControl Name="Timer (seconds)" @bind-Value="RecipeObj.TimerDuration" FieldWidth="5" />
+        <FormInputText Name="Image URL" @bind-Value="RecipeObj.ImgUrl" AutoComplete=false FieldWidth="6" />
+        <FormInputTextArea Name="Description" @bind-Value="RecipeObj.Description" AutoComplete=false FieldWidth="12" />
+    </FormBase>
+    <ButtonContainer>
+        <SaveButtonControl OnClickCall="Save" />
+        <DeleteButtonControl OnClickCall="Delete" />
+        <BackButtonControl OnClickCall="PageBack" />
+    </ButtonContainer>
+</PageBase>
+
+@code {
+    [Parameter]
+    public string CatchId { get; set; } = string.Empty;
+
+    public RecipeStep? RecipeObj { get; set; }
+
+    private int StepId { get; set; }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        int stepId = Int32.Parse(CatchId);
+        if (stepId > 0)
+        {
+            StepId = stepId;
+            RecipeObj = await _api.GetRecipeStepUniqueAsync(stepId);
+        }
+        else
+        {
+            RecipeObj = new RecipeStep();
+        }
+
+        await base.OnParametersSetAsync();
+    }
+
+    public string PageTitleName
+    {
+        get
+        {
+            if (RecipeObj.Id > 0)
+            {
+                return "CC - " + RecipeObj.Title;
+            }
+            else
+            {
+                return "CC - New Step";
+            }
+        }
+    }
+
+    public string TitleName
+    {
+        get
+        {
+            if (RecipeObj.Id > 0)
+            {
+                return "Edit Step";
+            }
+            else
+            {
+                return "Add New Step";
+            }
+        }
+    }
+
+    
+
+    private async Task Save()
+    {
+        try
+        {
+            //RecipeObj.LastModified = DateTime.Now;
+            await _api.SaveRecipeStepAsync(RecipeObj);
+            PageBack();
+        }
+        catch { }
+    }
+
+    private async Task Delete()
+    {
+        try
+        {
+            await _api.DeleteRecipeStepAsync(RecipeObj.Id);
+            PageBack();
+        }
+        catch
+        {
+
+        }
+    }
+
+    private void PageBack()
+    {
+        if (_page.IsPrevious())
+        {
+            _api.ClearCacheAsync();
+            _nav.NavigateTo(_page.GetPreviousPage());
+        }
+    }
+}

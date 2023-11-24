@@ -1,11 +1,39 @@
-﻿@inherits NumberControlBase
-
-<div class="col-sm-@FieldWidth">
+﻿<div class="col-sm-@FieldWidth">
     <label>@Name</label><br />
     <input class="form-control mb-3 @CssClass" type="number"
-        @onchange="UpdateParentElement" hidden="@IsHidden" disabled="@IsDisabled"/>
+        @onchange="UpdateParentElement" value="@Value" hidden="@IsHidden" disabled="@IsDisabled"/>
 </div>
 
 @code {
+    @code {
+        [Parameter]
+        public string Name { get; set; } = string.Empty;
 
+        [Parameter]
+        public decimal Value { get; set; }
+
+        [Parameter]
+        public bool IsHidden { get; set; }
+
+        [Parameter]
+        public bool IsDisabled { get; set; }
+
+        [Parameter]
+        public string CssClass { get; set; } = string.Empty;
+
+        [Parameter]
+        public string FieldWidth { get; set; } = string.Empty;
+
+        [Parameter]
+        public EventCallback<decimal> ValueChanged { get; set; }
+
+        public async void UpdateParentElement(ChangeEventArgs e)
+        {
+            if (Value.ToString().Length > 0)
+            {
+                Value = decimal.Parse(e?.Value?.ToString() ?? "0");
+                await ValueChanged.InvokeAsync(Value);
+            }
+        }
+    }
 }

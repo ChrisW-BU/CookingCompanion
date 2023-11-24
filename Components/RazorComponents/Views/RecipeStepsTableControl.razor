@@ -14,7 +14,7 @@
     <tbody>
         @foreach (RecipeStep r in TableData)
         {
-            <tr>
+            <tr @onclick="(args)=> SelectStep(args, r.Id)">
                 <td>
                     @r.StepNumber
                 </td>
@@ -38,6 +38,14 @@
 @code {
     [Parameter]
     public int RecipeId { get; set; }
+
+    [Parameter]
+    public EventCallback<int> RowClick { get; set; }
+
+    private async Task SelectStep(MouseEventArgs e, int id)
+    {
+        await RowClick.InvokeAsync(id);
+    }
 
     [Parameter]
     public List<RecipeStep> TableData { get; set; } = new();

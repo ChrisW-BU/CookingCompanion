@@ -6,12 +6,24 @@
 
 <PageTitle>@PageTitleName</PageTitle>
 <PageBase>
-    <h3>@TitleName</h3>
+    @* <h5>@TitleName</h5> *@
     <FormBase>
         @if (!IsLoading)
         {
-            <div>@Title</div>
-            <div>@Description</div>
+            <div class="container row">
+                <div class="col-4"><img width="100rem" src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" /></div>
+                <div class="col-8 text-end">
+                    <div><h6>@TitleName</h6></div>
+                    <div>Step: @RStepObj.StepNumber</div>
+                    <div>&nbsp</div>
+                </div>
+
+                <div class="mt-2">
+                    <div><h5>@Title</h5></div>
+                    <div>@Description</div>
+                </div>
+            </div>
+            
         }
         else
         {
@@ -20,9 +32,9 @@
     </FormBase>
 
     <ButtonContainer>
-        <CookingRecipeButton OnClickCall="PageBack" />
-        <PreviousStepButton OnClickCall="PreviousStep" />
         <NextStepButton OnClickCall="NextStep" />
+        <PreviousStepButton OnClickCall="PreviousStep" />
+        <CookingRecipeButton OnClickCall="PageBack" />
     </ButtonContainer>
     
 </PageBase>
@@ -132,7 +144,7 @@
         {
             if (RecipeObj.Id > 0)
             {
-                return "Cooking " + RecipeObj.Name;
+                return RecipeObj.Name;
             }
             else
             {

@@ -1,9 +1,4 @@
-﻿@* <div>
-    <label>@Name</label><br />
-    <InputText @oninput="UpdateParent" @bind-Value="@Value" class="i" />
-</div>
-<br /> *@
-@inherits FormInputBase
+﻿@inherits FormInputBase
 <div class="col-sm-@FieldWidth">
     <label>@Name</label><br />
     <input class="@CssClass form-control mb-3" value="@Value" autocomplete="@AutoCompleteStr"
