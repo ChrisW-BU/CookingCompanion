@@ -14,20 +14,27 @@ namespace Data.Models.Models
 
         public bool IsAdmin { get; set; }
 
+        public Guid UserToken { get; set; } = Guid.Empty;
+
         public void SetUserInfo(User user)
         {
-            Id = user.Id;
-            UserName = user.Name;
-            IsAdmin = user.IsAdmin;
-            LoggedIn = true;
+            if (user != null)
+            {
+                Id = user.Id;
+                UserName = user.Name;
+                IsAdmin = user.IsAdmin;
+                LoggedIn = true;
+                UserToken = user.UserToken;
+            }
         }
 
         public void ResetUserInfo()
         {
             Id = 0;
-            UserName = "";
+            UserName = string.Empty;
             IsAdmin = false;
             LoggedIn = false;
+            UserToken = Guid.Empty;
         }
     }
 }

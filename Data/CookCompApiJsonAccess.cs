@@ -1533,7 +1533,7 @@ public class CookCompApiJsonAccess : CookCompAPI
         return _users ?? new();
     }
 
-    public async Task<User?> GetUser(string userName)
+    public async Task<User?> GetUser(string userName, bool isGuidCheck)
     {
         await GetUserListAsync();
 
@@ -1541,9 +1541,19 @@ public class CookCompApiJsonAccess : CookCompAPI
         {
             foreach (User u in _users)
             {
-                if (u.Name == userName)
+                if (isGuidCheck)
                 {
-                    return u;
+                    if(u.UserToken.ToString() == userName)
+                    {
+                        return u;
+                    }
+                }
+                else
+                {
+                    if (u.Name == userName)
+                    {
+                        return u;
+                    }
                 }
             }
         }
@@ -1560,6 +1570,24 @@ public class CookCompApiJsonAccess : CookCompAPI
             foreach (User u in _users)
             {
                 if (u.Id == userId)
+                {
+                    return u;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public async Task<User?> GetUser(Guid userId)
+    {
+        await GetUserListAsync();
+
+        if (_users != null)
+        {
+            foreach (User u in _users)
+            {
+                if (u.UserToken == userId)
                 {
                     return u;
                 }

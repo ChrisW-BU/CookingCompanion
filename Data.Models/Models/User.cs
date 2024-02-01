@@ -7,5 +7,7 @@
         public string Name { get; set; } = string.Empty;
 
         public bool IsAdmin { get; set; }
+
+        public Guid UserToken { get; set; } = Guid.Empty;
     }
 }

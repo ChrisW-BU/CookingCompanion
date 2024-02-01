@@ -117,8 +117,9 @@ namespace Data.Models.Interfaces
         // User Interface Members
         ////////////////////////////
         Task<List<User>?> GetUserListAsync();
-        Task<User?> GetUser(string userName);
+        Task<User?> GetUser(string userName, bool isGuidCheck);
         Task<User?> GetUser(int userId);
+        Task<User?> GetUser(Guid userId);
 
 
 

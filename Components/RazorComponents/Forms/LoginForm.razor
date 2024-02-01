@@ -29,7 +29,7 @@
     {
         try
         {
-            getUser = await _api.GetUser(UserField);
+            getUser = await _api.GetUser(UserField, false);
 
             if (getUser != null && getUser.Id > 0)
             {
@@ -38,7 +38,7 @@
 
                 if (_user.Id > 0)
                 {
-                    _ls.SetItemAsync("uls", _user.Id);
+                    _ls.SetItemAsStringAsync("uls", _user.UserToken.ToString());
                     await OnSuccessCallBack.InvokeAsync();
                 }
             }
