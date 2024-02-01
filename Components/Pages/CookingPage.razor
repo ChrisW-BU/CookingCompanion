@@ -55,7 +55,7 @@
             </div>
 
             @* This layout is for larger screens *@
-            <div class="container d-none d-lg-grid" style="padding-left: 15%; padding-right: 15%">
+            <div class="container d-none d-lg-grid">
                 <div class="col-12 row">
                     <div class="col-6" style="float:left">
                         <img src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" style="float:left; margin-right: 4px; max-width:35%;" />
@@ -91,19 +91,10 @@
 
     @* Made an adaptation of the ButtonContainer, as it wasn't ordering the buttons as preferred. *@
     <div class="d-none d-sm-grid">
-        <div class="d-none d-lg-grid">
-            <div class="btn-group mt-4" style="padding-left:15%; padding-right: 15%;">
-                <PreviousStepButton OnClickCall="PreviousStep" />
-                <CookingRecipeButton OnClickCall="PageBack" />
-                <NextStepButton OnClickCall="NextStep" />
-            </div>
-        </div>
-        <div class="d-grid d-lg-none">
-            <div class="btn-group mt-4">
-                <PreviousStepButton OnClickCall="PreviousStep" />
-                <CookingRecipeButton OnClickCall="PageBack" />
-                <NextStepButton OnClickCall="NextStep" />
-            </div>
+        <div class="btn-group mt-4">
+            <PreviousStepButton OnClickCall="PreviousStep" />
+            <CookingRecipeButton OnClickCall="PageBack" />
+            <NextStepButton OnClickCall="NextStep" />
         </div>
     </div>
     <div class="d-grid d-sm-none">
