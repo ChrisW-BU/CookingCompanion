@@ -55,25 +55,25 @@
             </div>
 
             @* This layout is for larger screens *@
-            <div class="container p-5 d-none d-lg-grid">
+            <div class="container d-none d-lg-grid" style="padding-left: 15%; padding-right: 15%">
                 <div class="col-12 row">
                     <div class="col-6" style="float:left">
                         <img src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" style="float:left; margin-right: 4px; max-width:35%;" />
-                        <h6 style="font-size:30px">@TitleName</h6>
-                        <p style="font-size:25px">Step: @RStepObj.StepNumber</p>
+                        <h6 style="font-size:25px">@TitleName</h6>
+                        <p style="font-size:20px">Step: @RStepObj.StepNumber</p>
                     </div>
 
                     <div class="col-6 p-4" style="float:right;">
                         <div class=" w-shopping-list" style="background-color:antiquewhite">
-                            <i style="font-size:40px; color:gray; float:right; margin-left: 4px;" class="fas fa-history"></i>
-                            <div style="font-size:22px;"><b>@RStepObj.PreviousStep</b></div>
+                            <i style="font-size:36px; color:grey; float:right; margin-left: 4px;" class="fas fa-history"></i>
+                            <div style="font-size:18px;">@RStepObj.PreviousStep</div>
                         </div>
                     </div>
                 </div>
                 <br />
-                <div class="col-12 pt-4"><div><h5 style="font-size:30px">@Title</h5></div></div>
+                <div class="col-12 pt-4"><div><h5 style="font-size:25px">@Title</h5></div></div>
                 <div class="col-12 row">
-                    <div class="col-8" style="font-size:30px">
+                    <div class="col-8" style="font-size:22px">
                         <div>@Description</div>
                     </div>
                     <div class="col-4">
@@ -91,10 +91,19 @@
 
     @* Made an adaptation of the ButtonContainer, as it wasn't ordering the buttons as preferred. *@
     <div class="d-none d-sm-grid">
-        <div class="btn-group mt-4">
-            <PreviousStepButton OnClickCall="PreviousStep" />
-            <CookingRecipeButton OnClickCall="PageBack" />
-            <NextStepButton OnClickCall="NextStep" />
+        <div class="d-none d-lg-grid">
+            <div class="btn-group mt-4" style="padding-left:15%; padding-right: 15%;">
+                <PreviousStepButton OnClickCall="PreviousStep" />
+                <CookingRecipeButton OnClickCall="PageBack" />
+                <NextStepButton OnClickCall="NextStep" />
+            </div>
+        </div>
+        <div class="d-grid d-lg-none">
+            <div class="btn-group mt-4">
+                <PreviousStepButton OnClickCall="PreviousStep" />
+                <CookingRecipeButton OnClickCall="PageBack" />
+                <NextStepButton OnClickCall="NextStep" />
+            </div>
         </div>
     </div>
     <div class="d-grid d-sm-none">
