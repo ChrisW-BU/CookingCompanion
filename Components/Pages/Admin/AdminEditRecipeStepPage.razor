@@ -14,6 +14,9 @@
         <NumberControl Name="Timer (seconds)" @bind-Value="RecipeObj.TimerDuration" FieldWidth="5" />
         <FormInputText Name="Image URL" @bind-Value="RecipeObj.ImgUrl" AutoComplete=false FieldWidth="6" />
         <FormInputTextArea Name="Description" @bind-Value="RecipeObj.Description" AutoComplete=false FieldWidth="12" />
+        
+        <FormInputTextArea Name="Previous Description" @bind-Value="RecipeObj.PreviousStep" AutoComplete=false FieldWidth="12" />
+        <FormInputText Name="Previous Image URL" @bind-Value="RecipeObj.PreviousStepImgUrl" AutoComplete=false FieldWidth="12" />
     </FormBase>
     <ButtonContainer>
         <SaveButtonControl OnClickCall="Save" />

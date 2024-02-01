@@ -14,6 +14,10 @@
 
         public string ImgUrl { get; set; } = string.Empty;
 
+        public string PreviousStep { get; set; } = string.Empty;
+
+        public string PreviousStepImgUrl { get; set; } = string.Empty;
+
 
         // When we create a cooking recipe step, keep track of timings
         public bool HasTimer { get; set; }

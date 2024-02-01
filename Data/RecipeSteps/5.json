@@ -1,1 +1,1 @@
-{"Id":5,"RecipeId":1,"StepNumber":5,"Title":"Fry your onions","Description":"Add the onions to the frying pan and cook them for 5 minutes or until the onions have softened.","ImgUrl":"","HasTimer":true,"TimerDuration":300}
+{"Id":5,"RecipeId":1,"StepNumber":5,"Title":"Fry your onions","Description":"Add the onions to the frying pan and cook them for 5 minutes or until the onions have softened.","ImgUrl":"","PreviousStep":"Your pan should be hot, it should sizzle when adding the onion.","PreviousStepImgUrl":"","HasTimer":true,"TimerDuration":300}

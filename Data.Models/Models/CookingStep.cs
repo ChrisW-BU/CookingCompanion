@@ -12,6 +12,7 @@
 
         public bool IsCompleted { get; set; }
 
+        //
         public DateTime? StepTimerStarted { get; set; }
 
         public DateTime? StepTimerEnded { get; set; }
