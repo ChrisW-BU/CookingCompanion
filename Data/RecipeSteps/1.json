@@ -1,1 +1,1 @@
-{"Id":1,"RecipeId":1,"StepNumber":1,"Title":"Prepare the vegetable stock","Description":"Boil 1 litre of water in the kettle or on the hob.","ImgUrl":"","HasTimer":false,"TimerDuration":0}
+{"Id":1,"RecipeId":1,"StepNumber":1,"Title":"Prepare the vegetable stock","Description":"Boil 1 litre of water in the kettle or on the hob.","ImgUrl":"","PreviousStep":"This is just some test text so that I don\u0027t have to keep changing page in testing.","PreviousStepImgUrl":"","HasTimer":false,"TimerDuration":0}

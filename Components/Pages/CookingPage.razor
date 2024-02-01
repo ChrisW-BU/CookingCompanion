@@ -10,20 +10,78 @@
     <FormBase>
         @if (!IsLoading)
         {
-            <div class="container row">
-                <div class="col-4"><img width="100rem" src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" /></div>
-                <div class="col-8 text-end">
-                    <div><h6>@TitleName</h6></div>
-                    <div>Step: @RStepObj.StepNumber</div>
-                    <div>&nbsp</div>
+            <!-- This layout is for smaller screens -->
+            <div class="container d-grid d-lg-none">
+                <div class="col-12 row">
+
+                    <!-- Step header-->
+                    <!-- Landscape-->
+                    <div class="col-6 d-none d-sm-block" style="float:left">
+                        <img src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" style="float:left; margin-right: 4px; max-width:40%;" />
+                        <h6>@TitleName</h6>
+                        Step: @RStepObj.StepNumber
+                    </div>
+                    <div class="col-6 d-none d-sm-block" style="float:right;">
+                        <div class="w-shopping-list" style=" background-color:antiquewhite;">
+                            <i style="font-size:30px; color:gray; float:right; margin-left: 4px;" class="fas fa-history"></i>
+                            <div style="font-size:12px;"><b>@RStepObj.PreviousStep</b></div>
+                        </div>
+                    </div>
+
+                    <!-- Portrait -->
+                    <div class="col-4 d-block d-sm-none" style="float:left">
+                        <img src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" style="float:left; margin-right: 4px;" />
+                        <h6>@TitleName</h6>
+                        Step: @RStepObj.StepNumber
+                    </div>
+                    <div class="col-8 d-block d-sm-none" style="float:right;">
+                        <div class="w-shopping-list" style=" background-color:antiquewhite;">
+                            <i style="font-size:30px; color:gray; float:right; margin-left: 4px;" class="fas fa-history"></i>
+                            <div style="font-size:12px;"><b>@RStepObj.PreviousStep</b></div>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="mt-2">
-                    <div><h5>@Title</h5></div>
-                    <div>@Description</div>
+                <!-- Step Instructions -->
+                <div class="col-12 row pt-4">
+                    <div class="col-8">
+                        <h5>@Title</h5>
+                        <div>@Description</div>
+                    </div>
+                    <div class="col-4">
+                        <img width="200px" src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" />
+                    </div>
                 </div>
             </div>
-            
+
+            <!-- This layout is for larger screens -->
+            <div class="container p-5 d-none d-lg-grid">
+                <div class="col-12 row">
+                    <div class="col-6" style="float:left">
+                        <img src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" style="float:left; margin-right: 4px; max-width:35%;" />
+                        <h6 style="font-size:30px">@TitleName</h6>
+                        <p style="font-size:25px">Step: @RStepObj.StepNumber</p>
+                    </div>
+
+                    <div class="col-6 p-4" style="float:right;">
+                        <div class=" w-shopping-list" style="background-color:antiquewhite">
+                            <i style="font-size:40px; color:gray; float:right; margin-left: 4px;" class="fas fa-history"></i>
+                            <div style="font-size:22px;"><b>@RStepObj.PreviousStep</b></div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="col-12 pt-4"><div><h5 style="font-size:30px">@Title</h5></div></div>
+                <div class="col-12 row">
+                    <div class="col-8" style="font-size:30px">
+                        <div>@Description</div>
+                    </div>
+                    <div class="col-4">
+                        <img width="200px" src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" />
+                    </div>
+                </div>
+            </div>
+
         }
         else
         {
@@ -31,12 +89,22 @@
         }
     </FormBase>
 
-    <ButtonContainer>
-        <NextStepButton OnClickCall="NextStep" />
-        <PreviousStepButton OnClickCall="PreviousStep" />
-        <CookingRecipeButton OnClickCall="PageBack" />
-    </ButtonContainer>
-    
+    <!-- Made an adaptation of the ButtonContainer, as it wasn't ordering the buttons as preferred. -->
+    <div class="d-none d-sm-grid">
+        <div class="btn-group mt-4">
+            <PreviousStepButton OnClickCall="PreviousStep" />
+            <CookingRecipeButton OnClickCall="PageBack" />
+            <NextStepButton OnClickCall="NextStep" />
+        </div>
+    </div>
+    <div class="d-grid d-sm-none">
+        <div class="btn-group-vertical mt-4">
+            <NextStepButton OnClickCall="NextStep" />
+            <PreviousStepButton OnClickCall="PreviousStep" />
+            <CookingRecipeButton OnClickCall="PageBack" />
+        </div>
+    </div>
+
 </PageBase>
 
 @code {
@@ -108,7 +176,7 @@
 
     private async void NextStep()
     {
-        if(StepList != null && CStepObj != null && (CStepObj.StepNumber +1 <= StepList.Count))
+        if (StepList != null && CStepObj != null && (CStepObj.StepNumber + 1 <= StepList.Count))
         {
             CStepObj = StepList.Find(x => x.StepNumber == CStepObj.StepNumber + 1);
             await UpdateRecipeStep();
