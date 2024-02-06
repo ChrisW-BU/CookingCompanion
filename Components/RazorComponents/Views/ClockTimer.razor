@@ -25,6 +25,8 @@
 
     private bool TimerComplete { get; set; }
 
+    public bool TimerStarted { get; set; }
+
     public async Task StartTimer(decimal duration, string timerStr, string timerImgStr)
     {
         // reset CSS & unhide component
@@ -69,15 +71,23 @@
         timer?.Dispose();
     }
 
+    public void StopClock()
+    {
+        HideClock();
+        Dispose();
+    }
+
     public void HideClock()
     {
         isHidden = true;
+        TimerStarted = false;
         StateHasChanged();
     }
 
     public void ShowClock()
     {
         isHidden = false;
+        TimerStarted = true;
         StateHasChanged();
     }
 
@@ -90,7 +100,7 @@
         else
         {
             animString = "timer-off-anim";
-            System.Diagnostics.Debug.WriteLine("Nothing happens...");
+            // nothing happens - above needs removing
         }
     }
 }

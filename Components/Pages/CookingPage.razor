@@ -171,9 +171,6 @@
                 }
             }
 
-            //System.Diagnostics.Debug.WriteLine("C Step: " + cStepObj.StepNumber);
-            //System.Diagnostics.Debug.WriteLine("R Step: " + rStepObj.Title);
-
             IsLoading = false;
         }
         else
@@ -196,6 +193,17 @@
 
     private async void NextStep()
     {
+        if ((await CheckNextStepForTimer())) {
+            if (!await JSRuntime.InvokeAsync<bool>(
+                "confirm", $"You already have a timer running. Do you want to cancel the previous timer?"))
+            {
+                return;
+            }
+            else
+            {
+                ourClock.StopClock();
+            }
+        }
         if (StepList != null && CStepObj != null && (CStepObj.StepNumber + 1 <= StepList.Count))
         {
             CStepObj.IsCompleted = true;
@@ -211,6 +219,29 @@
         RStepObj = await _api.GetRecipeStepUniqueAsync(CStepObj.StepId);
         Title = RStepObj.Title;
         Description = RStepObj.Description;
+    }
+
+    private async Task<bool> CheckNextStepForTimer()
+    {
+        if (StepList != null && CStepObj != null && (CStepObj.StepNumber + 1 <= StepList.Count))
+        {
+
+            var cookStep = StepList.Find(x => x.StepNumber == CStepObj.StepNumber + 1);
+            var recStep = await _api.GetRecipeStepUniqueAsync(cookStep.StepId);
+
+            if(recStep.HasTimer && ourClock.TimerStarted)
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "It has a timer, we need to do something else...");
+                return true;
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    "We're fine to carry on...");
+            }
+        }
+        return false;
     }
 
     private async Task SaveCookingStep()
@@ -290,6 +321,7 @@
         CStepObj.StepTimerStarted = DateTime.Now;
         // We need to stop this somehow later. This might need to tie into the
         // ClockTimer comp.
+        SaveCookingStep();
 
         ourClock.StartTimer(RStepObj.TimerDuration, RStepObj.TimerString, RStepObj.PreviousStepImgUrl);
     }
