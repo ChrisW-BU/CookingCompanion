@@ -3,6 +3,7 @@
 @inject NavigationManager _nav
 @inject UserGlobal _user
 @inject PageHistory _page
+@inject IJSRuntime JSRuntime
 
 <PageTitle>@PageTitleName</PageTitle>
 <PageBase>
@@ -87,8 +88,19 @@
         {
             <div>Content is loading...</div>
         }
-    </FormBase>
+        @if (RStepObj.HasTimer)
+        {
+            UpdateTimerButton(false);
+        }
+        else
+        {
+            UpdateTimerButton(true);
+        }
 
+    </FormBase>
+    <div hidden="@IsHidden"><button style="width:120px; color:#fff; background-color:slategrey; border-radius: 10px;" @onclick="(() => StartTimer())">
+        <i style="float: right; color:#fff;" class="fas fa-clock pt-1"></i>&nbsp Start Timer</button></div>
+    
     @* Made an adaptation of the ButtonContainer, as it wasn't ordering the buttons as preferred. *@
     <div class="d-none d-sm-grid">
         <div class="btn-group mt-4">
@@ -104,25 +116,33 @@
             <CookingRecipeButton OnClickCall="PageBack" />
         </div>
     </div>
-
 </PageBase>
 
+<ClockTimer @ref=ourClock></ClockTimer>
+
 @code {
+    public ClockTimer ourClock = new();
+
+    [CascadingParameter]
+    protected MainLayout parent { get; set; }
+
     [Parameter]
     public string CatchId { get; set; } = string.Empty;
 
     [Parameter]
     public int RecipeId { get; set; }
 
+    public bool IsHidden { get; set; } =  true;
+
     private bool IsLoading { get; set; } = true;
 
-    private Recipe? RecipeObj { get; set; }
+    private Recipe? RecipeObj { get; set; } = new();
 
     private List<CookingStep> StepList { get; set; }
 
-    private RecipeStep? RStepObj { get; set; }
+    private RecipeStep? RStepObj { get; set; } = new();
 
-    private CookingStep? CStepObj { get; set; }
+    private CookingStep? CStepObj { get; set; } = new();
 
     private string Title { get; set; } = string.Empty;
 
@@ -222,12 +242,43 @@
     }
 
 
-    private void PageBack()
+    private async void PageBack()
     {
+        if (!ourClock.isHidden)
+        {
+            if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Cancel timer and exit recipe?")){
+                return;
+            }
+            ourClock.Dispose();
+            ourClock.HideClock();
+        }
         if (_page.IsPrevious())
         {
             _api.ClearCacheAsync();
             _nav.NavigateTo(_page.GetPreviousPage());
         }
+        else
+        {
+            _nav.NavigateTo("/recipes/view_recipe/" + RecipeId);
+        }
+    }
+
+    public async Task UpdateTimerButton(bool x)
+    {
+        if (IsHidden != x)
+        {
+            IsHidden = x;
+            await AlterTimerButton();
+        }
+    }
+
+    async Task AlterTimerButton()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public async void StartTimer()
+    {
+        ourClock.StartTimer(RStepObj.TimerDuration);
     }
 }

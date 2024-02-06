@@ -12,12 +12,11 @@
         All saved recipes will be listed on this page.
     </AlertItem>
 </PageBase>
-
 <FormBase CenterItems=false>
     @* Make it so you can unpin a shopping list from the page *@
     @foreach (var r in lists)
     {
-        <div class="col-lg-6 col-sm-0 mb-4">
+        <div class="col-lg-4 col-sm-0 mb-4">
             <div class="w-shopping-list">
                 <div class="position-relative">
                     <div class=""><u>@r.Name - Ingredient List</u></div>
@@ -27,8 +26,9 @@
                 <div>
                     @foreach (ShoppingListItem s in r.ShoppingListItems)
                     {
-                        var nameString = s.Details.IngredientName + " - " + s.Details.Quantity + " " + s.Details.MeasurementName;
-                        <FormCheckbox OnClick="Save" IsLabelRight=true FieldWidth="0" Name="@nameString" @bind-Value="s.HasObtained" />
+                        var nameString = s.Details.IngredientName;
+                        var extraString = s.Details.Quantity + " " + s.Details.MeasurementName;
+                        <FormCheckbox OnClick="Save" IsLabelRight=true FieldWidth="0" Name="@nameString" ExtraStr="@extraString" @bind-Value="s.HasObtained" />
                     }
                 </div>
                 <a href="" @onclick="() => GoToRecipe(r.RecipeId)">Go to recipe</a> <a style="float:right" href="shoppinglist" @onclick="() => ClearList(r.Id)">Clear list</a>
@@ -36,7 +36,6 @@
         </div>
     }
 </FormBase>
-
 <PageBase>
     <ButtonContainer>
         <BackButtonControl OnClickCall="PageBack" />
@@ -97,6 +96,10 @@
         {
             _api.ClearCacheAsync();
             _nav.NavigateTo(_page.GetPreviousPage());
+        }
+        else
+        {
+            _nav.NavigateTo("/");
         }
     }
 }

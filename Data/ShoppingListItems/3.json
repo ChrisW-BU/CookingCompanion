@@ -1,1 +1,1 @@
-{"Id":3,"ListId":1,"RecipeIngId":12,"HasObtained":true,"Details":{"Id":12,"RecipeId":1,"IngredientId":11,"Quantity":1,"MeasurementTypeId":2,"IngredientName":"Vegetable Stock","MeasurementName":"(l) Litres"}}
+{"Id":3,"ListId":1,"RecipeIngId":12,"HasObtained":false,"Details":{"Id":12,"RecipeId":1,"IngredientId":11,"Quantity":1,"MeasurementTypeId":2,"IngredientName":"Vegetable Stock","MeasurementName":"(l) Litres"}}

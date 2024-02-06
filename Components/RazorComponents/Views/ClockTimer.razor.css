@@ -1,0 +1,27 @@
+.clock-timer {
+    width: 120px;
+    height: 35px;
+    position: fixed;
+    top: 50px;
+    right: 10%;
+    background-color: green;
+    color: #fff;
+    padding: 5px;
+    text-align: center;
+    user-select: none;
+    border-radius: 50px;
+}
+
+.clock-timer-expired {
+    width: 120px;
+    height: 35px;
+    position: fixed;
+    top: 50px;
+    right: 10%;
+    background-color: darkred;
+    color: #fff;
+    padding: 5px;
+    text-align: center;
+    user-select: none;
+    border-radius: 50px;
+}

@@ -5,71 +5,72 @@
 @inject PageHistory _page;
 @inject ILocalStorageService _ls;
 
-<div class="page">
-    <main>
-        <div class="top-row px-4">
-        <div class="user-select-none">
-        @titleStr &nbsp @if (_user.LoggedIn)
-        {
-        <div style="display:inline" @onclick="LogOut">
-        <i class="fas fa-right-from-bracket"></i>
-        <span>Log Out</span>
-        </div>
-        }
-        </div>
-            <div class="user-select-none" style="display:flex; align-items:center">
-                @if (_user.LoggedIn) {
-                    <button class="navbar-toggler" type="button" title="Navigation" data-bs-toggle="offcanvas"
-                    data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
-                    <span class="fas fa-bars"></span>
-                </button>
-                }
-                &nbsp
-        <span class="d-none d-sm-block">Cooking Companion</span></div>
-        </div>
-
-        @* Offcanvas *@
-        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-            <div class="offcanvas-header top-row mb-3">
-                <h4 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
-            <div class="offcanvas-body">
-                <div class="grid gap-3">
-                    @if (_user.IsAdmin)
+<CascadingValue Value="this">
+    <div class="page">
+        <main>
+            <div class="top-row px-4">
+                <div class="user-select-none">
+                    @titleStr &nbsp @if (_user.LoggedIn)
                     {
-                        <MenuItem IsOffCanvas=true Icon="fas fa-tools" Title="Admin Panel" Href="admin"></MenuItem>
+                        <div style="display:inline" @onclick="LogOut">
+                            <i class="fas fa-right-from-bracket"></i>
+                            <span>Log Out</span>
+                        </div>
                     }
-                    <MenuItem IsOffCanvas=true Icon="fas fa-burger" Title="Recipes" Href="recipes"></MenuItem>
-                    <MenuItem IsOffCanvas=true Icon="fas fa-list-check" Title="Shopping Lists" Href="shoppinglist"></MenuItem>
-                    <MenuItem IsOffCanvas=true Icon="fas fa-star" Title="Favourites" Href="favourites"></MenuItem>
+                </div>
+                <div class="user-select-none" style="display:flex; align-items:center">
+                    @if (_user.LoggedIn)
+                    {
+                        <button class="navbar-toggler" type="button" title="Navigation" data-bs-toggle="offcanvas"
+                                data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
+                            <span class="fas fa-bars"></span>
+                        </button>
+                    }
+                    &nbsp
+                    <span class="d-none d-sm-block">Cooking Companion</span>
                 </div>
             </div>
-        </div>
 
-        <div class="@loginCSS">
-            <LoginForm @ref="@loginObj" OnSuccessCallBack="SuccessfulCallBack" />
-        </div>
-        @if (_user.LoggedIn)
-        {
-            <div class="@bodyCSS
-                    ">
-                <article class="content px-3">
-                    @Body
-                </article>
+            @* Offcanvas *@
+            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
+                <div class="offcanvas-header top-row mb-3">
+                    <h4 class="offcanvas-title" id="offcanvasMenuLabel">Menu</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <div class="grid gap-3">
+                        @if (_user.IsAdmin)
+                        {
+                            <MenuItem IsOffCanvas=true Icon="fas fa-tools" Title="Admin Panel" Href="admin"></MenuItem>
+                        }
+                        <MenuItem IsOffCanvas=true Icon="fas fa-burger" Title="Recipes" Href="recipes"></MenuItem>
+                        <MenuItem IsOffCanvas=true Icon="fas fa-list-check" Title="Shopping Lists" Href="shoppinglist"></MenuItem>
+                        <MenuItem IsOffCanvas=true Icon="fas fa-star" Title="Favourites" Href="favourites"></MenuItem>
+                    </div>
+                </div>
             </div>
-        }
 
-    </main>
-</div>
+            <div class="@loginCSS">
+                <LoginForm @ref="@loginObj" OnSuccessCallBack="SuccessfulCallBack" />
+            </div>
+            @if (_user.LoggedIn)
+            {
+                <div class="@bodyCSS">
+                    <article class="content px-3">
+                        @Body
+                    </article>
+                </div>
+            }
+
+        </main>
+    </div>
+</CascadingValue>
 
 @code {
     string loginCSS = "";
     string bodyCSS = "d-none";
     private LoginForm loginObj = new();
     string titleStr = "";
-
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -93,7 +94,6 @@
         }
         catch { }
 
-        //System.Diagnostics.Debug.WriteLine("Login CSS: " + loginObj.LoginCSS);
         if (_user.LoggedIn)
         {
             bodyCSS = "d-block";

@@ -1015,6 +1015,31 @@ public class CookCompApiJsonAccess : CookCompAPI
         }
     }
 
+    public async Task<bool> IsShoppingListLimit(int userId)
+    {
+        await LoadShoppingListsAsync();
+
+        if (_shopping_list != null)
+        {
+            List<ShoppingList> userList = new();
+
+            foreach (ShoppingList s in _shopping_list)
+            {
+                if(s.UserId == userId)
+                {
+                    userList.Add(s);
+                }
+            }
+
+            if(userList.Count == 3)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     ////////////////////////
     // Shopping List Items

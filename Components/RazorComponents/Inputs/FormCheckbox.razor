@@ -3,9 +3,10 @@
 @if(IsLabelRight)
 {
     <div class="col-sm-@FieldWidth">
-        <input class="@CssClass form-check-input mb-3" type="checkbox" value="@Value" checked="@Value"
+        <input class="@CssClass form-check-input" type="checkbox" value="@Value" checked="@Value"
                @onchange="UpdateParentElement" @onclick="OnClick" hidden="@IsHidden" disabled="@IsDisabled" />
         <label class="form-check-label">@Name</label>
+        <div class="mb-3" style="font-size:10px;">@ExtraStr</div>
     </div>
 }
 else
@@ -20,6 +21,9 @@ else
 @code {
     [Parameter]
     public bool IsLabelRight { get; set; } = false;
+
+    [Parameter]
+    public string ExtraStr { get; set; } = string.Empty;
 
     [Parameter]
     public EventCallback OnClick { get; set; }

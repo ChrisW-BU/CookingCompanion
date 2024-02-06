@@ -1,1 +1,1 @@
-{"Id":5,"ListId":1,"RecipeIngId":9,"HasObtained":true,"Details":{"Id":9,"RecipeId":1,"IngredientId":13,"Quantity":1,"MeasurementTypeId":12,"IngredientName":"White Onion","MeasurementName":"Quantity"}}
+{"Id":5,"ListId":1,"RecipeIngId":15,"HasObtained":false,"Details":{"Id":15,"RecipeId":1,"IngredientId":17,"Quantity":175,"MeasurementTypeId":1,"IngredientName":"White Wine","MeasurementName":"(ml) Millilitres"}}

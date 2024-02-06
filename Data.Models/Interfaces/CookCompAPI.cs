@@ -73,7 +73,7 @@ namespace Data.Models.Interfaces
         Task<ShoppingList?> SaveShoppingListAsync(ShoppingList editedObj);
         Task DeleteShoppingListAsync(int id);
         Task ClearShoppingList(int listId);
-
+        Task<bool> IsShoppingListLimit(int userId);
 
 
         ////////////////////////////

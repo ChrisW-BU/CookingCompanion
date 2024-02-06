@@ -50,5 +50,9 @@
             _api.ClearCacheAsync();
             _nav.NavigateTo(_page.GetPreviousPage());
         }
+        else
+        {
+            _nav.NavigateTo("/");
+        }
     }
 }

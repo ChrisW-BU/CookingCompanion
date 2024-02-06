@@ -1,0 +1,63 @@
+﻿@implements IDisposable;
+<div class="@cssString" hidden="@isHidden"><i class="fas fa-clock"></i>&nbsp @ClockTime</div>
+
+
+@code {
+    public string ClockTime { get; set; } = "00:00:00";
+
+    public string cssString { get; set; }
+
+    public bool isHidden = true;
+
+    public DateTime? StartTime;
+
+    public DateTime? EndTime;
+
+    System.Threading.Timer timer;
+
+    public async Task StartTimer(decimal duration)
+    {
+        // reset CSS & unhide component
+        cssString = "clock-timer";
+        ShowClock();
+
+        // set timer variables
+        StartTime = DateTime.Now;
+        EndTime = StartTime.Value.AddSeconds((double)duration);
+
+        // start timer interval
+        timer = new System.Threading.Timer((_) =>
+        {
+            TimeSpan currentTime = EndTime.Value.Subtract(DateTime.Now);
+            ClockTime = currentTime.ToString("hh\\:mm\\:ss");
+
+            if(currentTime <= TimeSpan.Zero)
+            {
+                cssString = "clock-timer-expired";
+                Dispose();
+            }
+
+            InvokeAsync(() =>
+            {
+                StateHasChanged();
+            });
+        }, null, 0, 1000);
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
+
+    public void HideClock()
+    {
+        isHidden = true;
+        StateHasChanged();
+    }
+
+    public void ShowClock()
+    {
+        isHidden = false;
+        StateHasChanged();
+    }
+}

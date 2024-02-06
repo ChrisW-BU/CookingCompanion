@@ -32,7 +32,7 @@
                         <ul>
                             @foreach (RecipeIngredient r in IngredientsObj)
                             {
-                                <li>@r.IngredientName - @r.Quantity @r.MeasurementName</li>
+                                <li>@r.IngredientName<div style="font-size:10px;">@r.Quantity @r.MeasurementName</div></li>
                             }
                         </ul>
                         @if (ShopObj.IsPinned)
@@ -46,7 +46,8 @@
 
         </div>
         <p>
-            <b>Page Notes:</b> There will be an option to resume or start the cooking process. You will be able to click an ingredient for overview (picture etc).<br />
+            <b>Page Notes:</b> If you haven't attempted this recipe before please select <i>"Start Cooking!"</i>. If you have attempted this recipe before you can
+            <i>"Resume Cooking"</i> or <i>"Restart Recipe"</i>.'<br />
 
         </p>
         @* if this recipe/user ID combination has a record already, be "resume recipe" and add another button for restart recipe *@
@@ -69,7 +70,7 @@
         }
     </ButtonContainer>
 </PageBase>
-
+<Modal @ref="modalRef" />
 
 @code {
     [Parameter]
@@ -150,12 +151,20 @@
         {
             if (RecipeObj != null && RecipeObj.Id > 0)
             {
-                ShopObj = new();
-                ShopObj.UserId = _user.Id;
-                ShopObj.RecipeId = RecipeId;
-                ShopObj.Name = RecipeObj.Name;
-                ShopObj.IsPinned = true;
-                ShopObj = await _api.SaveShoppingListAsync(ShopObj);
+                if(!await _api.IsShoppingListLimit(_user.Id))
+                {
+                    ShopObj = new();
+                    ShopObj.UserId = _user.Id;
+                    ShopObj.RecipeId = RecipeId;
+                    ShopObj.Name = RecipeObj.Name;
+                    ShopObj.IsPinned = true;
+                    ShopObj = await _api.SaveShoppingListAsync(ShopObj);
+                }
+                else
+                {
+                    // Pop-up
+                    ErrorMessage();
+                }
             }
         }
 
@@ -249,5 +258,17 @@
             _api.ClearCacheAsync();
             _nav.NavigateTo(_page.GetPreviousPage());
         }
+        else
+        {
+            _nav.NavigateTo("/recipes/");
+        }
+    }
+
+    private Modal modalRef;
+
+    private void ErrorMessage()
+    {
+        // Shows the popup at the center of the screen
+        modalRef.Show("You can only add a maximum of 3 shopping lists.");
     }
 }
