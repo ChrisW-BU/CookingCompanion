@@ -98,8 +98,8 @@
         }
 
     </FormBase>
-    <div hidden="@IsHidden"><button style="width:120px; color:#fff; background-color:slategrey; border-radius: 10px;" @onclick="(() => StartTimer())">
-        <i style="float: right; color:#fff;" class="fas fa-clock pt-1"></i>&nbsp Start Timer</button></div>
+    <div hidden="@IsHidden"><button class="timer-button" @onclick="(() => StartTimer())">
+        <i class="fas fa-clock pt-1 timer-icon"></i>Start Timer</button></div>
     
     @* Made an adaptation of the ButtonContainer, as it wasn't ordering the buttons as preferred. *@
     <div class="d-none d-sm-grid">
@@ -279,6 +279,6 @@
 
     public async void StartTimer()
     {
-        ourClock.StartTimer(RStepObj.TimerDuration);
+        ourClock.StartTimer(RStepObj.TimerDuration, RStepObj.TimerString, RStepObj.PreviousStepImgUrl);
     }
 }

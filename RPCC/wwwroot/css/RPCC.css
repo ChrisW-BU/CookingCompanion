@@ -41,3 +41,21 @@
     font-style:italic;
 }
 
+.timer-button {
+    width: 120px;
+    padding: 5px;
+    color: #fff;
+    background-color: slategrey;
+    border-radius: 10px;
+}
+
+    .timer-button:hover {
+        background-color: white;
+        color: slategrey;
+    }
+
+.timer-icon {
+    float: right;
+    margin-left: 4px;
+}
+

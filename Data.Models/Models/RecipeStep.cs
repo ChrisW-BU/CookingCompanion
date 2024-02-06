@@ -18,6 +18,8 @@
 
         public string PreviousStepImgUrl { get; set; } = string.Empty;
 
+        public string TimerString { get; set; } = string.Empty;
+
 
         // When we create a cooking recipe step, keep track of timings
         public bool HasTimer { get; set; }

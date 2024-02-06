@@ -1,11 +1,19 @@
 ﻿@implements IDisposable;
-<div class="@cssString" hidden="@isHidden"><i class="fas fa-clock"></i>&nbsp @ClockTime</div>
-
+<div class="clock-position @animString" @onclick=TimerClick>
+    <div class="@cssString" hidden="@isHidden"><i class="fas fa-clock"></i>&nbsp @ClockTime</div>
+    <div class="clock-description" hidden="@isHidden">@timerString &nbsp<img src="@timerImgString" class="img-fluid rounded-4" style="width:25px; float: right;" /></div>
+</div>
 
 @code {
     public string ClockTime { get; set; } = "00:00:00";
 
     public string cssString { get; set; }
+
+    public string timerString { get; set; }
+
+    public string timerImgString { get; set; }
+
+    public string animString { get; set; }
 
     public bool isHidden = true;
 
@@ -15,10 +23,15 @@
 
     System.Threading.Timer timer;
 
-    public async Task StartTimer(decimal duration)
+    private bool TimerComplete { get; set; }
+
+    public async Task StartTimer(decimal duration, string timerStr, string timerImgStr)
     {
         // reset CSS & unhide component
+        SetTimerString(timerStr, timerImgStr);
+        animString = "timer-on-anim";
         cssString = "clock-timer";
+        TimerComplete = false;
         ShowClock();
 
         // set timer variables
@@ -33,7 +46,8 @@
 
             if(currentTime <= TimeSpan.Zero)
             {
-                cssString = "clock-timer-expired";
+                cssString = "clock-timer-expired clock-anim";
+                TimerComplete = true;
                 Dispose();
             }
 
@@ -42,6 +56,12 @@
                 StateHasChanged();
             });
         }, null, 0, 1000);
+    }
+
+    public void SetTimerString(string str, string img)
+    {
+        timerString = str;
+        timerImgString = img;
     }
 
     public void Dispose()
@@ -59,5 +79,18 @@
     {
         isHidden = false;
         StateHasChanged();
+    }
+
+    public void TimerClick()
+    {
+        if(TimerComplete)
+        {
+            animString = "timer-off-anim";
+        }
+        else
+        {
+            animString = "timer-off-anim";
+            System.Diagnostics.Debug.WriteLine("Nothing happens...");
+        }
     }
 }

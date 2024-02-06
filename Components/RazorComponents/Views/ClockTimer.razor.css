@@ -1,27 +1,97 @@
+.clock-position {
+    position: fixed;
+    top: 49px;
+    left: 0px;
+    user-select: none;
+    text-align: center;
+    width: 100%;
+    z-index: 1;
+}
+
 .clock-timer {
     width: 120px;
     height: 35px;
-    position: fixed;
-    top: 50px;
-    right: 10%;
     background-color: green;
     color: #fff;
-    padding: 5px;
-    text-align: center;
-    user-select: none;
-    border-radius: 50px;
+    padding: 2px;
+    /*border-radius: 15px;*/
+    border-end-start-radius: 15px;
+    display: inline-block;
+    border: 2px solid #cbcbcb;
 }
 
 .clock-timer-expired {
     width: 120px;
     height: 35px;
-    position: fixed;
-    top: 50px;
-    right: 10%;
     background-color: darkred;
     color: #fff;
-    padding: 5px;
-    text-align: center;
-    user-select: none;
-    border-radius: 50px;
+    padding: 2px;
+    /*border-radius: 15px;*/
+    border-end-start-radius: 15px;
+    display: inline-block;
+    border: 2px solid #cbcbcb;
+}
+
+.clock-description {
+    max-width: 220px;
+    height: 35px;
+    background-color: grey;
+    color: #fff;
+    padding: 2px;
+    border-end-end-radius: 15px;
+    display: inline-block;
+    border: 2px solid #cbcbcb;
+}
+
+.clock-anim {
+    animation: text-flash 1s linear infinite;
+}
+
+.timer-on-anim {
+    animation: timer-on 0.5s linear forwards;
+}
+
+.timer-off-anim {
+    animation: timer-off 0.4s linear forwards;
+}
+
+@keyframes text-flash {
+    50% {
+        opacity:0;
+    }
+}
+
+@keyframes timer-on {
+    0% {
+        top: -50px;
+        opacity:0;
+    }
+    50% {
+        top: 0px;
+        opacity: 0.5;
+    }
+    90% {
+        top: 59px;
+    }
+    100% {
+        top: 49px;
+        opacity: 1;
+    }
+}
+
+@keyframes timer-off {
+    0% {
+        opacity:1;
+        top: 49px;
+    }
+
+    50% {
+        opacity:0.5;
+        top: 0px;
+    }
+
+    100% {
+        opacity:0;
+        top: -50px;
+    }
 }
