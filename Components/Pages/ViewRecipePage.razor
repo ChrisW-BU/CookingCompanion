@@ -171,6 +171,7 @@
         StateHasChanged();
     }
 
+    // Finds all CookingSteps tied to this recipe/user and deletes them all.
     public async Task RestartRecipe()
     {
         await _api.RestartCookingRecipe(RecipeId, _user.Id);

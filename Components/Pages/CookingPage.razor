@@ -156,7 +156,7 @@
             RecipeId = recId;
             RecipeObj = await _api.GetRecipeUniqueAsync(RecipeId);
             StepList = await _api.CheckCookingStatus(RecipeId, _user.Id);
-
+            StepList = StepList.OrderBy(b => b.StepNumber).ToList();
             foreach (CookingStep cs in StepList)
             {
                 if (!cs.IsCompleted)
@@ -198,6 +198,8 @@
     {
         if (StepList != null && CStepObj != null && (CStepObj.StepNumber + 1 <= StepList.Count))
         {
+            CStepObj.IsCompleted = true;
+            await SaveCookingStep();
             CStepObj = StepList.Find(x => x.StepNumber == CStepObj.StepNumber + 1);
             await UpdateRecipeStep();
             StateHasChanged();
@@ -209,6 +211,11 @@
         RStepObj = await _api.GetRecipeStepUniqueAsync(CStepObj.StepId);
         Title = RStepObj.Title;
         Description = RStepObj.Description;
+    }
+
+    private async Task SaveCookingStep()
+    {
+        await _api.SaveCookingStepAsync(CStepObj);
     }
 
     public string PageTitleName
@@ -279,6 +286,11 @@
 
     public async void StartTimer()
     {
+        // We are starting the step here
+        CStepObj.StepTimerStarted = DateTime.Now;
+        // We need to stop this somehow later. This might need to tie into the
+        // ClockTimer comp.
+
         ourClock.StartTimer(RStepObj.TimerDuration, RStepObj.TimerString, RStepObj.PreviousStepImgUrl);
     }
 }
