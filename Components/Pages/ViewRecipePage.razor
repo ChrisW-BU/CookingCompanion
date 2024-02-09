@@ -121,11 +121,13 @@
         }
     }
 
-    public async Task FavouriteClicked()
+    public async Task FavouriteClicked() // Logging
     {
         if (FavObj != null && FavObj.Id > 0)
         {
             await _api.DeleteFavouriteAsync(FavObj.Id);
+            await _api.SaveManualLogEntry(
+                _user.Id, FavObj.Id, CookCompAPI.UserLogs.RemovedFavourite, "Favourite");
             FavObj = new();
         }
         else
@@ -135,16 +137,20 @@
             FavObj.UserId = _user.Id;
             FavObj.IsFavourite = true;
             FavObj = await _api.SaveFavouriteAsync(FavObj);
+            await _api.SaveManualLogEntry(
+                _user.Id, FavObj.Id, CookCompAPI.UserLogs.AddFavourite, "Favourite");
         }
 
         StateHasChanged();
     }
 
-    public async Task PinClicked()
+    public async Task PinClicked() // Logging
     {
         if (ShopObj != null && ShopObj.Id > 0)
         {
             await _api.DeleteShoppingListAsync(ShopObj.Id);
+            await _api.SaveManualLogEntry(
+                _user.Id, ShopObj.Id, CookCompAPI.UserLogs.RemovedShoppingList, "ShoppingList");
             ShopObj = new();
         }
         else
@@ -159,9 +165,13 @@
                     ShopObj.Name = RecipeObj.Name;
                     ShopObj.IsPinned = true;
                     ShopObj = await _api.SaveShoppingListAsync(ShopObj);
+                    await _api.SaveManualLogEntry(
+                        _user.Id, ShopObj.Id, CookCompAPI.UserLogs.AddedShoppingList, "ShoppingList");
                 }
                 else
                 {
+                    await _api.SaveManualLogEntry(
+                        _user.Id, 0, CookCompAPI.UserLogs.Error, "Tried to add more shopping lists than max.");
                     // Pop-up
                     ErrorMessage();
                 }
@@ -176,6 +186,8 @@
     {
         await _api.RestartCookingRecipe(RecipeId, _user.Id);
         GoToCookingPage();
+        await _api.SaveManualLogEntry(
+                        _user.Id, RecipeObj.Id, CookCompAPI.UserLogs.RestartedRecipe, "Recipe");
     }
 
     protected async override Task OnParametersSetAsync()
@@ -243,6 +255,8 @@
         _page.AddPage("recipes/view_recipe/" + RecipeId);
         _api.ClearCacheAsync();
         _nav.NavigateTo("/recipes/cooking/" + RecipeId);
+        _api.SaveManualLogEntry(
+            _user.Id, RecipeObj.Id, CookCompAPI.UserLogs.StartedRecipe, "Recipe");
     }
 
     private void GoToShoppingListPage()

@@ -4,6 +4,27 @@ namespace Data.Models.Interfaces
 {
     public interface CookCompAPI
     {
+        public enum LogActionType
+        {
+            Read,
+            Save,
+            Delete
+        }
+
+        public enum UserLogs
+        {
+            StartedRecipe,
+            EndedRecipe,
+            RestartedRecipe,
+            StartedTimer,
+            EndedTimer,
+            AddFavourite,
+            RemovedFavourite,
+            AddedShoppingList,
+            RemovedShoppingList,
+            Error
+        }
+
         ////////////////////////////////
         // Ingredient Interface Members
         ////////////////////////////////
@@ -123,11 +144,19 @@ namespace Data.Models.Interfaces
 
 
 
+        ////////////////////////////
+        // Logs
+        ////////////////////////////
+        Task<List<LogEntry>?> GetLogEntryListAsync(int userId, string entityType);
+        Task SaveManualLogEntry(int userId, int entityId, UserLogs ul, string entityType);
+        Task<List<LogEntry>?> GetManualLogEntryList();
+
+
         /////////////////
         // Other Helpers
         /////////////////
         Task ClearCacheAsync();
-        Task<List<MeasurementType?>>GetMeasurementTypeListAsync();
+        Task<List<MeasurementType>?>GetMeasurementTypeListAsync();
         Task<MeasurementType?> GetMeasurementTypeUniqueAsync(int id);
     }
 }

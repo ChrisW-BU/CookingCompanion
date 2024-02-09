@@ -2,6 +2,9 @@
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 using Data.Models;
+using System.Xml.Linq;
+using System.Reflection;
+using System.ComponentModel;
 
 namespace Data;
 
@@ -19,6 +22,7 @@ public class CookCompApiJsonAccess : CookCompAPI
     private List<MeasurementType>? _measurements;
     private List<Cooking>? _cooking;
     private List<CookingStep>? _cooking_steps;
+    private List<LogEntry>? _logs;
 
     /// <summary>
     /// This allows the injection of IOptions and creates a settings structure for the data folders.
@@ -86,6 +90,11 @@ public class CookCompApiJsonAccess : CookCompAPI
         if (!Directory.Exists($@"{_settings.DataRootPath}\{_settings.CookingStepFolder}"))
         {
             Directory.CreateDirectory($@"{_settings.DataRootPath}\{_settings.CookingStepFolder}");
+        }
+
+        if (!Directory.Exists($@"{_settings.DataRootPath}\{_settings.LogEntryFolder}"))
+        {
+            Directory.CreateDirectory($@"{_settings.DataRootPath}\{_settings.LogEntryFolder}");
         }
     }
 
@@ -1520,6 +1529,8 @@ public class CookCompApiJsonAccess : CookCompAPI
     public Task DeleteCookingStepAsync(int id)
     {
         DeleteAsync(_cooking_steps, _settings.CookingStepFolder, id);
+        //SaveLogEntryAsync(null, id, id, LogActionType.Read, "Token Renewed");
+
         if (_cooking_steps != null)
         {
             var editedObj = _cooking_steps.FirstOrDefault(b => b.Id == id);
@@ -1570,6 +1581,7 @@ public class CookCompApiJsonAccess : CookCompAPI
                 {
                     if(u.UserToken.ToString() == userName)
                     {
+                        await SaveLogEntryAsync(u, u.Id, u.Id, Models.Interfaces.CookCompAPI.LogActionType.Read, "Token Validated");
                         return u;
                     }
                 }
@@ -1577,6 +1589,7 @@ public class CookCompApiJsonAccess : CookCompAPI
                 {
                     if (u.Name == userName)
                     {
+                        await SaveLogEntryAsync(u, u.Id, u.Id, Models.Interfaces.CookCompAPI.LogActionType.Read, "Logged In");
                         return u;
                     }
                 }
@@ -1614,11 +1627,144 @@ public class CookCompApiJsonAccess : CookCompAPI
             {
                 if (u.UserToken == userId)
                 {
+                    await SaveLogEntryAsync(u, u.Id, u.Id, Models.Interfaces.CookCompAPI.LogActionType.Read, "Token Renewed");
                     return u;
                 }
             }
         }
 
         return null;
+    }
+
+
+    /////////////////////
+    // Logs
+    /////////////////////
+ 
+    /// <summary>
+    /// Load the log entry repository.
+    /// </summary>
+    /// <returns></returns>
+    private Task LoadLogEntriesAsync()
+    {
+        Load<LogEntry>(ref _logs, _settings.LogEntryFolder);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Save a log entry using the specified parameters.
+    /// </summary>
+    /// <param name="dataObj"></param>
+    /// <param name="userId"></param>
+    /// <param name="entityId"></param>
+    /// <param name="lat"></param>
+    /// <param name="message"></param>
+    /// <returns></returns>
+    public async Task SaveLogEntryAsync(object dataObj, int userId, int entityId,
+        Models.Interfaces.CookCompAPI.LogActionType lat, string message)
+    {
+        if (_logs == null)
+        {
+            await LoadLogEntriesAsync();
+        }
+
+        int logId = 0;
+
+        if(_logs?.Count == 0)
+        {
+            logId = 1;
+        }
+        else
+        {
+            logId = ((int)_logs.Max(b => b.Id)) + 1;
+        }
+
+        LogEntry newEntry = new()
+        {
+            Id = logId,
+            Date = DateTime.Now,
+            UserId = userId,
+            EntityType = dataObj.GetType().Name,
+            EntityId = entityId,
+            Action = lat.ToString(),
+            Message = message,
+            EntityJson = JsonSerializer.Serialize(dataObj)
+        };
+
+        await SaveAsync<LogEntry>(_logs, _settings.LogEntryFolder, $"{newEntry.Id}.json", newEntry);
+    }
+
+    public async Task SaveManualLogEntry(int userId, int entityId,
+        Models.Interfaces.CookCompAPI.UserLogs ul, string entityType)
+    {
+        if (_logs == null)
+        {
+            await LoadLogEntriesAsync();
+        }
+
+        int logId = 0;
+
+        if (_logs?.Count == 0)
+        {
+            logId = 1;
+        }
+        else
+        {
+            logId = ((int)_logs.Max(b => b.Id)) + 1;
+        }
+
+        LogEntry newEntry = new()
+        {
+            Id = logId,
+            Date = DateTime.Now,
+            UserId = userId,
+            EntityId = entityId,
+            Action = ul.ToString(),
+            EntityType = entityType,
+            IsManual = true
+        };
+
+        await SaveAsync<LogEntry>(_logs, _settings.LogEntryFolder, $"{newEntry.Id}.json", newEntry);
+    }
+
+    /// <summary>
+    /// Return a list of log entries using the parameters specified
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="entityType"></param>
+    /// <returns></returns>
+    public async Task<List<LogEntry>?> GetLogEntryListAsync(int userId, string entityType)
+    {
+        await LoadLogEntriesAsync();
+
+        List<LogEntry> logList = new();
+
+        foreach (LogEntry log in _logs)
+        {
+            if ((userId == 0 ||log.UserId == userId) && 
+                (entityType == string.Empty ||log.EntityType == entityType))
+            {
+                logList.Add(log);
+            }
+        }
+
+        return logList ?? new();
+    }
+
+    public async Task<List<LogEntry>?> GetManualLogEntryList()
+    {
+        await LoadLogEntriesAsync();
+
+        List<LogEntry> logList = new();
+
+        foreach (LogEntry log in _logs)
+        {
+            if (log.IsManual)
+            {
+                logList.Add(log);
+            }
+        }
+
+        return logList ?? new();
     }
 }

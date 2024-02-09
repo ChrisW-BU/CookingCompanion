@@ -201,16 +201,26 @@
             }
             else
             {
+                await _api.SaveManualLogEntry(
+            _user.Id, CStepObj.Id, CookCompAPI.UserLogs.EndedTimer, "CookingStep");
                 ourClock.StopClock();
             }
         }
-        if (StepList != null && CStepObj != null && (CStepObj.StepNumber + 1 <= StepList.Count))
+        if (StepList != null && CStepObj != null)
         {
-            CStepObj.IsCompleted = true;
-            await SaveCookingStep();
-            CStepObj = StepList.Find(x => x.StepNumber == CStepObj.StepNumber + 1);
-            await UpdateRecipeStep();
-            StateHasChanged();
+            if (CStepObj.StepNumber + 1 <= StepList.Count)
+            {
+                CStepObj.IsCompleted = true;
+                await SaveCookingStep();
+                CStepObj = StepList.Find(x => x.StepNumber == CStepObj.StepNumber + 1);
+                await UpdateRecipeStep();
+                StateHasChanged();
+            }
+        }
+        else
+        {
+            await _api.SaveManualLogEntry(
+                _user.Id, 0, CookCompAPI.UserLogs.Error, "Step list not found, or cooking step object not found...");
         }
     }
 
@@ -287,8 +297,11 @@
             if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Cancel timer and exit recipe?")){
                 return;
             }
+            await _api.SaveManualLogEntry(
+                _user.Id, CStepObj.Id, CookCompAPI.UserLogs.EndedTimer, "CookingStep");
             ourClock.Dispose();
             ourClock.HideClock();
+
         }
         if (_page.IsPrevious())
         {
@@ -319,10 +332,9 @@
     {
         // We are starting the step here
         CStepObj.StepTimerStarted = DateTime.Now;
-        // We need to stop this somehow later. This might need to tie into the
-        // ClockTimer comp.
         SaveCookingStep();
-
         ourClock.StartTimer(RStepObj.TimerDuration, RStepObj.TimerString, RStepObj.PreviousStepImgUrl);
+        await _api.SaveManualLogEntry(
+            _user.Id, CStepObj.Id, CookCompAPI.UserLogs.StartedTimer, "CookingStep");
     }
 }

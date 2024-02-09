@@ -2,7 +2,10 @@
 @inject CookCompAPI _api
 @inject NavigationManager _nav
 @inject PageHistory _page
+@inject UserGlobal _user
 
+@if (_user.IsAdmin)
+{
 <PageTitle>@PageTitleName</PageTitle>
 <PageBase>
     <h3>@TitleName</h3>
@@ -25,6 +28,7 @@
         <BackButtonControl OnClickCall="PageBack" />
     </ButtonContainer>
 </PageBase>
+}
 
 @code {
     [Parameter]

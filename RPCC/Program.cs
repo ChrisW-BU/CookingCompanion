@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Web;
 using Data;
 using Data.Models.Interfaces;
 using Data.Models.Models;
-using Components.RazorComponents.Forms;
+//using Components.RazorComponents.Forms;
 using Blazored.LocalStorage;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,6 +31,7 @@ builder.Services.AddOptions<CookCompApiJsonAccessSetting>().Configure(options =>
     options.MeasurementTypeFolder = "MeasurementTypes";
     options.CookingFolder = "Cooking";
     options.CookingStepFolder = "CookingSteps";
+    options.LogEntryFolder = "LogEntries";
 }
 );
 

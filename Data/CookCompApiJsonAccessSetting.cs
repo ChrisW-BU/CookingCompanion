@@ -25,5 +25,7 @@
         public string CookingFolder { get; set; } = string.Empty;
 
         public string CookingStepFolder { get; set; } = string.Empty;
+
+        public string LogEntryFolder { get; set; } = string.Empty;
     }
 }

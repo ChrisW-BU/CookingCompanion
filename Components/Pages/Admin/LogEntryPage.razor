@@ -1,0 +1,28 @@
+﻿@page "/admin/log_entries/"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+@inject PageHistory _page
+@inject UserGlobal _user
+
+@if (_user.IsAdmin)
+{
+    <PageTitle>Admin Logs</PageTitle>
+    <PageBase>
+        <h3>Manual Log Entry Table</h3>
+        <LogEntryTable />
+        <ButtonContainer>
+            <BackButtonControl OnClickCall="PageBack" />
+        </ButtonContainer>
+    </PageBase>
+}
+
+@code {
+    private void PageBack()
+    {
+        if (_page.IsPrevious())
+        {
+            _api.ClearCacheAsync();
+            _nav.NavigateTo(_page.GetPreviousPage());
+        }
+    }
+}
