@@ -106,12 +106,12 @@
         <div class="btn-group mt-4">
             <PreviousStepButton OnClickCall="PreviousStep" />
             <CookingRecipeButton OnClickCall="PageBack" />
-            <NextStepButton OnClickCall="NextStep" />
+            <NextStepButton IsHidden=@NextIsHidden OnClickCall="NextStep" />
         </div>
     </div>
     <div class="d-grid d-sm-none">
         <div class="btn-group-vertical mt-4">
-            <NextStepButton OnClickCall="NextStep" />
+            <NextStepButton IsHidden=@NextIsHidden OnClickCall="NextStep" />
             <PreviousStepButton OnClickCall="PreviousStep" />
             <CookingRecipeButton OnClickCall="PageBack" />
         </div>
@@ -133,6 +133,7 @@
     public int RecipeId { get; set; }
 
     public bool IsHidden { get; set; } =  true;
+    public bool NextIsHidden { get; set; } = false;
 
     private bool IsLoading { get; set; } = true;
 
@@ -183,7 +184,19 @@
 
     private async void PreviousStep()
     {
-        if (StepList != null && CStepObj != null && (CStepObj.StepNumber > 1))
+        if (await CheckPreviousStepForTimer() && ourClock.IsRunning)
+        {
+            if (!await JSRuntime.InvokeAsync<bool>(
+                "confirm", $"You already have a timer running. Do you want to cancel the previous timer?"))
+            {
+                ourClock.StopClock();
+                await _api.SaveManualLogEntry(
+                    _user.Id, CStepObj.Id, CookCompAPI.UserLogs.EndedTimer, "CookingStep");
+                return;
+            }
+        }
+
+        if (await CheckPreviousStep())
         {
             CStepObj = StepList.Find(x => x.StepNumber == CStepObj.StepNumber - 1);
             await UpdateRecipeStep();
@@ -193,29 +206,23 @@
 
     private async void NextStep()
     {
-        if ((await CheckNextStepForTimer())) {
+        if (await CheckNextStepForTimer() && ourClock.IsRunning) {
             if (!await JSRuntime.InvokeAsync<bool>(
                 "confirm", $"You already have a timer running. Do you want to cancel the previous timer?"))
             {
+                ourClock.StopClock();
+                await _api.SaveManualLogEntry(
+                    _user.Id, CStepObj.Id, CookCompAPI.UserLogs.EndedTimer, "CookingStep");
                 return;
             }
-            else
-            {
-                await _api.SaveManualLogEntry(
-            _user.Id, CStepObj.Id, CookCompAPI.UserLogs.EndedTimer, "CookingStep");
-                ourClock.StopClock();
-            }
         }
-        if (StepList != null && CStepObj != null)
+        if (await CheckNextStep())
         {
-            if (CStepObj.StepNumber + 1 <= StepList.Count)
-            {
-                CStepObj.IsCompleted = true;
-                await SaveCookingStep();
-                CStepObj = StepList.Find(x => x.StepNumber == CStepObj.StepNumber + 1);
-                await UpdateRecipeStep();
-                StateHasChanged();
-            }
+            CStepObj.IsCompleted = true;
+            await SaveCookingStep();
+            CStepObj = StepList.Find(x => x.StepNumber == CStepObj.StepNumber + 1);
+            await UpdateRecipeStep();
+            StateHasChanged();
         }
         else
         {
@@ -224,31 +231,71 @@
         }
     }
 
+    private async Task<bool> CheckNextStep()
+    {
+        if (StepList != null && CStepObj != null)
+        {
+            if (CStepObj.StepNumber + 1 <= StepList.Count)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private async Task<bool> CheckPreviousStep()
+    {
+        if (StepList != null && CStepObj != null && (CStepObj.StepNumber > 1))
+        {
+            return true;
+        }
+        return false;
+    }
+
     private async Task UpdateRecipeStep()
     {
         RStepObj = await _api.GetRecipeStepUniqueAsync(CStepObj.StepId);
         Title = RStepObj.Title;
         Description = RStepObj.Description;
+
+        // This isn't working correctly in the render tree
+        if(await CheckNextStep())
+        {
+            NextIsHidden = false;
+        }
+        else
+        {
+            NextIsHidden = true;
+            await _api.SaveManualLogEntry(
+                _user.Id, CStepObj.Id, CookCompAPI.UserLogs.EndedRecipe, "CookingStep");
+        }
     }
 
     private async Task<bool> CheckNextStepForTimer()
     {
-        if (StepList != null && CStepObj != null && (CStepObj.StepNumber + 1 <= StepList.Count))
+        if (await CheckNextStep())
         {
-
             var cookStep = StepList.Find(x => x.StepNumber == CStepObj.StepNumber + 1);
             var recStep = await _api.GetRecipeStepUniqueAsync(cookStep.StepId);
 
             if(recStep.HasTimer && ourClock.TimerStarted)
             {
-                System.Diagnostics.Debug.WriteLine(
-                    "It has a timer, we need to do something else...");
                 return true;
             }
-            else
+        }
+        return false;
+    }
+
+    private async Task<bool> CheckPreviousStepForTimer()
+    {
+        if (await CheckPreviousStep())
+        {
+            var cookStep = StepList.Find(x => x.StepNumber == CStepObj.StepNumber - 1);
+            var recStep = await _api.GetRecipeStepUniqueAsync(cookStep.StepId);
+
+            if (recStep.HasTimer && ourClock.TimerStarted)
             {
-                System.Diagnostics.Debug.WriteLine(
-                    "We're fine to carry on...");
+                return true;
             }
         }
         return false;
@@ -328,12 +375,12 @@
         await InvokeAsync(StateHasChanged);
     }
 
-    public async void StartTimer()
+    public async Task StartTimer()
     {
         // We are starting the step here
         CStepObj.StepTimerStarted = DateTime.Now;
-        SaveCookingStep();
-        ourClock.StartTimer(RStepObj.TimerDuration, RStepObj.TimerString, RStepObj.PreviousStepImgUrl);
+        await SaveCookingStep();
+        await ourClock.StartTimer(RStepObj.TimerDuration, RStepObj.TimerString, RStepObj.PreviousStepImgUrl);
         await _api.SaveManualLogEntry(
             _user.Id, CStepObj.Id, CookCompAPI.UserLogs.StartedTimer, "CookingStep");
     }

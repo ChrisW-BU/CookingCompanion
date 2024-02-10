@@ -7,13 +7,13 @@
 @code {
     public string ClockTime { get; set; } = "00:00:00";
 
-    public string cssString { get; set; }
+    public string cssString { get; set; } = string.Empty;
 
-    public string timerString { get; set; }
+    public string timerString { get; set; } = string.Empty;
 
-    public string timerImgString { get; set; }
+    public string timerImgString { get; set; } = string.Empty;
 
-    public string animString { get; set; }
+    public string animString { get; set; } = string.Empty;
 
     public bool isHidden = true;
 
@@ -21,11 +21,13 @@
 
     public DateTime? EndTime;
 
-    System.Threading.Timer timer;
+    System.Threading.Timer? timer;
 
     private bool TimerComplete { get; set; }
 
     public bool TimerStarted { get; set; }
+
+    public bool IsRunning { get; set; }
 
     public async Task StartTimer(decimal duration, string timerStr, string timerImgStr)
     {
@@ -39,7 +41,7 @@
         // set timer variables
         StartTime = DateTime.Now;
         EndTime = StartTime.Value.AddSeconds((double)duration);
-
+        IsRunning = true;
         // start timer interval
         timer = new System.Threading.Timer((_) =>
         {
@@ -81,6 +83,7 @@
     {
         isHidden = true;
         TimerStarted = false;
+        IsRunning = false;
         StateHasChanged();
     }
 
@@ -95,12 +98,8 @@
     {
         if(TimerComplete)
         {
+            IsRunning = false;
             animString = "timer-off-anim";
-        }
-        else
-        {
-            animString = "timer-off-anim";
-            // nothing happens - above needs removing
         }
     }
 }
