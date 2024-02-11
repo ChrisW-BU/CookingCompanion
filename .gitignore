@@ -363,4 +363,15 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Custom Ignores
-Data/
+Data/Cooking
+Data/CookingSteps
+Data/Favourites
+Data/Ingredients
+Data/LogEntries
+Data/MeasurementTypes
+Data/RecipeIngredients
+Data/Recipes
+Data/RecipeSteps
+Data/ShoppingListItems
+Data/ShoppingLists
+Data/Users
