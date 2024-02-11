@@ -9,11 +9,12 @@
     <FormBase>
         <FormInputText @bind-Value="UserField" Name="Please enter your provided username..." CssClass="" FieldWidth="12" />
     </FormBase>
+    <ButtonContainer>
+        <SubmitButtonControl Name="Login" Icon="fas fa-sign-in-alt" OnClickCall="Save" />
+    </ButtonContainer>
 </PageBase>
 
-<ButtonContainer>
-    <SubmitButtonControl Name="Login" Icon="fas fa-sign-in-alt" OnClickCall="Save" />
-</ButtonContainer>
+
 
 @code {
     public string LoginCSS { get; set; }

@@ -1,6 +1,1 @@
-{
-  "Id": 1,
-  "Name": "ChrisW",
-  "IsAdmin": true,
-  "UserToken": "0996e83f-c970-4eb1-ac91-46eb440c8933"
-}
+{"Id":1,"Name":"ChrisW","IsAdmin":true,"UserToken":"0996e83f-c970-4eb1-ac91-46eb440c8933","TasksCompleted":false}

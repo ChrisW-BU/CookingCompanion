@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Data.Models.Interfaces;
 
 namespace Data.Models.Models
 {
@@ -16,6 +17,8 @@ namespace Data.Models.Models
 
         public Guid UserToken { get; set; } = Guid.Empty;
 
+        private bool TasksCompleted { get; set; }
+
         public void SetUserInfo(User user)
         {
             if (user != null)
@@ -25,6 +28,7 @@ namespace Data.Models.Models
                 IsAdmin = user.IsAdmin;
                 LoggedIn = true;
                 UserToken = user.UserToken;
+                TasksCompleted = user.TasksCompleted;
             }
         }
 
@@ -35,6 +39,25 @@ namespace Data.Models.Models
             IsAdmin = false;
             LoggedIn = false;
             UserToken = Guid.Empty;
+            TasksCompleted = false;
+        }
+
+        public void SetTaskComplete(bool x)
+        {
+            TasksCompleted = x;
+        }
+
+        public void UpdateUserTaskStatus(User? u)
+        {
+            if (u != null)
+            {
+                u.TasksCompleted = TasksCompleted;
+            }
+        }
+
+        public bool GetTaskComplete()
+        {
+            return TasksCompleted;
         }
     }
 }

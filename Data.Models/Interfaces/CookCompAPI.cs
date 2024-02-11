@@ -26,7 +26,7 @@ namespace Data.Models.Interfaces
         }
 
         ////////////////////////////////
-        // Ingredient Interface Members
+        // IIngredient
         ////////////////////////////////
         Task<List<Ingredient>?> GetIngredientListAsync(int ingredientCount, int index);
         Task<Ingredient?> GetIngredientUniqueAsync(int id);
@@ -37,7 +37,7 @@ namespace Data.Models.Interfaces
 
 
         ////////////////////////////
-        // Recipe Interface Members
+        // IRecipe
         ////////////////////////////
         Task<List<Recipe>?> GetRecipeListAsync(int recipeCount, int index);
         Task<Recipe?> GetRecipeUniqueAsync(int id);
@@ -49,7 +49,7 @@ namespace Data.Models.Interfaces
 
 
         ////////////////////////////
-        // Recipe Ingredient Interface Members
+        // IRecipeIngredient
         ////////////////////////////
         Task<List<RecipeIngredient>?> GetRecipeIngredientListAsync(int recipeIngCount, int index);
         Task<RecipeIngredient?> GetRecipeIngredientUniqueAsync(int id);
@@ -61,7 +61,7 @@ namespace Data.Models.Interfaces
 
 
         ////////////////////////////
-        // Recipe Steps Interface Members
+        // IRecipeStep
         ////////////////////////////
         Task<List<RecipeStep>?> GetRecipeStepListAsync(int recipeStepCount, int index);
         Task<RecipeStep?> GetRecipeStepUniqueAsync(int id);
@@ -73,7 +73,7 @@ namespace Data.Models.Interfaces
 
 
         ////////////////////////////
-        // Favourites Interface Members
+        // IFavourite
         ////////////////////////////
         Task<List<Favourite>?> GetFavouriteListAsync();
         Task<Favourite?> GetFavouriteUniqueAsync(int id);
@@ -85,7 +85,7 @@ namespace Data.Models.Interfaces
 
 
         ////////////////////////////
-        // Shopping Interface Members
+        // IShoppingList
         ////////////////////////////
         Task<List<ShoppingList>?> GetShoppingListAsync(int userId);
         Task<ShoppingList?> GetShoppingUniqueAsync(int id);
@@ -98,7 +98,7 @@ namespace Data.Models.Interfaces
 
 
         ////////////////////////////
-        // ShoppingListItem Interface Members
+        // IShoppingListItem
         ////////////////////////////
         Task<List<ShoppingListItem>?> GetShoppingItemListAsync(int listId);
         Task<ShoppingListItem?> GetShoppingItemUniqueAsync(int id);
@@ -110,7 +110,7 @@ namespace Data.Models.Interfaces
 
 
         ////////////////////////////////
-        // Cooking Members
+        // ICooking
         ////////////////////////////////
         Task<List<Cooking>?> GetCookingListAsync(int cookingCount, int index);
         Task<Cooking?> GetCookingUniqueAsync(int id);
@@ -124,7 +124,7 @@ namespace Data.Models.Interfaces
 
 
         ////////////////////////////////
-        // Cooking Steps Members
+        // ICookingStep
         ////////////////////////////////
         Task<List<CookingStep>?> GetCookingStepListAsync(int cookingId);
         Task<CookingStep?> GetCookingStepUniqueAsync(int id);
@@ -135,21 +135,33 @@ namespace Data.Models.Interfaces
 
 
         ////////////////////////////
-        // User Interface Members
+        // IUser
         ////////////////////////////
         Task<List<User>?> GetUserListAsync();
         Task<User?> GetUser(string userName, bool isGuidCheck);
         Task<User?> GetUser(int userId);
         Task<User?> GetUser(Guid userId);
+        Task<User?> SaveUserAsync(User editedObj);
 
 
 
         ////////////////////////////
-        // Logs
+        // ITaskObj
+        ////////////////////////////
+        Task<List<TaskObj>?> GetTaskListAsync();
+        Task<bool> CheckTaskStatus(int taskId, int userId);
+        Task<TaskObj?> GetActiveTask(int taskId, int userId);
+        Task<TaskObj?> SaveTaskAsync(TaskObj editedObj);
+
+
+
+        ////////////////////////////
+        // ILogEntry
         ////////////////////////////
         Task<List<LogEntry>?> GetLogEntryListAsync(int userId, string entityType);
         Task SaveManualLogEntry(int userId, int entityId, UserLogs ul, string entityType);
         Task<List<LogEntry>?> GetManualLogEntryList();
+
 
 
         /////////////////

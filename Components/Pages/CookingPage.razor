@@ -5,6 +5,8 @@
 @inject PageHistory _page
 @inject IJSRuntime JSRuntime
 
+@if (_user.GetTaskComplete())
+{
 <PageTitle>@PageTitleName</PageTitle>
 <PageBase>
     @* <h5>@TitleName</h5> *@
@@ -119,6 +121,7 @@
 </PageBase>
 
 <ClockTimer @ref=ourClock></ClockTimer>
+}
 
 @code {
     public ClockTimer ourClock = new();
@@ -186,7 +189,7 @@
     {
         if (await CheckPreviousStepForTimer() && ourClock.IsRunning)
         {
-            if (!await JSRuntime.InvokeAsync<bool>(
+            if (await JSRuntime.InvokeAsync<bool>(
                 "confirm", $"You already have a timer running. Do you want to cancel the previous timer?"))
             {
                 ourClock.StopClock();

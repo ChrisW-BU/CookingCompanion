@@ -1,0 +1,250 @@
+﻿@page "/03e7e140-a010-4062-82c0-1201e4961532"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+@inject PageHistory _page
+@inject UserGlobal _user
+@implements IDisposable
+@inject IJSRuntime JSRuntime;
+@inject ILocalStorageService _ls;
+
+<PageTitle>Task One</PageTitle>
+<PageBase>
+    <AlertItem Style="AlertItem.AlertStyle.Warning">
+        <div style="font-size:24px;">
+            <i class="fas fa-edit fa-fw"></i>
+            <b>Task One</b>
+        </div>
+        <div style="font-size:20px;">
+            Search for a recipe called "mushroom risotto" and add it to your favourites.
+        </div>
+    </AlertItem>
+
+    @if (isLoading)
+    {
+        <ButtonContainer>
+            <BackButtonControl OnClickCall="GoToIndex"/>
+            <ButtonControl Name="Start Task" OnBaseClickCall="StartTask" Icon="fas fa-play" Colour="success" />
+        </ButtonContainer>
+    }
+    else
+    {
+        <ButtonContainer>
+            <BackButtonControl OnClickCall="GoToIndex" />
+            <ButtonControl Name="Can't Complete" OnBaseClickCall="FailTask" Icon="fas fa-stop" Colour="danger" />
+        </ButtonContainer>
+    }
+    <Modal />
+</PageBase>
+
+@*
+    GUID 1: 03e7e140-a010-4062-82c0-1201e4961532
+    GUID 2: ac5c23b5-bf0c-4894-ae80-8b1226daa7b4
+    GUID 3: 823bce54-0cf9-40a0-9c5d-53921f743093
+    GUID 4: cddd7b74-5596-42b1-b0da-848ed5e78a27
+    GUID 5: 0d90d0ad-6212-43a6-8fb8-fd91f6d8221b
+    GUID 6: defd8446-7e51-4482-8811-dd627fc64798
+*@
+
+@code {
+    // We check to see if user has a task record for this task
+    protected override async Task OnInitializedAsync()
+    {
+        // If this task is already complete, navigate to next task
+        if (await _api.CheckTaskStatus(1, _user.Id))
+        {
+            // If true, move to next task
+            _nav.NavigateTo("/ac5c23b5-bf0c-4894-ae80-8b1226daa7b4");
+        }
+        else
+        {
+            // Get the taskObj for this user/taskId
+            taskObj = await _api.GetActiveTask(taskId, _user.Id);
+
+            if(taskObj.Id > 0)
+            {
+                await ResetTaskAsync();
+            }
+        }
+        await base.OnInitializedAsync();
+    }
+
+    private bool isLoading { get; set; } = true;
+
+    private bool taskStarted { get; set; } = false;
+
+    private bool taskCompleted { get; set; } = false;
+
+    protected int taskId = 1;
+
+    private TaskObj? taskObj = new();
+
+    protected string currentPage = "03e7e140-a010-4062-82c0-1201e4961532";
+
+    protected string nextPage = "ac5c23b5-bf0c-4894-ae80-8b1226daa7b4";
+
+    private async void StartTask()
+    {
+        taskStarted = true;
+        DateTime startTime = DateTime.Now;
+
+        if(taskObj?.Id == 0) {
+            // Create a new task record for this user id
+            taskObj = new TaskObj
+            {
+                UserId = _user.Id,
+                TaskId = taskId,
+                TimeStarted = startTime
+            };
+        }
+        else
+        {
+            taskObj.TimeStarted = startTime;
+            taskObj.TimeEnded = null;
+            taskObj.TaskFailed = false;
+        }
+
+        await _api.SaveTaskAsync(taskObj);
+        isLoading = false;
+        StateHasChanged();
+    }
+
+    private async void FailTask()
+    {
+        if (await JSRuntime.InvokeAsync<bool>(
+            "confirm", $"This task will fail, and move you to the next task automatically. Confirm?"))
+        {
+            if (taskObj?.Id > 0)
+            {
+                taskObj.TaskFailed = true;
+                await _api.SaveTaskAsync(taskObj);
+            }
+            else
+            {
+                // error?
+            }
+        }
+    }
+
+    private async Task NextTask()
+    {
+        _nav.NavigateTo("/ac5c23b5-bf0c-4894-ae80-8b1226daa7b4");
+    }
+
+    public async Task TaskCompleted()
+    {
+        taskObj.TimeEnded = DateTime.Now;
+        await _api.SaveTaskAsync(taskObj);
+        // Then either give the option to navigate via button
+        // or navigate straight to the next task
+    }
+
+
+    // This will be used when the user has completed all tasks
+    public async Task AllTasksCompleted()
+    {
+        string lsu = "";
+        try
+        {
+            lsu = await _ls.GetItemAsStringAsync("uls");
+            Guid guid = Guid.Parse(lsu);
+
+            if (guid != Guid.Empty)
+            {
+                User? getUser = await _api.GetUser(guid);
+                _user.SetTaskComplete(true);
+                _user.UpdateUserTaskStatus(getUser);
+                await _api.SaveUserAsync(getUser);
+            }
+        }
+        catch { }
+    }
+
+    // The following code is to manage page navigation. We want to limit what the user can do
+    // when the app is in a scenario
+    private IDisposable? locationReg;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            locationReg =
+                _nav.RegisterLocationChangingHandler(OnLocationChanging);
+        }
+    }
+
+    // We need control over where the user can go once the scenario has begun
+    private async ValueTask OnLocationChanging(LocationChangingContext context)
+    {
+        if (context.TargetLocation == "/")
+        {
+            // we can go back to index regardless, so reset any timers on taskObj if req
+            await ResetTaskAsync();
+            await _api.SaveTaskAsync(taskObj);
+        }
+        else
+        {
+            if (taskCompleted)
+            {
+                if(context.TargetLocation != "/" + nextPage)
+                {
+                    context.PreventNavigation();
+                }
+            }
+            else // this is probably surplus to requirements
+            {
+                bool cancelChange = false;
+                // We want to check if the task has begun yet
+                if (taskStarted && !await ConfirmPageExit())
+                {
+                    cancelChange = true;
+                }
+
+                if (cancelChange)
+                {
+                    context.PreventNavigation();
+                }
+                else
+                {
+                    // If it hasn't then it doesn't matter
+                    if (context.TargetLocation != "/" + currentPage)
+                    {
+                        context.PreventNavigation();
+                    }
+                }
+            }
+        }
+        //return ValueTask.CompletedTask;
+    }
+
+    private async Task<bool> ConfirmPageExit()
+    {
+        if (await JSRuntime.InvokeAsync<bool>(
+            "confirm", $"If you leave this page now the task will be reset. Is this OK?"))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private async Task ResetTaskAsync()
+    {
+        if (taskObj.Id > 0)
+        {
+            taskObj.TimeStarted = null;
+            taskObj.TimeEnded = null;
+            taskObj.TaskFailed = false;
+            await _api.SaveTaskAsync(taskObj);
+        }
+    }
+
+    private async void GoToIndex()
+    {
+        if (await JSRuntime.InvokeAsync<bool>(
+            "confirm", $"If you leave this page now, the task will be reset. Is this OK?"))
+        {
+            _nav.NavigateTo("/");
+        }
+    }
+
+    public void Dispose() => locationReg?.Dispose();
+}

@@ -38,6 +38,7 @@
         TimerComplete = false;
         ShowClock();
 
+        await Task.Delay(900);
         // set timer variables
         StartTime = DateTime.Now;
         EndTime = StartTime.Value.AddSeconds((double)duration);
@@ -94,12 +95,14 @@
         StateHasChanged();
     }
 
-    public void TimerClick()
+    public async void TimerClick()
     {
         if(TimerComplete)
         {
             IsRunning = false;
             animString = "timer-off-anim";
+            await Task.Delay(700);
+            StopClock();
         }
     }
 }

@@ -17,8 +17,8 @@ main {
 
 .top-row {
     /*background-color: #ed8d07;*/
-    background-color:sienna;
-    border-bottom: 1px solid #9f4b05;
+    background-color: sienna;
+    border-bottom: 2px solid #783904;
     justify-content: space-between;
     height: 3.0rem;
     display: flex;

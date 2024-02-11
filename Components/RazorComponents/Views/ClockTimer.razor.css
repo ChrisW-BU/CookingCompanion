@@ -1,6 +1,6 @@
 .clock-position {
     position: fixed;
-    top: 49px;
+    top: 46px;
     left: 0px;
     user-select: none;
     text-align: center;
@@ -17,7 +17,8 @@
     /*border-radius: 15px;*/
     border-end-start-radius: 15px;
     display: inline-block;
-    border: 2px solid #cbcbcb;
+    border: 2px solid #783904;
+    z-index: 1;
 }
 
 .clock-timer-expired {
@@ -29,18 +30,19 @@
     /*border-radius: 15px;*/
     border-end-start-radius: 15px;
     display: inline-block;
-    border: 2px solid #cbcbcb;
+    border: 2px solid #783904;
+    z-index: 1;
 }
 
 .clock-description {
     max-width: 220px;
     height: 35px;
-    background-color: grey;
+    background-color: sienna;
     color: #fff;
     padding: 2px;
     border-end-end-radius: 15px;
     display: inline-block;
-    border: 2px solid #cbcbcb;
+    border: 2px solid #783904;
 }
 
 .clock-anim {
@@ -74,15 +76,15 @@
         top: 59px;
     }
     100% {
-        top: 49px;
+        top: 46px;
         opacity: 1;
     }
 }
 
 @keyframes timer-off {
     0% {
-        opacity:1;
-        top: 49px;
+        opacity: 1;
+        top: 46px;
     }
 
     50% {

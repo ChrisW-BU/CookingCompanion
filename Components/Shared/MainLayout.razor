@@ -19,7 +19,7 @@
                     }
                 </div>
                 <div class="user-select-none" style="display:flex; align-items:center">
-                    @if (_user.LoggedIn)
+                    @if (_user.LoggedIn && _user.GetTaskComplete())
                     {
                         <button class="navbar-toggler" type="button" title="Navigation" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
@@ -43,9 +43,12 @@
                         {
                             <MenuItem IsOffCanvas=true Icon="fas fa-tools" Title="Admin Panel" Href="admin"></MenuItem>
                         }
-                        <MenuItem IsOffCanvas=true Icon="fas fa-burger" Title="Recipes" Href="recipes"></MenuItem>
-                        <MenuItem IsOffCanvas=true Icon="fas fa-list-check" Title="Shopping Lists" Href="shoppinglist"></MenuItem>
-                        <MenuItem IsOffCanvas=true Icon="fas fa-star" Title="Favourites" Href="favourites"></MenuItem>
+                        @if (_user.GetTaskComplete())
+                        {
+                            <MenuItem IsOffCanvas=true Icon="fas fa-burger" Title="Recipes" Href="recipes"></MenuItem>
+                            <MenuItem IsOffCanvas=true Icon="fas fa-list-check" Title="Shopping Lists" Href="shoppinglist"></MenuItem>
+                            <MenuItem IsOffCanvas=true Icon="fas fa-star" Title="Favourites" Href="favourites"></MenuItem>
+                        }
                     </div>
                 </div>
             </div>
@@ -55,7 +58,7 @@
             </div>
             @if (_user.LoggedIn)
             {
-                <div class="@bodyCSS">
+                <div class="@bodyCSS" style="user-select:none">
                     <article class="content px-3">
                         @Body
                     </article>

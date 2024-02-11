@@ -9,5 +9,7 @@
         public bool IsAdmin { get; set; }
 
         public Guid UserToken { get; set; } = Guid.Empty;
+
+        public bool TasksCompleted { get; set; }
     }
 }
