@@ -1,0 +1,35 @@
+﻿@page "/b813df99-af96-417b-9a14-a72626b958e8"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+@inject PageHistory _page
+@inject UserGlobal _user
+
+<PageTitle>Cooking Companion - Tasks Completed</PageTitle>
+<PageBase>
+    <AlertItem Style="AlertItem.AlertStyle.Warning">
+        <div style="font-size:24px;">
+            <i class="fas fa-edit fa-fw"></i>
+            <b>All Tasks Completed!</b>
+        </div>
+        <div style="font-size:20px;">
+            Thank you for your participation in this test. The rest of the prototype should now be available to
+            use from the burger menu at the top. We encourage you to have a play with the features before continuing
+            on to the questionnaire. Once the questionnaire has been completed that will conclude your participation
+            in this test.
+        </div>
+    </AlertItem>
+    <ButtonContainer>
+        @*<BackButtonControl OnClickCall="GoToIndex" />
+         <ButtonControl Name="Complete Task" OnBaseClickCall="TaskCompleted" Icon="fas fa-check" Colour="success" />
+        <ButtonControl Name="Can't Complete" OnBaseClickCall="FailTask" Icon="fas fa-stop" Colour="danger" /> *@
+    </ButtonContainer>
+    <Modal />
+</PageBase>
+
+@code {
+    // We check to see if user has a task record for this task
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+}

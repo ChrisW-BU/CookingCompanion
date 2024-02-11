@@ -1,20 +1,20 @@
-﻿@page "/03e7e140-a010-4062-82c0-1201e4961532"
+﻿@page "/defd8446-7e51-4482-8811-dd627fc64798"
 @inject CookCompAPI _api
 @inject NavigationManager _nav
 @inject PageHistory _page
 @inject UserGlobal _user
-@implements IDisposable
+@inject ILocalStorageService _ls;
 @inject IJSRuntime JSRuntime;
 
-<PageTitle>Cooking Companion - Task One</PageTitle>
+<PageTitle>Cooking Companion - Task Six</PageTitle>
 <PageBase>
     <AlertItem Style="AlertItem.AlertStyle.Warning">
         <div style="font-size:24px;">
             <i class="fas fa-edit fa-fw"></i>
-            <b>Task One</b>
+            <b>Task Six</b>
         </div>
         <div style="font-size:20px;">
-            Search for a recipe called "mushroom risotto" and add it to your favourites.
+            Open the main menu.
         </div>
     </AlertItem>
 
@@ -22,7 +22,7 @@
     {
         @* Init - Task description and start button *@
         <ButtonContainer>
-            <BackButtonControl OnClickCall="GoToIndex"/>
+            <BackButtonControl OnClickCall="GoToIndex" />
             <ButtonControl Name="Start Task" OnBaseClickCall="StartTask" Icon="fas fa-play" Colour="success" />
         </ButtonContainer>
     }
@@ -38,6 +38,11 @@
     <Modal />
 </PageBase>
 
+@*
+    GUID 6: defd8446-7e51-4482-8811-dd627fc64798
+    GUID 7: b813df99-af96-417b-9a14-a72626b958e8
+*@
+
 @code {
     // We check to see if user has a task record for this task
     protected override async Task OnInitializedAsync()
@@ -45,7 +50,6 @@
         // If this task is already complete, navigate to next task
         if (await _api.CheckTaskStatus(taskId, _user.Id))
         {
-            //System.Diagnostics.Debug.WriteLine("Moves to next task!");
             await NextTask();
         }
         else
@@ -53,7 +57,7 @@
             // Get the taskObj for this user/taskId
             taskObj = await _api.GetActiveTask(taskId, _user.Id);
 
-            await ResetTaskAsync(); // COPY THIS CHANGE
+            await ResetTaskAsync();
         }
         await base.OnInitializedAsync();
     }
@@ -64,13 +68,13 @@
 
     private bool taskCompleted { get; set; } = false;
 
-    protected int taskId = 1;
+    protected int taskId = 6;
 
     private TaskObj? taskObj = new();
 
-    protected string currentPage = "03e7e140-a010-4062-82c0-1201e4961532";
+    protected string currentPage = "defd8446-7e51-4482-8811-dd627fc64798";
 
-    protected string nextPage = "ac5c23b5-bf0c-4894-ae80-8b1226daa7b4";
+    protected string nextPage = "b813df99-af96-417b-9a14-a72626b958e8";
 
     private async Task ResetTaskAsync()
     {
@@ -91,14 +95,15 @@
         taskStarted = true;
         DateTime startTime = DateTime.Now;
 
-        if(taskObj?.Id == 0) {
+        if (taskObj?.Id == 0)
+        {
             // Create a new task record for this user id
             taskObj = new TaskObj
-            {
-                UserId = _user.Id,
-                TaskId = taskId,
-                TimeStarted = startTime
-            };
+                {
+                    UserId = _user.Id,
+                    TaskId = taskId,
+                    TimeStarted = startTime
+                };
         }
         else
         {
@@ -136,9 +141,31 @@
         await _api.SaveTaskAsync(taskObj);
         // Then either give the option to navigate via button
         // or navigate straight to the next task
-        //System.Diagnostics.Debug.WriteLine("Task completed...");
+        System.Diagnostics.Debug.WriteLine("Task completed...");
         taskCompleted = true;
+        await AllTasksCompleted();
         await NextTask();
+    }
+
+
+    // This will be used when the user has completed all tasks
+    public async Task AllTasksCompleted()
+    {
+        string lsu = "";
+        try
+        {
+            lsu = await _ls.GetItemAsStringAsync("uls");
+            Guid guid = Guid.Parse(lsu);
+
+            if (guid != Guid.Empty)
+            {
+                User? getUser = await _api.GetUser(guid);
+                _user.SetTaskComplete(true);
+                _user.UpdateUserTaskStatus(getUser);
+                await _api.SaveUserAsync(getUser);
+            }
+        }
+        catch { }
     }
 
     // The following code is to manage page navigation. We want to limit what the user can do
@@ -161,12 +188,13 @@
         {
             // we can go back to index regardless, so reset any timers on taskObj if req
             await ResetTaskAsync();
+            await _api.SaveTaskAsync(taskObj);
         }
         else
         {
             if (taskCompleted)
             {
-                if(context.TargetLocation != "/" + nextPage)
+                if (context.TargetLocation != "/" + nextPage)
                 {
                     context.PreventNavigation();
                 }
