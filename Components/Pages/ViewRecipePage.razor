@@ -70,7 +70,7 @@
         }
     </ButtonContainer>
 </PageBase>
-<Modal @ref="modalRef" />
+<PopupObj @ref="modalRef" />
 
 @code {
     [Parameter]
@@ -279,7 +279,7 @@
         }
     }
 
-    private Modal modalRef;
+    private PopupObj modalRef;
 
     private void ErrorMessage()
     {

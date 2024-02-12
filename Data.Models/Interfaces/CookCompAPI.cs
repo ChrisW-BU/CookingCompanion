@@ -170,5 +170,7 @@ namespace Data.Models.Interfaces
         Task ClearCacheAsync();
         Task<List<MeasurementType>?>GetMeasurementTypeListAsync();
         Task<MeasurementType?> GetMeasurementTypeUniqueAsync(int id);
+
+        void Output(string s);
     }
 }

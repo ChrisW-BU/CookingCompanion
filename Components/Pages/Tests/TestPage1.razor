@@ -29,16 +29,32 @@
     else
     {
         @* Task content goes here... *@
+        <label>Search</label>
+        <input type="text" value="@searchField" oninput="@CheckSearchStr" class="mb-4"/>
+        <div hidden="@hideDivOne">
+            No recipes found...
+        </div>
+        <div hidden="@hideDivTwo">
+            @if (recipe?.Id > 0)
+            {
+                <RecipeCard Id="@recipe.Id" UserId="_user.Id" Name="@recipe.Name" Description="@recipe.Description" ImgUrl="@recipe.ImgUrl"
+                            Duration="@recipe.Duration" IsVege="@recipe.IsVege" OnFavouriteClick="() => ourModal.OpenModal()" />
+            }
+
+        </div>
         <ButtonContainer>
             <BackButtonControl OnClickCall="GoToIndex" />
-            <ButtonControl Name="Complete Task" OnBaseClickCall="TaskCompleted" Icon="fas fa-check" Colour="success" />
-            <ButtonControl Name="Can't Complete" OnBaseClickCall="FailTask" Icon="fas fa-stop" Colour="danger" />
+            @* <ButtonControl Name="Complete Task" OnBaseClickCall="TaskCompleted" Icon="fas fa-check" Colour="success" /> *@
+            <ButtonControl Name="Unable to Complete" OnBaseClickCall="FailTask" Icon="fas fa-circle-xmark" Colour="danger" />
         </ButtonContainer>
     }
-    <Modal />
+    
 </PageBase>
+<ModalControl OnClickCall="FavouriteClicked" HeadStr="Task One Completed" BodyStr="Please click 'Confirm' to progress to the next task." @ref="@ourModal" />
 
 @code {
+    ModalControl ourModal  { get; set; }
+
     // We check to see if user has a task record for this task
     protected override async Task OnInitializedAsync()
     {
@@ -53,11 +69,45 @@
             // Get the taskObj for this user/taskId
             taskObj = await _api.GetActiveTask(taskId, _user.Id);
 
+            recipe = await _api.GetRecipeUniqueAsync(1);
+
             await ResetTaskAsync(); // COPY THIS CHANGE
         }
         await base.OnInitializedAsync();
     }
 
+    // Task logic
+    private string searchField { get; set; } = string.Empty;
+
+    private async Task CheckSearchStr(ChangeEventArgs args)
+    {
+        searchField = args.Value.ToString();
+
+        if (searchField == "mushroom risotto")
+        {
+            hideDivOne = true;
+            hideDivTwo = false;
+        }
+        else
+        {
+            hideDivOne = false;
+            hideDivTwo = true;
+        }
+    }
+
+    private void FavouriteClicked()
+    {
+        ourModal.CloseModal();
+        TaskCompleted();
+    }
+
+    private bool hideDivOne { get; set; } = false;
+
+    private bool hideDivTwo { get; set; } = true;
+
+    private Recipe? recipe = new();
+
+    // Page logic
     private bool isLoading { get; set; } = true;
 
     private bool taskStarted { get; set; } = false;
@@ -134,9 +184,6 @@
     {
         taskObj.TimeEnded = DateTime.Now;
         await _api.SaveTaskAsync(taskObj);
-        // Then either give the option to navigate via button
-        // or navigate straight to the next task
-        //System.Diagnostics.Debug.WriteLine("Task completed...");
         taskCompleted = true;
         await NextTask();
     }

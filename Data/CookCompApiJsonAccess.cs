@@ -1878,5 +1878,10 @@ namespace Data
 
             return logList ?? new();
         }
+
+        public void Output(string s)
+        {
+            System.Diagnostics.Debug.WriteLine(s);
+        }
     }
 }
