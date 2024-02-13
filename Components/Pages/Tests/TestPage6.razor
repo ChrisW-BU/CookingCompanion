@@ -14,7 +14,7 @@
             <b>Task Six</b>
         </div>
         <div style="font-size:20px;">
-            Open the main menu.
+            Open the main menu using the burger button.
         </div>
     </AlertItem>
 
@@ -28,22 +28,31 @@
     }
     else
     {
-        @* Task content goes here... *@
-        <ButtonContainer>
+        @if (parent.menuClicked)
+        {
+            <ButtonContainer>
+                <ButtonControl Name="Complete" OnBaseClickCall="CompleteTask" Icon="fas fa-check" Colour="success" />
+            </ButtonContainer>
+        }
+        else
+        {
+            @* Task content goes here... *@
+            <ButtonContainer>
             <BackButtonControl OnClickCall="GoToIndex" />
-            <ButtonControl Name="Complete Task" OnBaseClickCall="TaskCompleted" Icon="fas fa-check" Colour="success" />
             <ButtonControl Name="Can't Complete" OnBaseClickCall="FailTask" Icon="fas fa-stop" Colour="danger" />
         </ButtonContainer>
+        }
     }
-    <Modal />
+    <ModalControl OnClickCall="ConfirmCompleted" HeadStr="Task Six Completed" BodyStr="Please click 'Confirm' to progress to the next task." @ref="@ourModal" />
 </PageBase>
 
-@*
-    GUID 6: defd8446-7e51-4482-8811-dd627fc64798
-    GUID 7: b813df99-af96-417b-9a14-a72626b958e8
-*@
-
 @code {
+    [CascadingParameter]
+    protected MainLayout parent { get; set; }
+
+    // Object References
+    ModalControl ourModal { get; set; }
+
     // We check to see if user has a task record for this task
     protected override async Task OnInitializedAsync()
     {
@@ -58,6 +67,7 @@
             taskObj = await _api.GetActiveTask(taskId, _user.Id);
 
             await ResetTaskAsync();
+            //await JSRuntime.InvokeVoidAsync("addEventListener", "click", DotNetObjectReference.Create(this).Value, "DocClick");
         }
         await base.OnInitializedAsync();
     }
@@ -90,6 +100,17 @@
         }
     }
 
+    private async void CompleteTask()
+    {
+        ourModal.OpenModal();
+    }
+
+    private async void ConfirmCompleted()
+    {
+        ourModal.CloseModal();
+        TaskCompleted();
+    }
+
     private async void StartTask()
     {
         taskStarted = true;
@@ -114,15 +135,24 @@
 
         await _api.SaveTaskAsync(taskObj);
         isLoading = false;
+
+
+
         StateHasChanged();
     }
+
+    // [JSInvokable]
+    // public void DocClick()
+    // {
+    //     
+    // }
 
     private async void FailTask()
     {
         if (taskObj.Id > 0)
         {
             if (await JSRuntime.InvokeAsync<bool>(
-                "confirm", $"This task will failand you will move to the next task automatically. Confirm?"))
+                "confirm", $"This task will fail and you will move to the next task automatically. Confirm?"))
             {
                 taskObj.TaskFailed = true;
                 await _api.SaveTaskAsync(taskObj);
@@ -132,6 +162,7 @@
 
     private async Task NextTask()
     {
+        Dispose();
         _nav.NavigateTo("/" + nextPage);
     }
 
@@ -139,9 +170,6 @@
     {
         taskObj.TimeEnded = DateTime.Now;
         await _api.SaveTaskAsync(taskObj);
-        // Then either give the option to navigate via button
-        // or navigate straight to the next task
-        System.Diagnostics.Debug.WriteLine("Task completed...");
         taskCompleted = true;
         await AllTasksCompleted();
         await NextTask();
@@ -230,6 +258,7 @@
         if (await JSRuntime.InvokeAsync<bool>(
             "confirm", $"If you leave this page now the task will be reset. Is this OK?"))
         {
+            Dispose();
             return true;
         }
         return false;
@@ -241,6 +270,7 @@
             "confirm", $"If you leave this page now, the task will be reset. Is this OK?"))
         {
             _nav.NavigateTo("/");
+            Dispose();
         }
     }
 

@@ -26,6 +26,12 @@
                             <span class="fas fa-bars"></span>
                         </button>
                     }
+                    else
+                    {
+                        <button @onclick="MenuClick" class="navbar-toggler" type="button" title="Navigation">
+                            <span class="fas fa-bars"></span>
+                        </button>
+                    }
                     &nbsp
                     <span class="d-none d-sm-block">Cooking Companion</span>
                 </div>
@@ -74,6 +80,17 @@
     string bodyCSS = "d-none";
     private LoginForm loginObj = new();
     string titleStr = "";
+    public bool menuClicked = false;
+
+    // This is a trigger to cascade to the final test page. Once this has been completed
+    // the app will be opened up to them.
+    public void MenuClick()
+    {
+        if (!_user.GetTaskComplete())
+        {
+            menuClicked = true;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {

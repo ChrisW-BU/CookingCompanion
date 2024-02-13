@@ -191,6 +191,7 @@
 
     private async Task NextTask()
     {
+        Dispose();
         _nav.NavigateTo("/" + nextPage);
     }
 
