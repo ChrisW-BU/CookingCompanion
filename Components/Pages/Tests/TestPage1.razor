@@ -50,7 +50,7 @@
     }
     
 </PageBase>
-<ModalControl OnClickCall="FavouriteClicked" HeadStr="Task One Completed" BodyStr="Please click 'Confirm' to progress to the next task." @ref="@ourModal" />
+<ModalControl OnClickCall="ConfirmCompleted" HeadStr="Task One Completed" BodyStr="Please click 'Confirm' to progress to the next task." @ref="@ourModal" />
 
 @code {
     ModalControl ourModal  { get; set; }
@@ -95,7 +95,7 @@
         }
     }
 
-    private void FavouriteClicked()
+    private void ConfirmCompleted()
     {
         ourModal.CloseModal();
         TaskCompleted();

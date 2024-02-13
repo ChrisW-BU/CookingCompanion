@@ -59,7 +59,7 @@
     }
     <Modal />
 </PageBase>
-<ModalControl HeadStr="Task Two Completed" BodyStr="Please click 'Confirm' to progress to the next task." @ref="@ourModal" />
+<ModalControl OnClickCall="ConfirmCompleted" HeadStr="Task Two Completed" BodyStr="Please click 'Confirm' to progress to the next task." @ref="@ourModal" />
 
 @code {
     // Object References
@@ -103,13 +103,20 @@
         ListItemChecked();
     }
 
-    private void ListItemChecked()
+    private async void ListItemChecked()
     {
         bool allTrue = listItems.All(a => a.HasObtained); // Returns true if all elements are true
         if(allTrue)
         {
             _api.Output("Task complete!");
+            ourModal.OpenModal();
         }
+    }
+
+    private async void ConfirmCompleted()
+    {
+        ourModal.CloseModal();
+        TaskCompleted();
     }
 
     // Page Setup
@@ -193,9 +200,6 @@
     {
         taskObj.TimeEnded = DateTime.Now;
         await _api.SaveTaskAsync(taskObj);
-        // Then either give the option to navigate via button
-        // or navigate straight to the next task
-        System.Diagnostics.Debug.WriteLine("Task completed...");
         taskCompleted = true;
         await NextTask();
     }

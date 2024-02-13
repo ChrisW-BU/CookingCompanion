@@ -23,9 +23,9 @@
     [Parameter]
     public EventCallback<bool> ValueChanged { get; set; }
 
-    public async void UpdateParentElement(ChangeEventArgs e)
+    public Task UpdateParentElement(ChangeEventArgs e)
     {
         Value = (bool)(e.Value ?? false);
-        await ValueChanged.InvokeAsync(Value);
+        return ValueChanged.InvokeAsync(Value);
     }
 }
