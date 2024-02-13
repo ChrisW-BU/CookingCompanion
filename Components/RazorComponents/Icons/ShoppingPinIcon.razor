@@ -1,58 +1,9 @@
 ﻿
-<div class="col-@ColSize user-select-none" @onclick="OnClickCallback" @onmouseover="MouseOver" @onmouseout="MouseOut"><i class="@ClassStr"></i>@DescriptionStr</div>
+<div class="col-@ColSize user-select-none" @onclick="OnClickCallback"><i class="@PinClass"></i>@DescriptionStr</div>
 
 @code {
-    private string? _classStr = string.Empty;
-
-    //string ClassStr { get; set; } = "col-3 fas fa-thumbtack";
-
-    string ClassStr
-    {
-        get
-        {
-            if(_classStr == string.Empty)
-            {
-                if(IsPinned)
-                {
-                    _classStr = "col-3 fas fa-thumbtack fa-rotate-90 text-danger";
-                }
-                else
-                {
-                    _classStr = "col-3 fas fa-thumbtack";
-                }
-            }
-
-            return _classStr;
-        }
-        set
-        {
-            _classStr = value;
-        }
-    }
-
-    public void MouseOver(MouseEventArgs e)
-    {
-        if(IsPinned)
-        {
-            ClassStr = "col-3 fas fa-thumbtack fa-rotate-90";
-        }
-        else
-        {
-            ClassStr = "col-3 fas fa-thumbtack text-danger";
-        }
-    }
-
-    public void MouseOut(MouseEventArgs e)
-    {
-        if (IsPinned)
-        {
-            ClassStr = "col-3 fas fa-thumbtack fa-rotate-90 text-danger";
-        }
-        else
-        {
-            ClassStr = "col-3 fas fa-thumbtack";
-        }
-    }
+    [Parameter]
+    public string PinClass { get; set; }
 
     [Parameter]
     public EventCallback OnClickCallback { get; set; }

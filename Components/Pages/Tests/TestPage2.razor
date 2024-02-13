@@ -14,7 +14,7 @@
             <b>Task Two</b>
         </div>
         <div style="font-size:20px;">
-            Search for a recipe called "vegetable stew" and pin the shopping list.
+            Pin the shopping list and check off all ingredients.
         </div>
     </AlertItem>
 
@@ -29,24 +29,42 @@
     else
     {
         @* Task content goes here... *@
+        @if(list?.Id > 0)
+        {
+            <PageBase>
+            <div class="mb-4">
+                <div class="w-shopping-list mx-auto" style="max-width:400px;">
+                    <div class="position-relative">
+                        <div class=""><u>@list.Name <br /> Ingredient List</u></div>
+                            <div class="position-absolute top-0 end-0"><ShoppingPinIcon PinClass="@pinClass" OnClickCallback="ShoppingPinClicked" IsPinned=@pinClicked ColSize="12" /></div>
+                    </div>
+                    <br />
+                    <div>
+                        @foreach (ShoppingListItem s in listItems)
+                        {
+                            var nameString = s.Details.IngredientName;
+                            var extraString = s.Details.Quantity + " " + s.Details.MeasurementName;
+                            <FormCheckbox OnClick="ListItemChecked" IsLabelRight=true FieldWidth="0" Name="@nameString" ExtraStr="@extraString" @bind-Value="s.HasObtained" />
+                        }
+                    </div>
+                </div>
+            </div>
+            </PageBase>
+        }
         <ButtonContainer>
             <BackButtonControl OnClickCall="GoToIndex" />
-            <ButtonControl Name="Complete Task" OnBaseClickCall="TaskCompleted" Icon="fas fa-check" Colour="success" />
-            <ButtonControl Name="Can't Complete" OnBaseClickCall="FailTask" Icon="fas fa-stop" Colour="danger" />
+            @* <ButtonControl Name="Complete Task" OnBaseClickCall="TaskCompleted" Icon="fas fa-check" Colour="success" /> *@
+            <ButtonControl Name="Unable to Complete" OnBaseClickCall="FailTask" Icon="fas fa-circle-xmark" Colour="danger" />
         </ButtonContainer>
     }
     <Modal />
 </PageBase>
-
-@*
-    GUID 2: ac5c23b5-bf0c-4894-ae80-8b1226daa7b4
-    GUID 3: 823bce54-0cf9-40a0-9c5d-53921f743093
-    GUID 4: cddd7b74-5596-42b1-b0da-848ed5e78a27
-    GUID 5: 0d90d0ad-6212-43a6-8fb8-fd91f6d8221b
-    GUID 6: defd8446-7e51-4482-8811-dd627fc64798
-*@
+<ModalControl HeadStr="Task Two Completed" BodyStr="Please click 'Confirm' to progress to the next task." @ref="@ourModal" />
 
 @code {
+    // Object References
+    ModalControl ourModal { get; set; }
+
     // We check to see if user has a task record for this task
     protected override async Task OnInitializedAsync()
     {
@@ -60,10 +78,43 @@
             // Get the taskObj for this user/taskId
             taskObj = await _api.GetActiveTask(taskId, _user.Id);
 
+            list = await _api.GetShoppingUniqueAsync(1);
+            listItems = await _api.GetShoppingItemListAsync(list.Id);
+
             await ResetTaskAsync();
         }
         await base.OnInitializedAsync();
     }
+
+    // Pin/Checkbox Logic
+    private bool pinClicked = false;
+    string pinClass = "col-3 shopping-pin-off fas fa-thumbtack";
+    private void ShoppingPinClicked()
+    {
+        pinClicked = !pinClicked;
+        if (pinClicked)
+        {
+            pinClass = "col-3 shopping-pin-on fas fa-thumbtack fa-rotate-90";
+        }
+        else
+        {
+            pinClass = "col-3 shopping-pin-off fas fa-thumbtack";
+        }
+        ListItemChecked();
+    }
+
+    private void ListItemChecked()
+    {
+        bool allTrue = listItems.All(a => a.HasObtained); // Returns true if all elements are true
+        if(allTrue)
+        {
+            _api.Output("Task complete!");
+        }
+    }
+
+    // Page Setup
+    ShoppingList list = new();
+    List<ShoppingListItem> listItems = new();
 
     private bool isLoading { get; set; } = true;
 

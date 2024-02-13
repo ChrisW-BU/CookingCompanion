@@ -22,10 +22,10 @@
             </div>
 
             <div class="col-lg-6 col-sm-0">
-                <div class="w-shopping-list">
+                <div class="w-shopping-list mx-auto" style="max-width:400px;">
                     <div class="position-relative">
                         <div class=""><u>Ingredient List</u></div>
-                        <div class="position-absolute top-0 end-0"><ShoppingPinIcon IsPinned="ShopObj.IsPinned" OnClickCallback="PinClicked" ColSize="12" /></div>
+                        <div class="position-absolute top-0 end-0"><ShoppingPinIcon PinClass="@pinClass" OnClickCallback="PinClicked" IsPinned=@pinClicked ColSize="12" /></div>
                     </div>
                     <br />
                     <div>
@@ -73,6 +73,63 @@
 <PopupObj @ref="modalRef" />
 
 @code {
+    // Pin/Checkbox Logic
+    private bool pinClicked = false;
+    string pinClass = "col-3 shopping-pin-off fas fa-thumbtack";
+
+    public async Task PinClicked() // Logging
+    {
+        if (ShopObj != null && ShopObj.Id > 0)
+        {
+            await _api.DeleteShoppingListAsync(ShopObj.Id);
+            await _api.SaveManualLogEntry(
+                _user.Id, ShopObj.Id, CookCompAPI.UserLogs.RemovedShoppingList, "ShoppingList");
+            pinClicked = false;
+            ShopObj = new();
+        }
+        else
+        {
+            if (RecipeObj != null && RecipeObj.Id > 0)
+            {
+                if (!await _api.IsShoppingListLimit(_user.Id))
+                {
+                    ShopObj = new();
+                    ShopObj.UserId = _user.Id;
+                    ShopObj.RecipeId = RecipeId;
+                    ShopObj.Name = RecipeObj.Name;
+                    ShopObj.IsPinned = true;
+                    ShopObj = await _api.SaveShoppingListAsync(ShopObj);
+                    await _api.SaveManualLogEntry(
+                        _user.Id, ShopObj.Id, CookCompAPI.UserLogs.AddedShoppingList, "ShoppingList");
+                    pinClicked = true;
+                }
+                else
+                {
+                    await _api.SaveManualLogEntry(
+                        _user.Id, 0, CookCompAPI.UserLogs.Error, "Tried to add more shopping lists than max.");
+                    // Pop-up
+                    ErrorMessage();
+                }
+            }
+        }
+
+        UpdatePinClass();
+
+        //StateHasChanged();
+    }
+
+    private void UpdatePinClass()
+    {
+        if (pinClicked)
+        {
+            pinClass = "col-3 shopping-pin-on fas fa-thumbtack fa-rotate-90";
+        }
+        else
+        {
+            pinClass = "col-3 shopping-pin-off fas fa-thumbtack";
+        }
+    }
+
     [Parameter]
     public string CatchId { get; set; } = string.Empty;
 
@@ -144,43 +201,6 @@
         StateHasChanged();
     }
 
-    public async Task PinClicked() // Logging
-    {
-        if (ShopObj != null && ShopObj.Id > 0)
-        {
-            await _api.DeleteShoppingListAsync(ShopObj.Id);
-            await _api.SaveManualLogEntry(
-                _user.Id, ShopObj.Id, CookCompAPI.UserLogs.RemovedShoppingList, "ShoppingList");
-            ShopObj = new();
-        }
-        else
-        {
-            if (RecipeObj != null && RecipeObj.Id > 0)
-            {
-                if(!await _api.IsShoppingListLimit(_user.Id))
-                {
-                    ShopObj = new();
-                    ShopObj.UserId = _user.Id;
-                    ShopObj.RecipeId = RecipeId;
-                    ShopObj.Name = RecipeObj.Name;
-                    ShopObj.IsPinned = true;
-                    ShopObj = await _api.SaveShoppingListAsync(ShopObj);
-                    await _api.SaveManualLogEntry(
-                        _user.Id, ShopObj.Id, CookCompAPI.UserLogs.AddedShoppingList, "ShoppingList");
-                }
-                else
-                {
-                    await _api.SaveManualLogEntry(
-                        _user.Id, 0, CookCompAPI.UserLogs.Error, "Tried to add more shopping lists than max.");
-                    // Pop-up
-                    ErrorMessage();
-                }
-            }
-        }
-
-        StateHasChanged();
-    }
-
     // Finds all CookingSteps tied to this recipe/user and deletes them all.
     public async Task RestartRecipe()
     {
@@ -200,6 +220,9 @@
             IngredientsObj = await _api.GetRecipeIngredientListAsync(RecipeId);
             FavObj = await _api.CheckIsFavourite(RecipeId, _user.Id);
             ShopObj = await _api.CheckIsPinned(RecipeId, _user.Id);
+
+            pinClicked = ShopObj.IsPinned;
+            UpdatePinClass();
         }
         else
         {

@@ -59,3 +59,19 @@
     margin-left: 4px;
 }
 
+.shopping-pin-on {
+    color: red;
+}
+
+.shopping-pin-on:hover {
+    color: dimgrey;
+}
+
+.shopping-pin-off {
+    color: dimgrey;
+}
+
+    .shopping-pin-off:hover {
+        color: red;
+    }
+

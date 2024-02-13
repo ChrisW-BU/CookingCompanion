@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <Folder Include="ShoppingListItems\" />
+    <Folder Include="ShoppingLists\" />
     <Folder Include="Tasks\" />
   </ItemGroup>
 
