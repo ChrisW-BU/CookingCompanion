@@ -38,7 +38,8 @@
             @if (recipe?.Id > 0)
             {
                 <RecipeCard Id="@recipe.Id" UserId="_user.Id" Name="@recipe.Name" Description="@recipe.Description" ImgUrl="@recipe.ImgUrl"
-                            Duration="@recipe.Duration" IsVege="@recipe.IsVege" OnFavouriteClick="() => ourModal.OpenModal()" />
+                            Duration="@recipe.Duration" IsVege="@recipe.IsVege"
+                            CustomStyles="max-width: 250px;" OnFavouriteClick="() => ourModal.OpenModal()" />
             }
 
         </div>

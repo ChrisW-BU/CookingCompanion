@@ -7,57 +7,71 @@
 <PageTitle>Cooking Companion</PageTitle>
 <PageBase>
     @* <h1>Main Menu</h1> *@
-
-    <h4>Welcome to Cooking Companion!</h4>
-    <p>
-        This app has been designed alongside research
-        into whether apps can be designed in a way that's more considerate to users with <b>Mild Cognitive Impairment (MCI)</b>
-        and other mild forms of related dementia. The hope is that in the future such apps could help users with MCI
-        perform certain daily tasks with more <b>confidence</b> and potentially slow down progression to advanced forms
-        of dementia such as Alzheimer's. The daily task selected for this particular study is <b>cooking</b>.
-    </p>
-    <h4>Before we continue...</h4>
-    <p>
-        Before participating you should ensure that you have received the following documentation
-        which forms part of the University of Bath informed consent process:
-    </p>
-    <ul style="width:90%" class="list-group list-group-numbered mx-4 pb-4">
-        <li class="list-group-item">Participant Sheet - Study information sheet.</li>
-        <li class="list-group-item">Consent Form - Consent to participating in this study.</li>
-    </ul>
-    <p>
-        <u>You should have also confirmed that you are 18 years old or more which is a requirement for participation.</u>
-    </p>
-    <h4>What will you be asked to do?</h4>
-    <p>
-        This test will involve a number of <b>scenarios</b> where you will be presented with a <b>task</b> to complete.
-        Upon successful completion of the task you can move on to the next one. If you get stuck or are unable
-        to complete the task for what ever reason, just press the <b>"Skip Task"</b> button. Once all scenarios have been completed you will be given access to the whole prototype. We then encourage you
-        to have a little play with the features before continuing on to the brief questionnaire.
-    </p>
-    <h4>How long will this take?</h4>
-    <p>
-        Each scenario task should take no more than 1 minute to complete. We encourage you to spend as much time as
-        you can or feel is appropriate on testing the prototype. The questionnaire should take no more than 5-10 minutes.
-        We expect the whole process to take around roughly <b>15-20 minutes</b> and recommend completing in one sitting - 
-        so please allow yourself this time when you begin participation.
-    </p>
-    <h4>What happens after?</h4>
-    <p>
-        Some people may be contacted after completion of the test with some <b>follow-up</b> questions. All data obtained
-        in this study will be <b>anonymous</b> and used only for the purpose of developing the prototype further or contribute
-        to the ideas and concepts of it's design.
-    </p>
-    <h4>Let's begin</h4>
-    <p>
-        If you have any questions before you begin, please contact the researcher (Chris) via email
+    @if (!_user.GetTaskComplete())
+    {
+        <h4>Welcome to Cooking Companion!</h4>
+        <p>
+            This app has been designed alongside research
+            into whether apps can be designed in a way that's more considerate to users with <b>Mild Cognitive Impairment (MCI)</b>
+            and other mild forms of related dementia. The hope is that in the future such apps could help users with MCI
+            perform certain daily tasks with more <b>confidence</b> and potentially slow down progression to advanced forms
+            of dementia such as Alzheimer's. The daily task selected for this particular study is <b>cooking</b>.
+        </p>
+        <h4>Before we continue...</h4>
+        <p>
+            Before participating you should ensure that you have received the following documentation
+            which forms part of the University of Bath informed consent process:
+        </p>
+        <ul style="width:90%" class="list-group list-group-numbered mx-4 pb-4">
+            <li class="list-group-item">Participant Sheet - Study information sheet.</li>
+            <li class="list-group-item">Consent Form - Consent to participating in this study.</li>
+        </ul>
+        <p>
+            <u>You should have also confirmed that you are 18 years old or more which is a requirement for participation.</u>
+        </p>
+        <h4>What will you be asked to do?</h4>
+        <p>
+            This test will involve a number of <b>scenarios</b> where you will be presented with a <b>task</b> to complete.
+            Upon successful completion of the task you can move on to the next one. If you get stuck or are unable
+            to complete the task for what ever reason, just press the <b>"Skip Task"</b> button. Once all scenarios have been completed you will be given access to the whole prototype. We then encourage you
+            to have a little play with the features before continuing on to the brief questionnaire.
+        </p>
+        <h4>How long will this take?</h4>
+        <p>
+            Each scenario task should take no more than 1 minute to complete. We encourage you to spend as much time as
+            you can or feel is appropriate on testing the prototype. The questionnaire should take no more than 5-10 minutes.
+            We expect the whole process to take around roughly <b>15-20 minutes</b> and recommend completing in one sitting - 
+            so please allow yourself this time when you begin participation.
+        </p>
+        <h4>What happens after?</h4>
+        <p>
+            Some people may be contacted after completion of the test with some <b>follow-up</b> questions. All data obtained
+            in this study will be <b>anonymous</b> and used only for the purpose of developing the prototype further or contribute
+            to the ideas and concepts of it's design.
+        </p>
+        <h4>Let's begin</h4>
+        <p>
+            If you have any questions before you begin, please contact the researcher (Chris) via email
         <b>cw2480@bath.ac.uk</b>. Otherwise, click the button below to begin!
     </p>
 
     <ButtonContainer>
         <ButtonControl Name="Begin" OnBaseClickCall="OnClickEvent" Icon="fas fa-play" Colour="success" />
-    </ButtonContainer>
-        
+        </ButtonContainer>
+    }
+    else
+    {
+        <h4>Questionnaire Time</h4>
+        <p>
+            Thank you for your participation so far. If you feel you have familiarised yourself with the
+            functionality of the app, we would like to invite you participate in the questionnaire. This
+            shouldn't take more than another <b>5-10 minutes</b> of your time.
+        </p>
+        <ButtonContainer>
+            <ButtonControl Name="Start Questionnaire" OnBaseClickCall="SurveyPage" Icon="fas fa-play" Colour="success" />
+        </ButtonContainer>
+    }
+
 
 </PageBase>
 
@@ -74,6 +88,13 @@
     {
         _nav.NavigateTo("/03e7e140-a010-4062-82c0-1201e4961532");
         _page.AddPage("/");
+    }
+
+    private void SurveyPage()
+    {
+        _api.Output("Survey page...");
+        // _nav.NavigateTo("/03e7e140-a010-4062-82c0-1201e4961532");
+        // _page.AddPage("/");
     }
 }
 
