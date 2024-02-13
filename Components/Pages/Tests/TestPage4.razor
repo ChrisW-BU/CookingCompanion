@@ -14,7 +14,7 @@
             <b>Task Four</b>
         </div>
         <div style="font-size:20px;">
-            Navigate to the cooking step which asks you to “chop the mushrooms” and then go to the recipe menu.
+            Follow the recipe until you're instructed to "chop your mushrooms" then go to the recipe menu.
         </div>
     </AlertItem>
 
@@ -29,22 +29,190 @@
     else
     {
         @* Task content goes here... *@
+        @* <h5>@TitleName</h5> *@
+        <FormBase>
+            @if (RecipeObj.Id > 0)
+            {
+                @* This layout is for smaller screens *@
+                <div class="container d-grid d-lg-none">
+                    <div class="col-12 row">
+
+                        @* Step header *@
+                        @* Landscape *@
+                        <div class="col-6 d-none d-sm-block" style="float:left">
+                            <img src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" style="float:left; margin-right: 4px; max-width:40%;" />
+                            <h6>@TitleName</h6>
+                            Step: @RStepObj.StepNumber
+                        </div>
+                        <div class="col-6 d-none d-sm-block" style="float:right;">
+                            <div class="w-shopping-list" style=" background-color:antiquewhite;">
+                                <i style="font-size:30px; color:gray; float:right; margin-left: 4px;" class="fas fa-history"></i>
+                                <div style="font-size:12px;"><b>@RStepObj.PreviousStep</b></div>
+                            </div>
+                        </div>
+
+                        @* Portrait *@
+                        <div class="col-4 d-block d-sm-none" style="float:left">
+                            <img src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" style="float:left; margin-right: 4px;" />
+                            <h6>@TitleName</h6>
+                            Step: @RStepObj.StepNumber
+                        </div>
+                        <div class="col-8 d-block d-sm-none" style="float:right;">
+                            <div class="w-shopping-list" style=" background-color:antiquewhite;">
+                                <i style="font-size:30px; color:gray; float:right; margin-left: 4px;" class="fas fa-history"></i>
+                                <div style="font-size:12px;"><b>@RStepObj.PreviousStep</b></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* Step Instructions *@
+                    <div class="col-12 row pt-4">
+                        <div class="col-8">
+                            <h5>@Title</h5>
+                            <div>@Description</div>
+                        </div>
+                        <div class="col-4">
+                            <img width="200px" src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" />
+                        </div>
+                    </div>
+                </div>
+
+                @* This layout is for larger screens *@
+                <div class="container d-none d-lg-grid">
+                    <div class="col-12 row">
+                        <div class="col-6" style="float:left">
+                            <img src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" style="float:left; margin-right: 4px; max-width:35%;" />
+                            <h6 style="font-size:25px">@TitleName</h6>
+                            <p style="font-size:20px">Step: @RStepObj.StepNumber</p>
+                        </div>
+
+                        <div class="col-6 p-4" style="float:right;">
+                            <div class=" w-shopping-list" style="background-color:antiquewhite">
+                                <i style="font-size:36px; color:grey; float:right; margin-left: 4px;" class="fas fa-history"></i>
+                                <div style="font-size:18px;">@RStepObj.PreviousStep</div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="col-12 pt-4"><div><h5 style="font-size:25px">@Title</h5></div></div>
+                    <div class="col-12 row">
+                        <div class="col-8" style="font-size:22px">
+                            <div>@Description</div>
+                        </div>
+                        <div class="col-4">
+                            <img width="200px" src="@RecipeObj.ImgUrl" class="img-fluid rounded-start" />
+                        </div>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div>Content is loading...</div>
+            }
+
+        </FormBase>
+        <div hidden="@IsHidden">
+            <button class="timer-button">
+                <i class="fas fa-clock pt-1 timer-icon"></i>Start Timer
+            </button>
+        </div>
+
+        @* Made an adaptation of the ButtonContainer, as it wasn't ordering the buttons as preferred. *@
+        <div class="d-none d-sm-grid">
+            <div class="btn-group mt-4">
+                <PreviousStepButton OnClickCall="PreviousStep" />
+                <CookingRecipeButton OnClickCall="PageBack" />
+                <NextStepButton OnClickCall="NextStep" />
+            </div>
+        </div>
+        <div class="d-grid d-sm-none">
+            <div class="btn-group-vertical mt-4">
+                <NextStepButton OnClickCall="NextStep" />
+                <PreviousStepButton OnClickCall="PreviousStep" />
+                <CookingRecipeButton OnClickCall="PageBack" />
+            </div>
+        </div>
+
+        /* Additional buttons */
         <ButtonContainer>
             <BackButtonControl OnClickCall="GoToIndex" />
-            <ButtonControl Name="Complete Task" OnBaseClickCall="TaskCompleted" Icon="fas fa-check" Colour="success" />
-            <ButtonControl Name="Can't Complete" OnBaseClickCall="FailTask" Icon="fas fa-stop" Colour="danger" />
+            <ButtonControl Name="Unable to Complete" OnBaseClickCall="FailTask" Icon="fas fa-circle-xmark" Colour="danger" />
         </ButtonContainer>
     }
-    <Modal />
 </PageBase>
 
-@*
-    GUID 4: cddd7b74-5596-42b1-b0da-848ed5e78a27
-    GUID 5: 0d90d0ad-6212-43a6-8fb8-fd91f6d8221b
-    GUID 6: defd8446-7e51-4482-8811-dd627fc64798
-*@
+<ModalControl OnClickCall="ConfirmCompleted" HeadStr="Task Four Completed" BodyStr="Please click 'Confirm' to progress to the next task." @ref="@ourModal" />
+<ClockTimer ></ClockTimer>
 
 @code {
+    // Object References
+    ModalControl ourModal { get; set; }
+
+    // Object variables
+    public int RecipeId { get; set; }
+    private Recipe? RecipeObj { get; set; } = new();
+    private List<CookingStep> StepList { get; set; }
+    private RecipeStep? RStepObj { get; set; } = new();
+    private CookingStep? CStepObj { get; set; } = new();
+    private string Title { get; set; } = string.Empty;
+    private string Description { get; set; } = string.Empty;
+    public bool IsHidden { get; set; } = true;
+    public string TitleName { get { return (RecipeObj?.Id < 0) ? "Cooking Companion" : RecipeObj.Name; } }
+
+    private async void PreviousStep()
+    {
+        if (await CheckPreviousStep())
+        {
+            CStepObj = StepList.Find(x => x.StepNumber == CStepObj.StepNumber - 1);
+            await UpdateRecipeStep();
+            StateHasChanged();
+        }
+    }
+    private async void NextStep()
+    {
+        if (await CheckNextStep())
+        {
+            CStepObj = StepList.Find(x => x.StepNumber == CStepObj.StepNumber + 1);
+            await UpdateRecipeStep();
+            StateHasChanged();
+        }
+    }
+    private async Task UpdateRecipeStep()
+    {
+        RStepObj = await _api.GetRecipeStepUniqueAsync(CStepObj.StepId);
+        Title = RStepObj.Title;
+        Description = RStepObj.Description;
+    }
+    private async Task<bool> CheckNextStep()
+    {
+        if (StepList != null && CStepObj != null)
+        {
+            if (CStepObj.StepNumber + 1 <= 8)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    private async Task<bool> CheckPreviousStep()
+    {
+        if (StepList != null && CStepObj != null && (CStepObj.StepNumber > 1))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private async void PageBack()
+    {
+        if(RStepObj.StepNumber == 6)
+        {
+            //Task successful
+            ourModal.Show();
+        }
+    }
+
     // We check to see if user has a task record for this task
     protected override async Task OnInitializedAsync()
     {
@@ -59,10 +227,36 @@
             taskObj = await _api.GetActiveTask(taskId, _user.Id);
 
             await ResetTaskAsync();
+
+            // Load objects
+            RecipeId = 1;
+            RecipeObj = await _api.GetRecipeUniqueAsync(RecipeId);
+            StepList = await _api.CheckCookingStatus(RecipeId, 0);
+            StepList = StepList.OrderBy(b => b.StepNumber).ToList();
+            foreach (CookingStep cs in StepList)
+            {
+                if (!cs.IsCompleted)
+                {
+                    CStepObj = cs;
+                    RStepObj = await _api.GetRecipeStepUniqueAsync(cs.StepId);
+
+                    Title = RStepObj.Title;
+                    Description = RStepObj.Description;
+
+                    break;
+                }
+            }
         }
         await base.OnInitializedAsync();
     }
 
+    private async void ConfirmCompleted()
+    {
+        ourModal.CloseModal();
+        TaskCompleted();
+    }
+
+    // Page setup
     private bool isLoading { get; set; } = true;
 
     private bool taskStarted { get; set; } = false;
@@ -140,9 +334,6 @@
     {
         taskObj.TimeEnded = DateTime.Now;
         await _api.SaveTaskAsync(taskObj);
-        // Then either give the option to navigate via button
-        // or navigate straight to the next task
-        System.Diagnostics.Debug.WriteLine("Task completed...");
         taskCompleted = true;
         await NextTask();
     }
