@@ -33,6 +33,7 @@ builder.Services.AddOptions<CookCompApiJsonAccessSetting>().Configure(options =>
     options.CookingStepFolder = "CookingSteps";
     options.LogEntryFolder = "LogEntries";
     options.TasksFolder = "Tasks";
+    options.QuestionnaireFolder = "Questionnaires";
 }
 );
 

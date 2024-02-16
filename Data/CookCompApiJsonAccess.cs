@@ -25,6 +25,7 @@ namespace Data
         private List<CookingStep>? _cooking_steps;
         private List<LogEntry>? _logs;
         private List<TaskObj>? _tasks;
+        private List<QuestionnaireObj>? _questions;
 
         /// <summary>
         /// This allows the injection of IOptions and creates a settings structure for the data folders.
@@ -102,6 +103,11 @@ namespace Data
             if (!Directory.Exists($@"{_settings.DataRootPath}\{_settings.TasksFolder}"))
             {
                 Directory.CreateDirectory($@"{_settings.DataRootPath}\{_settings.TasksFolder}");
+            }
+
+            if (!Directory.Exists($@"{_settings.DataRootPath}\{_settings.QuestionnaireFolder}"))
+            {
+                Directory.CreateDirectory($@"{_settings.DataRootPath}\{_settings.QuestionnaireFolder}");
             }
         }
 
@@ -1652,6 +1658,62 @@ namespace Data
 
             await SaveAsync<User>(_users, _settings.UserFolder, $"{editedObj.Id}.json", editedObj);
             return editedObj;
+        }
+
+
+        /////////////////////
+        // Questionnaire Obj
+        /////////////////////
+
+        /// <summary>
+        /// Load a list of all questionnaires.
+        /// </summary>
+        /// <returns></returns>
+        private Task LoadQuestionnairesAsync()
+        {
+            Load<QuestionnaireObj>(ref _questions, _settings.QuestionnaireFolder);
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Load a list of all questionnaires and return the list.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<QuestionnaireObj>?> GetQuestionnaireObjListAsync()
+        {
+            await LoadQuestionnairesAsync();
+            return _questions ?? new();
+        }
+
+        public async Task<QuestionnaireObj?> CheckUserQuestionnaire(int userId)
+        {
+            if (_questions == null)
+            {
+                await LoadQuestionnairesAsync();
+            }
+            
+            foreach(QuestionnaireObj question in _questions)
+            {
+                if (question.UserId == userId)
+                {
+                    return question;
+                }
+            }
+
+            QuestionnaireObj newQuestionnaire = new();
+
+            if (_questions.Count > 0)
+            {
+                newQuestionnaire.Id = _questions.Max(x => x.Id) + 1;
+            }
+            else
+            {
+                newQuestionnaire.Id = 1;
+            }
+            newQuestionnaire.UserId = userId;
+            newQuestionnaire.TimeStarted = DateTime.Now;
+
+            return newQuestionnaire;
         }
 
 

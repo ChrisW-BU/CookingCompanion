@@ -1,0 +1,70 @@
+﻿@page "/91f13a77-38ae-4fc0-84e4-67e6cdcf505c"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+@inject UserGlobal _user
+@inject PageHistory _page
+
+<PageTitle>CC - Questionnaire</PageTitle>
+<QuestionnaireBase>
+    <h3>Questionnaire</h3>
+
+    @if(isLoading)
+    {
+        <div>Content is loading...</div>
+    }
+    else
+    {
+        <AlertItem Style="AlertItem.AlertStyle.Warning">
+            Please be as honest and detailed as you can. This questionnaire will not save your answers and should 
+            be completed in a single session. It should take no longer than 5-10 minutes.
+        </AlertItem>
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="How frequently do you use digital recipe aids? Examples include cooking apps, website recipes and videos."
+                            ChoiceStrings="@testQuestion" FormName="QuestionOne" />
+    }
+    
+    <ButtonContainer>
+        <BackButtonControl OnClickCall="PageBack" />
+    </ButtonContainer>
+</QuestionnaireBase>
+
+@code {
+    private bool isLoading { get; set; } = true;
+    private QuestionnaireObj? QuestionObj = new();
+    List<string> testQuestion = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        QuestionObj = await _api.CheckUserQuestionnaire(_user.Id);
+
+        if (QuestionObj.IsCompleted)
+        {
+            // We stop anything else occurring
+        }
+        else
+        {
+            if(QuestionObj.Id > 0)
+            {
+                isLoading = false;
+            }
+        }
+    }
+
+    private void OnClickEvent()
+    {
+        _nav.NavigateTo("/");
+        _page.AddPage("91f13a77-38ae-4fc0-84e4-67e6cdcf505c");
+    }
+
+    private void PageBack()
+    {
+        if (_page.IsPrevious())
+        {
+            _api.ClearCacheAsync();
+            _nav.NavigateTo(_page.GetPreviousPage());
+        }
+        else
+        {
+            _nav.NavigateTo("/");
+        }
+    }
+}

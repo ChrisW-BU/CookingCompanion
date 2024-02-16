@@ -1,0 +1,18 @@
+﻿@* Smaller screens*@
+<div class="container d-grid d-lg-none">
+    <div class="align-items-center mt-4">
+        @ChildContent
+    </div>
+</div>
+
+@* Larger Screens *@
+<div class="container d-none d-lg-grid" style="padding-right: 15%; padding-left: 15%">
+    <div class="align-items-center mt-4">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

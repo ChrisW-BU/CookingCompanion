@@ -29,5 +29,7 @@
         public string LogEntryFolder { get; set; } = string.Empty;
 
         public string TasksFolder { get; set; } = string.Empty;
+
+        public string QuestionnaireFolder { get; set; } = string.Empty;
     }
 }

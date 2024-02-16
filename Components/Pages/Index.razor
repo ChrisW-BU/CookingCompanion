@@ -68,7 +68,7 @@
             shouldn't take more than another <b>5-10 minutes</b> of your time.
         </p>
         <ButtonContainer>
-            <ButtonControl Name="Start Questionnaire" OnBaseClickCall="SurveyPage" Icon="fas fa-play" Colour="success" />
+            <ButtonControl Name="Start Questionnaire" OnBaseClickCall="GoToQuestionnaire" Icon="fas fa-play" Colour="success" />
         </ButtonContainer>
     }
 
@@ -90,11 +90,10 @@
         _page.AddPage("/");
     }
 
-    private void SurveyPage()
+    private void GoToQuestionnaire()
     {
-        _api.Output("Survey page...");
-        // _nav.NavigateTo("/03e7e140-a010-4062-82c0-1201e4961532");
-        // _page.AddPage("/");
+        _nav.NavigateTo("/91f13a77-38ae-4fc0-84e4-67e6cdcf505c");
+        _page.AddPage("/");
     }
 }
 
