@@ -1,0 +1,20 @@
+﻿@page "/6fc5fe59-d915-438f-8e49-c25706ff50f9"
+@inject ILocalStorageService _ls;
+@inject UserGlobal _user;
+@inject NavigationManager _nav;
+
+<div>Logging you out...</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await LogOut();
+    }
+
+    public async Task LogOut()
+    {
+        _user.ResetUserInfo();
+        _ls.RemoveItemAsync("uls");
+        _nav.NavigateTo("/", true);
+    }
+}

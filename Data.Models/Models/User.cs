@@ -11,5 +11,7 @@
         public Guid UserToken { get; set; } = Guid.Empty;
 
         public bool TasksCompleted { get; set; }
+
+        public bool QuestionnaireCompleted { get; set; }
     }
 }

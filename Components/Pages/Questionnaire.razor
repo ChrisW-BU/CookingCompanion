@@ -3,6 +3,8 @@
 @inject NavigationManager _nav
 @inject UserGlobal _user
 @inject PageHistory _page
+@inject ILocalStorageService _ls;
+@inject IJSRuntime JSRuntime;
 
 <PageTitle>CC - Questionnaire</PageTitle>
 <QuestionnaireBase>
@@ -15,22 +17,147 @@
     else
     {
         <AlertItem Style="AlertItem.AlertStyle.Warning">
-            Please be as honest and detailed as you can. This questionnaire will not save your answers and should 
-            be completed in a single session. It should take no longer than 5-10 minutes.
+            Please be as <b>honest and detailed</b> as you can. This <u>questionnaire will not save your answers</u> and should
+            be completed in a single session. It should take no longer than <b>5-10 minutes</b>.
         </AlertItem>
-        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="How frequently do you use digital recipe aids? Examples include cooking apps, website recipes and videos."
-                            ChoiceStrings="@testQuestion" FormName="QuestionOne" />
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionOne()" QuestionNumber="1"
+                            FormName="QuestionOne" Answers="QuestionObj?.GetQuestionOneOptions()" />
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionTwo()" QuestionNumber="2"
+                            FormName="QuestionTwo" Answers="QuestionObj?.GetQuestionTwoOptions()" />
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionThree()" QuestionNumber="3"
+                            FormName="QuestionThree" Answers="QuestionObj?.GetQuestionThreeOptions()" />
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionFour()" QuestionNumber="4"
+                            FormName="QuestionFour" Answers="QuestionObj?.GetBinaryOptions()" />
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionFive()" QuestionNumber="5"
+                            FormName="QuestionFive" Answers="QuestionObj?.GetLikertOptions()" IsLikert=true/>
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionSix()" QuestionNumber="6"
+                            FormName="QuestionSix" Answers="QuestionObj?.GetBinaryOptions()" />
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionSeven()" QuestionNumber="7"
+                            FormName="QuestionSeven" Answers="QuestionObj?.GetLikertOptions()" IsLikert=true />
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionEight()" QuestionNumber="8"
+                            FormName="QuestionEight" Answers="QuestionObj?.GetBinaryOptions()" />
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionNine()" QuestionNumber="9"
+                            FormName="QuestionNine" Answers="QuestionObj?.GetBinaryOptions()" />
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionTen()" QuestionNumber="10"
+                            FormName="QuestionTen" Answers="QuestionObj?.GetLikertOptions()" IsLikert=true />
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionEleven()" QuestionNumber="11"
+                            FormName="QuestionEleven" Answers="QuestionObj?.GetBinaryOptions()" />
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionTwelve()" QuestionNumber="12"
+                            FormName="QuestionTwelve" Answers="QuestionObj?.GetLikertOptions()" IsLikert=true />
+
+        <b><FormInputTextArea Name="@QuestionObj.GetQuestionThirteen()" @bind-Value="@QuestionObj.QuestionThirteenAnswer" /></b>
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionFourteen()" QuestionNumber="14"
+                            FormName="QuestionFourteen" Answers="QuestionObj?.GetLikertOptions()" IsLikert=true />
     }
     
     <ButtonContainer>
         <BackButtonControl OnClickCall="PageBack" />
+        <ButtonControl Name="Submit Answers" Colour="success" OnBaseClickCall="CheckAnswer" Icon="fas fa-check-circle" />
     </ButtonContainer>
 </QuestionnaireBase>
+<PopupObj @ref="ourPopUp" />
+
+
 
 @code {
     private bool isLoading { get; set; } = true;
     private QuestionnaireObj? QuestionObj = new();
     List<string> testQuestion = new();
+    private PopupObj ourPopUp = new();
+
+    public async Task CheckAnswer()
+    {
+        _api.Output("Question One: " + QuestionObj.QuestionOneAnswer);
+        _api.Output("Question Two: " + QuestionObj.QuestionTwoAnswer);
+        _api.Output("Question Three: " + QuestionObj.QuestionThreeAnswer);
+        _api.Output("Question Four: " + QuestionObj.QuestionFourAnswer + " - " + QuestionObj.QuestionFourAnswerString);
+        _api.Output("Question Five: " + QuestionObj.QuestionFiveAnswer);
+        _api.Output("Question Six: " + QuestionObj.QuestionSixAnswer + " - " + QuestionObj.QuestionSixAnswerString);
+        _api.Output("Question Seven: " + QuestionObj.QuestionSevenAnswer);
+        _api.Output("Question Eight: " + QuestionObj.QuestionEightAnswer);
+        _api.Output("Question Nine: " + QuestionObj.QuestionNineAnswer + " - " + QuestionObj.QuestionNineAnswerString);
+        _api.Output("Question Ten: " + QuestionObj.QuestionTenAnswer);
+        _api.Output("Question Eleven: " + QuestionObj.QuestionElevenAnswer + " - " + QuestionObj.QuestionElevenAnswerString);
+        _api.Output("Question Twelve: " + QuestionObj.QuestionTwelveAnswer);
+        _api.Output("Question Thirteen: " + QuestionObj.QuestionThirteenAnswer);
+        _api.Output("Question Fourteen: " + QuestionObj.QuestionFourteenAnswer);
+
+        await ValidateForm();
+    }
+
+    private async Task ValidateForm()
+    {
+        if (IsGreaterThanZero(QuestionObj.QuestionOneAnswer) && IsGreaterThanZero(QuestionObj.QuestionTwoAnswer) && 
+        IsGreaterThanZero(QuestionObj.QuestionThreeAnswer) && IsGreaterThanZero(QuestionObj.QuestionFourAnswer) && 
+        IsGreaterThanZero(QuestionObj.QuestionFiveAnswer) && IsGreaterThanZero(QuestionObj.QuestionSixAnswer) && 
+        IsGreaterThanZero(QuestionObj.QuestionSevenAnswer) && IsGreaterThanZero(QuestionObj.QuestionEightAnswer) && 
+        IsGreaterThanZero(QuestionObj.QuestionNineAnswer) && IsGreaterThanZero(QuestionObj.QuestionTenAnswer) && 
+        IsGreaterThanZero(QuestionObj.QuestionElevenAnswer) && IsGreaterThanZero(QuestionObj.QuestionTwelveAnswer) && 
+        QuestionObj.QuestionThirteenAnswer?.Length > 1 && IsGreaterThanZero(QuestionObj.QuestionFourteenAnswer))
+        {
+            if (await JSRuntime.InvokeAsync<bool>(
+            "confirm", $"Once you submit your answers they cannot be changed. Do you wish to continue?"))
+            {
+                QuestionObj = await _api.SaveQuestionnaireAsync(QuestionObj);
+                if (QuestionObj.IsCompleted)
+                {
+                    try
+                    {
+                        string lsu = "";
+                        lsu = await _ls.GetItemAsStringAsync("uls");
+                        Guid guid = Guid.Parse(lsu);
+
+                        if (guid != Guid.Empty)
+                        {
+                            User? getUser = await _api.GetUser(guid);
+                            getUser.QuestionnaireCompleted = true;
+                            await _api.SaveUserAsync(getUser);
+
+                            if (getUser.QuestionnaireCompleted)
+                            {
+                                _user.SetUserInfo(getUser);
+                                Dispose();
+                                PageBack();
+                            }
+                            else
+                            {
+                                ourPopUp.Show("Save failed. Please try again.");
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        ourPopUp.Show("Save failed. Please try again.");
+                    }
+                }
+            }
+        }
+        else
+        {
+            ourPopUp.Show("Check all questions have been answered correctly.");
+        }
+    }
+
+    private bool IsGreaterThanZero(int x)
+    {
+        if(x > 0)
+        {
+            return true;
+        }
+        return false;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -49,22 +176,41 @@
         }
     }
 
-    private void OnClickEvent()
-    {
-        _nav.NavigateTo("/");
-        _page.AddPage("91f13a77-38ae-4fc0-84e4-67e6cdcf505c");
-    }
-
     private void PageBack()
     {
-        if (_page.IsPrevious())
+        _nav.NavigateTo("/");
+    }
+
+    // The following code is to manage page navigation. We want to limit what the user can do
+    // when the app is in a scenario
+    private IDisposable? locationReg;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
         {
-            _api.ClearCacheAsync();
-            _nav.NavigateTo(_page.GetPreviousPage());
-        }
-        else
-        {
-            _nav.NavigateTo("/");
+            locationReg =
+                _nav.RegisterLocationChangingHandler(OnLocationChanging);
         }
     }
+
+    // We need control over where the user can go once the scenario has begun
+    private async ValueTask OnLocationChanging(LocationChangingContext context)
+    {
+        // If it hasn't then it doesn't matter
+        if (context.TargetLocation != "/91f13a77-38ae-4fc0-84e4-67e6cdcf505c")
+        {
+            if (await JSRuntime.InvokeAsync<bool>(
+            "confirm", $"If you leave this page now the questionnaire will be reset. Is this OK?"))
+            {
+                Dispose();
+            }
+            else
+            {
+                context.PreventNavigation();
+            }
+        }
+    }
+
+    public void Dispose() => locationReg?.Dispose();
 }

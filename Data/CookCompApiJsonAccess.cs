@@ -1716,6 +1716,20 @@ namespace Data
             return newQuestionnaire;
         }
 
+        public async Task<QuestionnaireObj?> SaveQuestionnaireAsync(QuestionnaireObj editedObj)
+        {
+            if (_questions == null)
+            {
+                LoadQuestionnairesAsync();
+            }
+
+            editedObj.IsCompleted = true;
+            editedObj.TimeEnded = DateTime.Now;
+
+            await SaveAsync<QuestionnaireObj>(_questions, _settings.QuestionnaireFolder, $"{editedObj.Id}.json", editedObj);
+            return editedObj;
+        }
+
 
         /////////////////////
         // Tasks

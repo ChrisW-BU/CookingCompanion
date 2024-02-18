@@ -149,6 +149,7 @@ namespace Data.Models.Interfaces
         ////////////////////////////
         Task<List<QuestionnaireObj>?> GetQuestionnaireObjListAsync();
         Task<QuestionnaireObj?> CheckUserQuestionnaire(int userId);
+        Task<QuestionnaireObj?> SaveQuestionnaireAsync(QuestionnaireObj editedObj);
 
 
         ////////////////////////////

@@ -387,4 +387,37 @@
         await _api.SaveManualLogEntry(
             _user.Id, CStepObj.Id, CookCompAPI.UserLogs.StartedTimer, "CookingStep");
     }
+
+    // The following code is to manage page navigation. We want to limit what the user can do
+    // when the app is in a scenario
+    private IDisposable? locationReg;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            locationReg =
+                _nav.RegisterLocationChangingHandler(OnLocationChanging);
+        }
+    }
+
+    // We need control over where the user can go once the scenario has begun
+    private async ValueTask OnLocationChanging(LocationChangingContext context)
+    {
+        // If it hasn't then it doesn't matter
+        if (context.TargetLocation != "/recipes/cooking/" + CatchId)
+        {
+            if (await JSRuntime.InvokeAsync<bool>(
+            "confirm", $"If you leave the recipe page now any timers will be cancelled. Is this OK?"))
+            {
+                Dispose();
+            }
+            else
+            {
+                context.PreventNavigation();
+            }
+        }
+    }
+
+    public void Dispose() => locationReg?.Dispose();
 }

@@ -45,6 +45,7 @@
                 </div>
                 <div class="offcanvas-body">
                     <div class="grid gap-3">
+                        <MenuItem IsOffCanvas=true Icon="fas fa-home" Title="Home" Href=""></MenuItem>
                         @if (_user.IsAdmin)
                         {
                             <MenuItem IsOffCanvas=true Icon="fas fa-tools" Title="Admin Panel" Href="admin"></MenuItem>
@@ -172,8 +173,6 @@
 
     public void LogOut()
     {
-        _user.ResetUserInfo();
-        _ls.RemoveItemAsync("uls");
-        _nav.NavigateTo("/", true);
+        _nav.NavigateTo("/6fc5fe59-d915-438f-8e49-c25706ff50f9");
     }
 }

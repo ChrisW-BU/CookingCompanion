@@ -19,6 +19,8 @@ namespace Data.Models.Models
 
         private bool TasksCompleted { get; set; }
 
+        private bool QuestionnaireCompleted { get; set; }
+
         public void SetUserInfo(User user)
         {
             if (user != null)
@@ -29,6 +31,7 @@ namespace Data.Models.Models
                 LoggedIn = true;
                 UserToken = user.UserToken;
                 TasksCompleted = user.TasksCompleted;
+                QuestionnaireCompleted = user.QuestionnaireCompleted;
             }
         }
 
@@ -40,6 +43,7 @@ namespace Data.Models.Models
             LoggedIn = false;
             UserToken = Guid.Empty;
             TasksCompleted = false;
+            QuestionnaireCompleted = false;
         }
 
         public void SetTaskComplete(bool x)
@@ -58,6 +62,16 @@ namespace Data.Models.Models
         public bool GetTaskComplete()
         {
             return TasksCompleted;
+        }
+
+        public void SetQuestionnaireCompleted(bool x)
+        {
+            QuestionnaireCompleted = x;
+        }
+
+        public bool GetQuestionnaireStatus()
+        {
+            return QuestionnaireCompleted;
         }
     }
 }

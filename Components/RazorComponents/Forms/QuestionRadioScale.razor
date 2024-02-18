@@ -1,16 +1,37 @@
-﻿<form>
-    <div>
-        <b>@QuestionName</b>
-    </div>
-    <br />
-    @if (ChoiceStrings?.Count > 0)
-    {
-        int count = 0;
+﻿<div>
+    <b>@QuestionName</b>
+</div>
+<br />
+@if (Answers?.Count > 0)
+{
+    int count = 0;
 
-        foreach (string s in ChoiceStrings)
+    foreach (string s in Answers)
+    {
+        count++;
+        int currCount = count;
+        
+        @if(IsLikert)
         {
-            count++;
-            int currCount = count;
+            @* Small Screens - Stack vertically instead*@
+            <div class="d-block d-sm-none">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" value="@count" name="@FormName"
+                           @onclick="()=>UpdateAnswer(currCount)">
+                    <label class="form-check-label">@s</label>
+                </div>
+            </div>
+
+            <div class="d-none d-sm-inline">
+                <div class="form-check form-check-inline me-4">
+                    <input class="form-check-input" type="radio" value="@count" name="@FormName"
+                           @onclick="()=>UpdateAnswer(currCount)">
+                    <label class="form-check-label">@s</label>
+                </div>
+            </div>
+        }
+        else
+        {
             <div class="form-check form-check-inline me-4">
                 <input class="form-check-input" type="radio" value="@count" name="@FormName"
                        @onclick="()=>UpdateAnswer(currCount)">
@@ -18,9 +39,25 @@
             </div>
         }
     }
-</form>
 
+    @if(ShowCommentBox)
+    {
+        <textarea class="form-control" value="@CommentString"
+                  oninput="@UpdateComment" />
+    }
+}
+<br />
+<br />
 @code {
+    [Parameter]
+    public bool IsLikert { get; set; }
+
+    private bool ShowCommentBox { get; set; }
+    private string CommentString { get; set; } = string.Empty;
+
+    [Parameter]
+    public int QuestionNumber { get; set; }
+
     [Parameter]
     public QuestionnaireObj QuestionObj { get; set; }
 
@@ -31,8 +68,109 @@
     {
         if (QuestionObj.Id > 0)
         {
-            QuestionObj.QuestionOneAnswer = value;
+            switch (QuestionNumber)
+            {
+                case 1:
+                    QuestionObj.QuestionOneAnswer = value;
+                    break;
+                case 2:
+                    QuestionObj.QuestionTwoAnswer = value;
+                    break;
+                case 3:
+                    QuestionObj.QuestionThreeAnswer = value;
+                    break;
+                case 4:
+                    QuestionObj.QuestionFourAnswer = value;
+                    if(value == 1)
+                    {
+                        ShowCommentBox = true;
+                    }
+                    else
+                    {
+                        ShowCommentBox = false;
+                    }
+                    break;
+                case 5:
+                    QuestionObj.QuestionFiveAnswer = value;
+                    break;
+                case 6:
+                    QuestionObj.QuestionSixAnswer = value;
+                    if (value == 1)
+                    {
+                        ShowCommentBox = true;
+                    }
+                    else
+                    {
+                        ShowCommentBox = false;
+                    }
+                    break;
+                case 7:
+                    QuestionObj.QuestionSevenAnswer = value;
+                    break;
+                case 8:
+                    QuestionObj.QuestionEightAnswer = value;
+                    break;
+                case 9:
+                    QuestionObj.QuestionNineAnswer = value;
+                    if (value == 2)
+                    {
+                        ShowCommentBox = true;
+                    }
+                    else
+                    {
+                        ShowCommentBox = false;
+                    }
+                    break;
+                case 10:
+                    QuestionObj.QuestionTenAnswer = value;
+                    break;
+                case 11:
+                    QuestionObj.QuestionElevenAnswer = value;
+                    if (value == 1)
+                    {
+                        ShowCommentBox = true;
+                    }
+                    else
+                    {
+                        ShowCommentBox = false;
+                    }
+                    break;
+                case 12:
+                    QuestionObj.QuestionTwelveAnswer = value;
+                    break;
+                case 14:
+                    QuestionObj.QuestionFourteenAnswer = value;
+                    break;
+                default:
+                    break;
+            }
+            OnChangeEvent.InvokeAsync();
+        }
+    }
 
+    private async Task UpdateComment(ChangeEventArgs args)
+    {
+        CommentString = args.Value.ToString();
+
+        if (QuestionObj.Id > 0)
+        {
+            switch (QuestionNumber)
+            {
+                case 4:
+                    QuestionObj.QuestionFourAnswerString = CommentString;
+                    break;
+                case 6:
+                    QuestionObj.QuestionSixAnswerString = CommentString;
+                    break;
+                case 9:
+                    QuestionObj.QuestionNineAnswerString = CommentString;
+                    break;
+                case 11:
+                    QuestionObj.QuestionElevenAnswerString = CommentString;
+                    break;
+                default:
+                    break;
+            }
             OnChangeEvent.InvokeAsync();
         }
     }
@@ -44,7 +182,7 @@
     public string QuestionName { get; set; } = "default";
 
     [Parameter]
-    public List<string>? ChoiceStrings { get; set; }
+    public List<string>? Answers { get; set; }
 
 
 }

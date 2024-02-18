@@ -61,15 +61,33 @@
     }
     else
     {
-        <h4>Questionnaire Time</h4>
-        <p>
-            Thank you for your participation so far. If you feel you have familiarised yourself with the
-            functionality of the app, we would like to invite you participate in the questionnaire. This
-            shouldn't take more than another <b>5-10 minutes</b> of your time.
+        @if (_user.GetQuestionnaireStatus())
+        {
+            <img src="img/bath-logo.png" class="img-fluid right-0" style="max-width:200px;" alt="...">
+            <h4>Thank you for your participation</h4>
+            <p>
+                We appreciate your participation in this prototype test. You will be able to access the prototype for
+                the remainder of the testing period - after which - we will be removing access from all users. If you
+                have any questions please notify the researcher <b>Chris</b> by email at cw2480@bath.ac.uk.
+            </p>
+            <p>
+                You may be contacted
+                afterwards for some post questioning; otherwise the research project will conclude at the end of April
+                when all gathered data will be securely stored in it's anonymised raw format for the required time period.
+            </p>
+        }
+        else
+        {
+            <h4>Questionnaire Time</h4>
+            <p>
+                Thank you for your participation so far. If you feel you have familiarised yourself with the
+            functionality of the app, we would like to invite you to participate in the questionnaire. This
+            shouldn't take more than <b>5-10 minutes</b> of your time.
         </p>
         <ButtonContainer>
             <ButtonControl Name="Start Questionnaire" OnBaseClickCall="GoToQuestionnaire" Icon="fas fa-play" Colour="success" />
         </ButtonContainer>
+        }
     }
 
 
