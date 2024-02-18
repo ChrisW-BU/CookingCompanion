@@ -5,6 +5,7 @@
 @inject UserGlobal _user
 @implements IDisposable
 @inject IJSRuntime JSRuntime;
+@using System.Timers
 
 <PageTitle>Cooking Companion - Task One</PageTitle>
 <PageBase>
@@ -29,8 +30,9 @@
     else
     {
         @* Task content goes here... *@
-        <label>Search</label>
-        <input type="text" value="@searchField" oninput="@CheckSearchStr" class="mb-4"/>
+        <FormBase>
+            <input class="form-control mb-4" placeholder="Search for recipe..." type="text" @bind=bindString @bind:event="oninput" @onkeyup="@ResetTimer" />
+        </FormBase>
         <div hidden="@hideDivOne">
             No recipes found...
         </div>
@@ -62,7 +64,6 @@
         // If this task is already complete, navigate to next task
         if (await _api.CheckTaskStatus(taskId, _user.Id))
         {
-            //System.Diagnostics.Debug.WriteLine("Moves to next task!");
             await NextTask();
         }
         else
@@ -72,28 +73,44 @@
 
             recipe = await _api.GetRecipeUniqueAsync(1);
 
-            await ResetTaskAsync(); // COPY THIS CHANGE
+            await ResetTaskAsync();
+
+            // Setup timer
+            searchTimer = new Timer(500);
+            searchTimer.Elapsed += FinishedTyping;
+            searchTimer.AutoReset = false;
         }
         await base.OnInitializedAsync();
     }
 
     // Task logic
-    private string searchField { get; set; } = string.Empty;
+    public string bindString { get; set; } = string.Empty;
+    public string submitString { get; set; } = string.Empty;
+    private Timer searchTimer = default!;
 
-    private async Task CheckSearchStr(ChangeEventArgs args)
+    public void ResetTimer(KeyboardEventArgs e)
     {
-        searchField = args.Value.ToString();
+        searchTimer.Stop();
+        searchTimer.Start();
+    }
 
-        if (searchField == "mushroom risotto")
-        {
-            hideDivOne = true;
-            hideDivTwo = false;
-        }
-        else
+    void IDisposable.Dispose() => searchTimer?.Dispose();
+
+    private async void FinishedTyping(Object? source, ElapsedEventArgs e)
+    {
+        submitString = await Task.FromResult(bindString);
+
+        if (submitString?.Length == 0 || !recipe.Name.ToLower().Contains(submitString.ToLower()))
         {
             hideDivOne = false;
             hideDivTwo = true;
         }
+        else
+        {
+            hideDivOne = true;
+            hideDivTwo = false;
+        }
+        await InvokeAsync(StateHasChanged);
     }
 
     private void ConfirmCompleted()
