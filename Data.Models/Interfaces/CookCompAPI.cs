@@ -41,6 +41,7 @@ namespace Data.Models.Interfaces
         ////////////////////////////
         Task<List<Recipe>?> GetRecipeListAsync(int recipeCount, int index);
         Task<Recipe?> GetRecipeUniqueAsync(int id);
+        Task<List<Recipe>?> GetRecipeBySearchAsync(string s);
         Task<int> GetRecipeCountAsync();
         Task<Recipe?> SaveRecipeAsync(Recipe editedObj);
         Task DeleteRecipeAsync(int id);

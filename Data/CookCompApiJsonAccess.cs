@@ -415,6 +415,25 @@ namespace Data
             return _recipes.FirstOrDefault(b => b.Id == id);
         }
 
+        public async Task<List<Recipe>?> GetRecipeBySearchAsync(string s)
+        {
+            await LoadRecipesAsync();
+            if(_recipes == null)
+            {
+                throw new Exception("No recipes have been found");
+            }
+
+            List<Recipe> returnCollection = new();
+            foreach (Recipe recipe in _recipes)
+            {
+                if (recipe.Name.ToLower().Contains(s.ToLower()))
+                {
+                    returnCollection.Add(recipe);
+                }
+            }
+            return returnCollection;
+        }
+
         /// <summary>
         /// Return the count of all ingredients.
         /// </summary>

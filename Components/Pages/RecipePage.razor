@@ -3,14 +3,21 @@
 @inject UserGlobal _user
 @inject PageHistory _page
 @inject NavigationManager _nav
+@implements IDisposable
+@using System.Timers
 
 <PageTitle>CC - Select a recipe</PageTitle>
 <PageBase>
-<h3>Recipes</h3>
+    <h3>Recipes</h3>
 
-<AlertItem Style="AlertItem.AlertStyle.Warning">
-    Please select a recipe from the list below to begin cooking
-</AlertItem>
+    <AlertItem Style="AlertItem.AlertStyle.Warning">
+        Please select a recipe from the list below to begin cooking. You can use the search box to find recipes faster.
+        As this is only a prototype there are limited amounts of recipes, but it should demonstrate the functionality.
+    </AlertItem>
+
+    <FormBase>
+        <input class="form-control mb-4" placeholder="Search for recipe..." type="text" @bind=bindString @bind:event="oninput" @onkeyup="@ResetTimer" />
+    </FormBase>
 
     <div class="grid gap-3">
         @foreach (var r in recipes)
@@ -28,11 +35,40 @@
 
 @code {
     protected List<Recipe> recipes = new();
+    public string bindString { get; set; } = string.Empty;
+    public string submitString { get; set; } = string.Empty;
+    private Timer searchTimer = default!;
 
     protected override async Task OnInitializedAsync()
     {
         recipes = await _api.GetRecipeListAsync(10, 0);
+
+        searchTimer = new Timer(500);
+        searchTimer.Elapsed += FinishedTyping;
+        searchTimer.AutoReset = false;
+
         await base.OnInitializedAsync();
+    }
+
+    public void ResetTimer(KeyboardEventArgs e)
+    {
+        searchTimer.Stop();
+        searchTimer.Start();
+    }
+
+    void IDisposable.Dispose() => searchTimer?.Dispose();
+
+    private async void FinishedTyping(Object? source, ElapsedEventArgs e)
+    {
+        submitString = await Task.FromResult(bindString);
+        _api.Output(submitString);
+        await SearchForRecipe();
+    }
+
+    private async Task SearchForRecipe()
+    {
+        recipes = await _api.GetRecipeBySearchAsync(submitString);
+        await InvokeAsync(StateHasChanged);
     }
 
     private void OnClickEvent(int recipeId)
@@ -43,7 +79,7 @@
 
     private void PageBack()
     {
-        if(_page.IsPrevious())
+        if (_page.IsPrevious())
         {
             _api.ClearCacheAsync();
             _nav.NavigateTo(_page.GetPreviousPage());
