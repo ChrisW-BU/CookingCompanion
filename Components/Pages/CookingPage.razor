@@ -108,12 +108,14 @@
         <div class="btn-group mt-4">
             <PreviousStepButton OnClickCall="PreviousStep" />
             <CookingRecipeButton OnClickCall="PageBack" />
-            <NextStepButton IsHidden=@NextIsHidden OnClickCall="NextStep" />
+                <ButtonControl Name="Next Step!" Colour="success" OnBaseClickCall="NextStep"
+                               Icon="fas fa-circle-arrow-right" IsHidden=@NextIsHidden />
         </div>
     </div>
     <div class="d-grid d-sm-none">
         <div class="btn-group-vertical mt-4">
-            <NextStepButton IsHidden=@NextIsHidden OnClickCall="NextStep" />
+                <ButtonControl Name="Next Step!" Colour="success" OnBaseClickCall="NextStep"
+                               Icon="fas fa-circle-arrow-right" IsHidden=@NextIsHidden />
             <PreviousStepButton OnClickCall="PreviousStep" />
             <CookingRecipeButton OnClickCall="PageBack" />
         </div>
@@ -125,6 +127,7 @@
 
 @code {
     public ClockTimer ourClock = new();
+    public NextStepButton NextButton = new();
 
     [CascadingParameter]
     protected MainLayout parent { get; set; }
@@ -195,7 +198,6 @@
                 ourClock.StopClock();
                 await _api.SaveManualLogEntry(
                     _user.Id, CStepObj.Id, CookCompAPI.UserLogs.EndedTimer, "CookingStep");
-                return;
             }
         }
 
@@ -210,13 +212,12 @@
     private async void NextStep()
     {
         if (await CheckNextStepForTimer() && ourClock.IsRunning) {
-            if (!await JSRuntime.InvokeAsync<bool>(
+            if (await JSRuntime.InvokeAsync<bool>(
                 "confirm", $"You already have a timer running. Do you want to cancel the previous timer?"))
             {
                 ourClock.StopClock();
                 await _api.SaveManualLogEntry(
                     _user.Id, CStepObj.Id, CookCompAPI.UserLogs.EndedTimer, "CookingStep");
-                return;
             }
         }
         if (await CheckNextStep())
@@ -229,6 +230,8 @@
         }
         else
         {
+            NextButton.SetIsHidden(true);
+            NextIsHidden = true;
             await _api.SaveManualLogEntry(
                 _user.Id, 0, CookCompAPI.UserLogs.Error, "Step list not found, or cooking step object not found...");
         }
@@ -269,9 +272,11 @@
         else
         {
             NextIsHidden = true;
+            NextButton.SetIsHidden(true);
             await _api.SaveManualLogEntry(
                 _user.Id, CStepObj.Id, CookCompAPI.UserLogs.EndedRecipe, "CookingStep");
         }
+        //StateHasChanged();
     }
 
     private async Task<bool> CheckNextStepForTimer()
@@ -342,17 +347,6 @@
 
     private async void PageBack()
     {
-        if (!ourClock.isHidden)
-        {
-            if (!await JSRuntime.InvokeAsync<bool>("confirm", $"Cancel timer and exit recipe?")){
-                return;
-            }
-            await _api.SaveManualLogEntry(
-                _user.Id, CStepObj.Id, CookCompAPI.UserLogs.EndedTimer, "CookingStep");
-            ourClock.Dispose();
-            ourClock.HideClock();
-
-        }
         if (_page.IsPrevious())
         {
             _api.ClearCacheAsync();

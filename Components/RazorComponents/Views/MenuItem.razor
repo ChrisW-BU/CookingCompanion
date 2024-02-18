@@ -42,7 +42,10 @@
 
     }
 
-    private void OnClickEvent()
+    [Parameter]
+    public EventCallback OnMenuItemClick { get; set; }
+
+    private async void OnClickEvent()
     {
         NavManager.NavigateTo(Href);
         if (IsAdmin)
@@ -53,5 +56,6 @@
         {
             _page.AddPage("");
         }
+        await OnMenuItemClick.InvokeAsync();
     }
 }
