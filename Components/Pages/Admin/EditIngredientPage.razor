@@ -1,4 +1,4 @@
-﻿@page "/admin/edit_ingredient/{CatchId}"
+﻿@page "/7455fc5d-1608-4e1f-95a9-0c07b9197542/{CatchId}"
 @inject CookCompAPI _api
 @inject NavigationManager _nav
 @inject PageHistory _page
@@ -106,6 +106,10 @@
         {
             _api.ClearCacheAsync();
             _nav.NavigateTo(_page.GetPreviousPage());
+        }
+        else
+        {
+            _nav.NavigateTo("/bfb09b08-06f1-4add-9244-21afa063cb4f");
         }
     }
 }

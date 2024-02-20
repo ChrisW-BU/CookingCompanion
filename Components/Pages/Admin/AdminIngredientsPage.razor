@@ -1,4 +1,4 @@
-﻿@page "/admin/ingredients"
+﻿@page "/bfb09b08-06f1-4add-9244-21afa063cb4f"
 @inject CookCompAPI _api
 @inject NavigationManager _nav
 @inject PageHistory _page
@@ -17,17 +17,14 @@
         <div class="grid gap-3">
             @foreach (var i in ingredients)
             {
-                <IngredientCard Name
-                ="@i.Name" Description
-                ="@i.Description" ImgUrl
-                ="@i.ImgUrl"
-                LastModified="@i.LastModified" OnClickCall="() => OnClickEvent(i.Id)" />
+                <IngredientCard Name="@i.Name" Description="@i.Description" ImgUrl="@i.ImgUrl"
+                                LastModified="@i.LastModified" OnClickCall="() => EditIngredient(i.Id)" />
             }
         </div>
         <ButtonContainer>
             <AddNewButtonControl OnClickCall="AddNewIngredient" />
             <BackButtonControl OnClickCall="PageBack" />
-        </ButtonContainer>    
+        </ButtonContainer>
     </PageBase>
 }
 
@@ -41,18 +38,18 @@
         await base.OnInitializedAsync();
     }
 
-    private void OnClickEvent(int ingredientId)
+    private void EditIngredient(int ingredientId)
     {
         _api.ClearCacheAsync();
-        _nav.NavigateTo("/admin/edit_ingredient/" + ingredientId);
-        _page.AddPage("admin/ingredients");
+        _nav.NavigateTo("/7455fc5d-1608-4e1f-95a9-0c07b9197542/" + ingredientId);
+        _page.AddPage("bfb09b08-06f1-4add-9244-21afa063cb4f");
     }
 
     private void AddNewIngredient()
     {
         _api.ClearCacheAsync();
-        _nav.NavigateTo("/admin/edit_ingredient/" + 0);
-        _page.AddPage("admin/ingredients");
+        _nav.NavigateTo("/7455fc5d-1608-4e1f-95a9-0c07b9197542/" + 0);
+        _page.AddPage("bfb09b08-06f1-4add-9244-21afa063cb4f");
     }
 
     private void PageBack()
@@ -61,6 +58,10 @@
         {
             _api.ClearCacheAsync();
             _nav.NavigateTo(_page.GetPreviousPage());
+        }
+        else
+        {
+            _nav.NavigateTo("/5e3ab173-93a1-43fc-86d1-45c9999cfc85");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@page "/admin/edit_recipe/edit_step/{CatchId}"
+﻿@page "/b27d92e4-0e6f-4428-971d-6b4f7ced93c8/{CatchId}"
 @inject CookCompAPI _api
 @inject NavigationManager _nav
 @inject PageHistory _page
@@ -84,7 +84,7 @@
         }
     }
 
-    
+
 
     private async Task Save()
     {
@@ -116,6 +116,10 @@
         {
             _api.ClearCacheAsync();
             _nav.NavigateTo(_page.GetPreviousPage());
+        }
+        else
+        {
+            _nav.NavigateTo("/a7d5083a-9e8d-47b1-8c47-62387e829df1/");
         }
     }
 }

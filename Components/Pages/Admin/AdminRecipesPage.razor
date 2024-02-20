@@ -1,4 +1,4 @@
-﻿@page "/admin/recipes"
+﻿@page "/a7d5083a-9e8d-47b1-8c47-62387e829df1"
 @inject CookCompAPI _api
 @inject NavigationManager _nav
 @inject PageHistory _page
@@ -18,7 +18,7 @@
             @foreach (var r in recipes)
             {
                 <RecipeCard Name="@r.Name" Description="@r.Description" ImgUrl="@r.ImgUrl"
-                Duration="@r.Duration" IsVege="@r.IsVege" OnClickCall="() => OnClickEvent(r.Id)" />
+                            Duration="@r.Duration" IsVege="@r.IsVege" OnClickCall="() => EditRecipe(r.Id)" />
             }
         </div>
         <ButtonContainer>
@@ -37,18 +37,18 @@
         await base.OnInitializedAsync();
     }
 
-    private void OnClickEvent(int recipeId)
+    private void EditRecipe(int recipeId)
     {
         _api.ClearCacheAsync();
-        _nav.NavigateTo("/admin/edit_recipe/" + recipeId);
-        _page.AddPage("admin/recipes");
+        _nav.NavigateTo("/d9ac8ceb-5821-4b8f-bc94-f96c4e2785ca/" + recipeId);
+        _page.AddPage("a7d5083a-9e8d-47b1-8c47-62387e829df1");
     }
 
     private void AddNewRecipe()
     {
         _api.ClearCacheAsync();
-        _nav.NavigateTo("/admin/edit_recipe/" + 0);
-        _page.AddPage("admin/recipes");
+        _nav.NavigateTo("/d9ac8ceb-5821-4b8f-bc94-f96c4e2785ca/" + 0);
+        _page.AddPage("a7d5083a-9e8d-47b1-8c47-62387e829df1");
     }
 
     private void PageBack()
@@ -57,6 +57,10 @@
         {
             _api.ClearCacheAsync();
             _nav.NavigateTo(_page.GetPreviousPage());
+        }
+        else
+        {
+            _nav.NavigateTo("/5e3ab173-93a1-43fc-86d1-45c9999cfc85/");
         }
     }
 }
