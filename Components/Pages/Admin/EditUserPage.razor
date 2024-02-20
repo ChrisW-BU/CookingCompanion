@@ -1,0 +1,113 @@
+﻿@page "/d0ec2085-543e-479d-9f26-b0c6897174cf/{CatchId}"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+@inject PageHistory _page
+@inject UserGlobal _user
+
+@if (_user.IsAdmin)
+{
+    <PageTitle>@PageTitleName</PageTitle>
+    <PageBase>
+        <h3>@TitleName</h3>
+
+        <FormBase>
+            <FormInputText Name="Username" @bind-Value="UserObj.Name" AutoComplete=false FieldWidth="12"/>
+            <FormCheckbox Name="Is Admin?" @bind-Value="UserObj.IsAdmin" FieldWidth="12"/>
+        </FormBase>
+        <ButtonContainer>
+            <SaveButtonControl OnClickCall="Save" />
+            <DeleteButtonControl OnClickCall="Delete" />
+            <BackButtonControl OnClickCall="PageBack" />
+        </ButtonContainer>
+    </PageBase>
+}
+
+@code {
+    [Parameter]
+    public string CatchId { get; set; } = string.Empty;
+
+    [Parameter]
+    public int UserId { get; set; }
+
+    public User? UserObj { get; set; }
+
+    public string PageTitleName
+    {
+        get
+        {
+            if (UserObj.Id > 0)
+            {
+                return "CC - " + UserObj.Name;
+            }
+            else
+            {
+                return "CC - New User";
+            }
+        }
+    }
+
+    public string TitleName
+    {
+        get
+        {
+            if (UserObj.Id > 0)
+            {
+                return "Edit User";
+            }
+            else
+            {
+                return "Add New User";
+            }
+        }
+    }
+
+    protected async override Task OnParametersSetAsync()
+    {
+        int userId = Int32.Parse(CatchId);
+        if (userId > 0)
+        {
+            UserObj = await _api.GetUserUniqueAsync(userId);
+        }
+        else
+        {
+            UserObj = new();
+        }
+        await base.OnParametersSetAsync();
+    }
+
+    private async Task Save()
+    {
+        try
+        {
+            await _api.SaveUserAsync(UserObj);
+            PageBack();
+        }
+        catch { }
+    }
+
+    private async Task Delete()
+    {
+        try
+        {
+            await _api.DeleteUserAsync(UserObj.Id);
+            PageBack();
+        }
+        catch
+        {
+
+        }
+    }
+
+    private void PageBack()
+    {
+        if (_page.IsPrevious())
+        {
+            _api.ClearCacheAsync();
+            _nav.NavigateTo(_page.GetPreviousPage());
+        }
+        else
+        {
+            _nav.NavigateTo("/69de5095-37ed-4334-8049-fc002b0d0ee2");
+        }
+    }
+}

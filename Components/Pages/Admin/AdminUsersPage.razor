@@ -1,0 +1,64 @@
+﻿@page "/69de5095-37ed-4334-8049-fc002b0d0ee2"
+@inject CookCompAPI _api
+@inject NavigationManager _nav
+@inject PageHistory _page
+@inject UserGlobal _user
+
+@if (_user.IsAdmin)
+{
+    <PageTitle>CC - User Manager</PageTitle>
+    <PageBase>
+        <h1>Users</h1>
+
+        <AlertItem Style="AlertItem.AlertStyle.Warning">
+            This page is for the management of users. You can add, edit, and delete users.
+        </AlertItem>
+
+        <UsersTable RowClick="EditUser" @ref="_stepsTable"/>
+
+        <ButtonContainer>
+            <AddNewButtonControl OnClickCall="AddNewUser" />
+            <BackButtonControl OnClickCall="PageBack" />
+        </ButtonContainer>
+    </PageBase>
+}
+
+
+@code {
+    protected List<Ingredient> ingredients = new();
+    protected List<User> users = new();
+    private UsersTable _stepsTable = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ingredients = await _api.GetIngredientListAsync(10, 0);
+        await base.OnInitializedAsync();
+    }
+
+    private void EditUser(int userId)
+    {
+        _api.ClearCacheAsync();
+        _nav.NavigateTo("/d0ec2085-543e-479d-9f26-b0c6897174cf/" + userId);
+        _page.AddPage("69de5095-37ed-4334-8049-fc002b0d0ee2");
+    }
+
+    private void AddNewUser()
+    {
+        _api.ClearCacheAsync();
+        _nav.NavigateTo("/d0ec2085-543e-479d-9f26-b0c6897174cf/" + 0);
+        _page.AddPage("69de5095-37ed-4334-8049-fc002b0d0ee2");
+    }
+
+    private void PageBack()
+    {
+        if (_page.IsPrevious())
+        {
+            _api.ClearCacheAsync();
+            _nav.NavigateTo(_page.GetPreviousPage());
+        }
+        else
+        {
+            _nav.NavigateTo("/5e3ab173-93a1-43fc-86d1-45c9999cfc85");
+        }
+    }
+}

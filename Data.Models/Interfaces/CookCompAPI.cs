@@ -143,6 +143,9 @@ namespace Data.Models.Interfaces
         Task<User?> GetUser(int userId);
         Task<User?> GetUser(Guid userId);
         Task<User?> SaveUserAsync(User editedObj);
+        Task<User?> GetUserUniqueAsync(int id); //
+        Task<int> GetUserCountAsync(); //
+        Task DeleteUserAsync(int id); //
 
 
         ////////////////////////////

@@ -1679,6 +1679,49 @@ namespace Data
             return editedObj;
         }
 
+        public async Task<User?> GetUserUniqueAsync(int id)
+        {
+            await LoadUsersAsync();
+            if (_users == null)
+            {
+                throw new Exception("No users have been found");
+            }
+            return _users.FirstOrDefault(b => b.Id == id);
+        }
+
+        /// <summary>
+        /// Return the count of all users.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> GetUserCountAsync()
+        {
+            await LoadUsersAsync();
+            if (_users == null)
+                return 0;
+            else
+                return _users.Count();
+        }
+
+        /// <summary>
+        /// Delete a user using the specified ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Task DeleteUserAsync(int id)
+        {
+            DeleteAsync(_users, _settings.UserFolder, id);
+            if (_users != null)
+            {
+                var editedObj = _users.FirstOrDefault(b => b.Id == id);
+                if (editedObj != null)
+                {
+                    _users.Remove(editedObj);
+                }
+
+            }
+            return Task.CompletedTask;
+        }
+
 
         /////////////////////
         // Questionnaire Obj
