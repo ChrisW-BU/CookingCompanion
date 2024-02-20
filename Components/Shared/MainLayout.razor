@@ -111,6 +111,7 @@
             {
                 User? getUser = await _api.GetUser(guid);
                 _user.SetUserInfo(getUser);
+                await _api.SaveManualLogEntry(_user.Id, _user.Id, CookCompAPI.UserLogs.TokenRefreshed, "User");
             }
         }
         catch { }

@@ -2017,6 +2017,25 @@ namespace Data
             return logList ?? new();
         }
 
+        public async Task<List<LogEntry>?> GetUserManualLogEntryList(int userId)
+        {
+            await LoadLogEntriesAsync();
+
+            List<LogEntry> logList = new();
+
+            foreach (LogEntry log in _logs)
+            {
+                if (log.IsManual && log.UserId == userId)
+                {
+                    logList.Add(log);
+                }
+            }
+
+            logList = logList.OrderBy(x => x.Date).ToList();
+
+            return logList ?? new();
+        }
+
         public void Output(string s)
         {
             System.Diagnostics.Debug.WriteLine(s);

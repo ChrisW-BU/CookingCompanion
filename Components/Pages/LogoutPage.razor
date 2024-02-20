@@ -1,5 +1,6 @@
 ﻿@page "/6fc5fe59-d915-438f-8e49-c25706ff50f9"
 @inject ILocalStorageService _ls;
+@inject CookCompAPI _api;
 @inject UserGlobal _user;
 @inject NavigationManager _nav;
 
@@ -13,8 +14,27 @@
 
     public async Task LogOut()
     {
-        _user.ResetUserInfo();
-        _ls.RemoveItemAsync("uls");
-        _nav.NavigateTo("/", true);
+        try
+        {
+            User getUser = await _api.GetUser(_user.UserName, false);
+
+            if (getUser != null && getUser.Id > 0)
+            {
+                if (_user.Id > 0)
+                {
+                    await _api.SaveManualLogEntry(_user.Id, _user.Id, CookCompAPI.UserLogs.LoggedOut, "User");
+                    _user.ResetUserInfo();
+                    _ls.RemoveItemAsync("uls");
+                    _nav.NavigateTo("/", true);
+                }
+            }
+            else
+            {
+                //System.Diagnostics.Debug.WriteLine("User NOT found");
+            }
+        }
+        catch { }
+
+        
     }
 }

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="LogEntries\" />
     <Folder Include="Questionnaires\" />
     <Folder Include="ShoppingListItems\" />
     <Folder Include="ShoppingLists\" />

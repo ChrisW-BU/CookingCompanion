@@ -22,7 +22,10 @@ namespace Data.Models.Interfaces
             RemovedFavourite,
             AddedShoppingList,
             RemovedShoppingList,
-            Error
+            Error,
+            LoggedIn,
+            TokenRefreshed,
+            LoggedOut
         }
 
         ////////////////////////////////
@@ -172,6 +175,7 @@ namespace Data.Models.Interfaces
         Task<List<LogEntry>?> GetLogEntryListAsync(int userId, string entityType);
         Task SaveManualLogEntry(int userId, int entityId, UserLogs ul, string entityType);
         Task<List<LogEntry>?> GetManualLogEntryList();
+        Task<List<LogEntry>?> GetUserManualLogEntryList(int userId);
 
 
 

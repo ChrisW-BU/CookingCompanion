@@ -40,6 +40,7 @@
                 if (_user.Id > 0)
                 {
                     _ls.SetItemAsStringAsync("uls", _user.UserToken.ToString());
+                    await _api.SaveManualLogEntry(_user.Id, _user.Id, CookCompAPI.UserLogs.LoggedIn, "User");
                     await OnSuccessCallBack.InvokeAsync();
                 }
             }

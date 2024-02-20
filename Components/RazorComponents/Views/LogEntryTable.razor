@@ -37,13 +37,15 @@
 </table>
 
 @code {
+    public int UserId { get; set; }
+
     public List<LogEntry> TableData { get; set; } = new();
 
     private async Task GetLogEntries()
     {
         try
         {
-            TableData = await _api.GetManualLogEntryList();
+            TableData = await _api.GetUserManualLogEntryList(UserId);
         }
         catch
         {
@@ -61,8 +63,15 @@
 
     public async Task Refresh()
     {
+        //_api.Output("Log Table ID Received: " + UserId);
         await GetLogEntries();
         StateHasChanged();
+    }
+
+    public async Task SetUserId(int userId)
+    {
+        UserId = userId;
+        await Refresh();
     }
 
 }

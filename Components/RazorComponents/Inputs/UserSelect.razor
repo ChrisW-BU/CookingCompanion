@@ -1,0 +1,36 @@
+﻿@inject CookCompAPI _api
+@inherits SelectControlBase
+<div class="col-sm-@FieldWidth">
+    <label>@Name</label><br />
+    <select class="form-select mb-3 @CssClass"
+            hidden="@IsHidden" disabled="@IsDisabled" @onchange="UpdateParentElement">
+
+        <option value="0">Select User</option>
+        @foreach (User i in userList)
+        {
+            <SelectControlOption Value="@i.Id" Name="@i.Name" />
+        }
+    </select>
+</div>
+
+@code {
+    [Parameter]
+    public List<User> userList { get; set; }
+
+    [Parameter]
+    public EventCallback SelectChanged { get; set; }
+
+    public async void UpdateParentElement(ChangeEventArgs e)
+    {
+        Value = int.Parse(e?.Value?.ToString() ?? "0");
+        //System.Diagnostics.Debug.WriteLine("The current value is: " + Value);
+        await ValueChanged.InvokeAsync(Value);
+        await SelectChanged.InvokeAsync();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        userList = await _api.GetUserListAsync();
+        //await base.OnInitializedAsync();
+    }
+}

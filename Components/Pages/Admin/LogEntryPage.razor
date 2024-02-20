@@ -9,7 +9,8 @@
     <PageTitle>Admin Logs</PageTitle>
     <PageBase>
         <h3>Manual Log Entry Table</h3>
-        <LogEntryTable />
+        <UserSelect @bind-Value="@UserId" SelectChanged="SelectChanged" Name="User Select" />
+        <LogEntryTable @ref="@logTable"/>
         <ButtonContainer>
             <BackButtonControl OnClickCall="PageBack" />
         </ButtonContainer>
@@ -17,6 +18,15 @@
 }
 
 @code {
+    private LogEntryTable logTable = new();
+    private int UserId { get; set; }
+
+    private async void SelectChanged()
+    {
+        //_api.Output("User Id: " + UserId);
+        await logTable.SetUserId(UserId);
+    }
+
     private void PageBack()
     {
         if (_page.IsPrevious())
