@@ -15,6 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="CookingSteps\" />
+    <Folder Include="Cooking\" />
+    <Folder Include="Favourites\" />
     <Folder Include="LogEntries\" />
     <Folder Include="Questionnaires\" />
     <Folder Include="ShoppingListItems\" />
