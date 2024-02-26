@@ -35,8 +35,8 @@
         <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionFive()" QuestionNumber="5"
                             FormName="QuestionFive" Answers="QuestionObj?.GetLikertOptions()" IsLikert=true/>
 
-        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionSix()" QuestionNumber="6"
-                            FormName="QuestionSix" Answers="QuestionObj?.GetBinaryOptions()" />
+        @* <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionSix()" QuestionNumber="6"
+                            FormName="QuestionSix" Answers="QuestionObj?.GetBinaryOptions()" /> *@
 
         <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionSeven()" QuestionNumber="7"
                             FormName="QuestionSeven" Answers="QuestionObj?.GetLikertOptions()" IsLikert=true />
@@ -60,6 +60,11 @@
 
         <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionFourteen()" QuestionNumber="14"
                             FormName="QuestionFourteen" Answers="QuestionObj?.GetLikertOptions()" IsLikert=true />
+
+        <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionFifteen()" QuestionNumber="15"
+                            FormName="QuestionFourteen" Answers="QuestionObj?.GetLikertOptions()" IsLikert=true />
+        
+       @* Add additional question "would you recommend this to someone else?" Add comment boxes to both questions.*@
     }
     
     <ButtonContainer>
@@ -99,7 +104,7 @@
     {
         if (IsGreaterThanZero(QuestionObj.QuestionOneAnswer) && IsGreaterThanZero(QuestionObj.QuestionTwoAnswer) && 
         IsGreaterThanZero(QuestionObj.QuestionThreeAnswer) && IsGreaterThanZero(QuestionObj.QuestionFourAnswer) && 
-        IsGreaterThanZero(QuestionObj.QuestionFiveAnswer) && IsGreaterThanZero(QuestionObj.QuestionSixAnswer) && 
+        IsGreaterThanZero(QuestionObj.QuestionFiveAnswer) && IsGreaterThanZero(QuestionObj.QuestionFifteenAnswer) &&
         IsGreaterThanZero(QuestionObj.QuestionSevenAnswer) && IsGreaterThanZero(QuestionObj.QuestionEightAnswer) && 
         IsGreaterThanZero(QuestionObj.QuestionNineAnswer) && IsGreaterThanZero(QuestionObj.QuestionTenAnswer) && 
         IsGreaterThanZero(QuestionObj.QuestionElevenAnswer) && IsGreaterThanZero(QuestionObj.QuestionTwelveAnswer) && 

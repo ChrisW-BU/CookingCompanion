@@ -18,6 +18,10 @@
             in this test.
         </div>
     </AlertItem>
+
+    <ButtonContainer>
+        <ButtonControl Name="Go to Home" Icon="fas fa-home" Colour="primary" OnBaseClickCall="GoToIndex"/>
+    </ButtonContainer>
 </PageBase>
 
 @code {
@@ -25,5 +29,10 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+    }
+
+    private async void GoToIndex()
+    {
+        _nav.NavigateTo("/");
     }
 }

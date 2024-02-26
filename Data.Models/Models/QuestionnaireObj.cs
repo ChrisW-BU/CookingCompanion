@@ -85,7 +85,7 @@
 
 
         // UX/UI QUESTIONS
-        public string QuestionSeven = "7). 'I found the user interface intuitive and user friendly.'";
+        public string QuestionSeven = "6). 'I found the user interface intuitive and user friendly.'";
         public string GetQuestionSeven()
         {
             return QuestionSeven;
@@ -94,7 +94,7 @@
 
 
 
-        public string QuestionEight = "8). 'I was able to complete a recipe from start to finish.'";
+        public string QuestionEight = "7). 'I was able to complete a recipe from start to finish.'";
         public string GetQuestionEight()
         {
             return QuestionEight;
@@ -103,7 +103,7 @@
 
 
 
-        public string QuestionNine = "9). Did all features work as you anticipated e.g., the cooking process, favourites, " +
+        public string QuestionNine = "8). Did all features work as you anticipated e.g., the cooking process, favourites, " +
             "and shopping list? If not, can you explain why? ";
         public string GetQuestionNine()
         {
@@ -114,7 +114,7 @@
 
 
 
-        public string QuestionTen = "10). 'The cooking process was clear and helpful.'";
+        public string QuestionTen = "9). 'The cooking process was clear and helpful.'";
         public string GetQuestionTen()
         {
             return QuestionTen;
@@ -123,7 +123,7 @@
 
 
 
-        public string QuestionEleven = "11). Were there any elements of the design that you found distracting or overwhelming? " +
+        public string QuestionEleven = "10). Were there any elements of the design that you found distracting or overwhelming? " +
             "If yes, can you briefly detail them. ";
         public string GetQuestionEleven()
         {
@@ -134,7 +134,7 @@
 
 
 
-        public string QuestionTwelve = "12). 'The prototype succeeded in guiding me through it's features.'";
+        public string QuestionTwelve = "11). 'The prototype succeeded in guiding me through it's features.'";
         public string GetQuestionTwelve()
         {
             return QuestionTwelve;
@@ -143,7 +143,7 @@
 
 
 
-        public string QuestionThirteen = "13). What changes would you make to the prototype to improve the user experience, and why?";
+        public string QuestionThirteen = "12). What changes would you make to the prototype to improve the user experience, and why?";
         public string GetQuestionThirteen()
         {
             return QuestionThirteen;
@@ -152,12 +152,21 @@
 
 
 
-        public string QuestionFourteen = "14). 'I would use this tool when I am cooking a recipe.'";
+        public string QuestionFourteen = "13). 'I would use this tool when I am cooking a recipe.'";
         public string GetQuestionFourteen()
         {
             return QuestionFourteen;
         }
         public int QuestionFourteenAnswer { get; set; }
+
+
+
+        public string QuestionFifteen = "14). 'I would recommend this tool to someone else.'";
+        public string GetQuestionFifteen()
+        {
+            return QuestionFifteen;
+        }
+        public int QuestionFifteenAnswer { get; set; }
 
 
 
