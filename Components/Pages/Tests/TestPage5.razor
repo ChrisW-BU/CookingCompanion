@@ -284,6 +284,8 @@
 
         await _api.SaveTaskAsync(taskObj);
         isLoading = false;
+        var dnRef = DotNetObjectReference.Create(this);
+        await JSRuntime.InvokeVoidAsync("RPCC.clickListener", dnRef);
         StartTimer();
         StateHasChanged();
     }
@@ -310,6 +312,7 @@
     public async Task TaskCompleted()
     {
         taskObj.TimeEnded = DateTime.Now;
+        taskObj.ClickCount = pageClicks;
         await _api.SaveTaskAsync(taskObj);
         taskCompleted = true;
         await NextTask();
@@ -391,4 +394,20 @@
     }
 
     public void Dispose() => locationReg?.Dispose();
+
+    // On Click Tracking
+    @implements IAsyncDisposable
+    private int pageClicks { get; set; }
+
+    [JSInvokable]
+    public void TriggerClick()
+    {
+        pageClicks++;
+        //_api.Output("Task 5 Clicks: " + pageClicks);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("RPCC.removeEventListener");
+    }
 }

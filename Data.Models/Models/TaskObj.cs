@@ -8,6 +8,8 @@
 
         public int TaskId { get; set; }
 
+        public int ClickCount { get; set; }
+
         public DateTime? TimeStarted { get; set; }
 
         public DateTime? TimeEnded { get; set; }
