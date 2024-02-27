@@ -15,5 +15,13 @@
         public DateTime? TimeEnded { get; set; }
 
         public bool TaskFailed { get; set; }
+
+        public string GetTimeTaken
+        {
+            get
+            {
+                return (TimeEnded - TimeStarted).ToString();
+            }
+        }
     }
 }

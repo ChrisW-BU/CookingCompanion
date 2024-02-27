@@ -166,6 +166,7 @@ namespace Data.Models.Interfaces
         Task<bool> CheckTaskStatus(int taskId, int userId);
         Task<TaskObj?> GetActiveTask(int taskId, int userId);
         Task<TaskObj?> SaveTaskAsync(TaskObj editedObj);
+        Task<List<TaskObj>?> GetUserTaskList(int userId);
 
 
 

@@ -1885,6 +1885,31 @@ namespace Data
             return editedObj;
         }
 
+        public async Task<List<TaskObj>?> GetUserTaskList(int userId)
+        {
+            if (_users == null)
+            {
+                await LoadUsersAsync();
+            }
+
+            if (_tasks == null)
+            {
+                await LoadTasksAsync();
+            }
+
+            List<TaskObj> returnCollection = new();
+
+            foreach(TaskObj task in _tasks)
+            {
+                if(task.UserId == userId)
+                {
+                    returnCollection.Add(task);
+                }
+            }
+
+            return returnCollection;
+        }
+
 
         /////////////////////
         // Logs
