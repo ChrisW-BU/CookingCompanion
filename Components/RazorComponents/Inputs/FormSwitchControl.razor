@@ -1,28 +1,35 @@
 ﻿@inherits FormCheckboxBase
 
-@if(IsLabelRight)
+@if (IsLabelRight)
 {
-    <div class="col-sm-@FieldWidth">
-        <input class="@CssClass form-check-input" type="checkbox" value="@Value" checked="@Value"
+    <div class="form-check form-switch">
+        <input class="@CssClass form-check-input" type="checkbox" role="switch" value="@Value" checked="@Value"
                @oninput="UpdateParentElement" @onchange="OnClick" hidden="@IsHidden" disabled="@IsDisabled" />
         <label class="form-check-label">@Name</label>
         <div class="mb-3" style="font-size:10px;">@ExtraStr</div>
     </div>
 }
-else if(IsLabelLeft)
+else if (IsLabelLeft)
 {
-    <div class="col-sm-@FieldWidth">
+    <div class="form-check form-check-reverse form-switch">
         <label class="form-check-label">@Name</label>
-        <input class="@CssClass form-check-input" type="checkbox" value="@Value" checked="@Value"
+        <input class="@CssClass form-check-input" type="checkbox" role="switch" value="@Value" checked="@Value"
                @oninput="UpdateParentElement" @onchange="OnClick" hidden="@IsHidden" disabled="@IsDisabled" />
         <div class="mb-3" style="font-size:10px;">@ExtraStr</div>
+    </div>
+}
+else if(NoLabel)
+{
+    <div class="form-check form-switch">
+        <input class="@CssClass form-check-input" type="checkbox" role="switch" value="@Value" checked="@Value"
+               @oninput="UpdateParentElement" @onchange="OnClick" hidden="@IsHidden" disabled="@IsDisabled" />
     </div>
 }
 else
 {
-    <div class="col-sm-@FieldWidth">
+    <div class="form-check form-switch">
         <label class="form-check-label">@Name</label><br />
-        <input class="@CssClass form-check-input mb-3" type="checkbox" value="@Value" checked="@Value"
+        <input class="@CssClass form-check-input mb-3" type="checkbox" role="switch" value="@Value" checked="@Value"
                @oninput="UpdateParentElement" @onchange="OnClick" hidden="@IsHidden" disabled="@IsDisabled" />
     </div>
 }
@@ -35,15 +42,19 @@ else
     public bool IsLabelLeft { get; set; } = false;
 
     [Parameter]
+    public bool NoLabel { get; set; } = false;
+
+    [Parameter]
     public string ExtraStr { get; set; } = string.Empty;
 
     [Parameter]
     public EventCallback OnClick { get; set; }
 
-    public string LabelRightCss { 
+    public string LabelRightCss
+    {
         get
         {
-            if(IsLabelRight)
+            if (IsLabelRight)
             {
                 return "float: right;";
             }

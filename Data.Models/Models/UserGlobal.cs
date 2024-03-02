@@ -21,6 +21,8 @@ namespace Data.Models.Models
 
         private bool QuestionnaireCompleted { get; set; }
 
+        private bool ConsentCompleted { get; set; }
+
         public void SetUserInfo(User user)
         {
             if (user != null)
@@ -32,6 +34,7 @@ namespace Data.Models.Models
                 UserToken = user.UserToken;
                 TasksCompleted = user.TasksCompleted;
                 QuestionnaireCompleted = user.QuestionnaireCompleted;
+                ConsentCompleted = user.ConsentCompleted;
             }
         }
 
@@ -44,6 +47,7 @@ namespace Data.Models.Models
             UserToken = Guid.Empty;
             TasksCompleted = false;
             QuestionnaireCompleted = false;
+            ConsentCompleted = false;
         }
 
         public void SetTaskComplete(bool x)
@@ -72,6 +76,16 @@ namespace Data.Models.Models
         public bool GetQuestionnaireStatus()
         {
             return QuestionnaireCompleted;
+        }
+
+        public void SetConsentCompleted(bool x)
+        {
+            ConsentCompleted = x;
+        }
+
+        public bool GetConsentStatus()
+        {
+            return ConsentCompleted;
         }
     }
 }

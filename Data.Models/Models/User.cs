@@ -13,5 +13,7 @@
         public bool TasksCompleted { get; set; }
 
         public bool QuestionnaireCompleted { get; set; }
+
+        public bool ConsentCompleted { get; set; }
     }
 }

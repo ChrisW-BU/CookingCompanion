@@ -26,6 +26,7 @@ namespace Data
         private List<LogEntry>? _logs;
         private List<TaskObj>? _tasks;
         private List<QuestionnaireObj>? _questions;
+        private List<ConsentObj>? _consent_forms;
 
         /// <summary>
         /// This allows the injection of IOptions and creates a settings structure for the data folders.
@@ -108,6 +109,11 @@ namespace Data
             if (!Directory.Exists($@"{_settings.DataRootPath}\{_settings.QuestionnaireFolder}"))
             {
                 Directory.CreateDirectory($@"{_settings.DataRootPath}\{_settings.QuestionnaireFolder}");
+            }
+
+            if (!Directory.Exists($@"{_settings.DataRootPath}\{_settings.ConsentObjectFolder}"))
+            {
+                Directory.CreateDirectory($@"{_settings.DataRootPath}\{_settings.ConsentObjectFolder}");
             }
         }
 
@@ -1909,6 +1915,119 @@ namespace Data
 
             return returnCollection;
         }
+
+
+
+        /////////////////////
+        // Ingredients
+        /////////////////////
+
+        /// <summary>
+        /// Load a list of all consent objects.
+        /// </summary>
+        /// <returns></returns>
+        private Task LoadConsentObjectsAsync()
+        {
+            Load<ConsentObj>(ref _consent_forms, _settings.ConsentObjectFolder);
+            return Task.CompletedTask;
+        }
+
+        ///
+        /// <summary>
+        /// Load a list of consent objects and return the list. The count and index will determine the range and amount returned.
+        /// </summary>
+        /// <param name="consentCount"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public async Task<List<ConsentObj>?> GetConsentListAsync(int consentCount, int index)
+        {
+            await LoadConsentObjectsAsync();
+            return _consent_forms ?? new();
+        }
+
+        /// <summary>
+        /// Load a single unique consent object and return it. Requires a correct unique ID.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public async Task<ConsentObj?> GetConsentUniqueAsync(int id)
+        {
+            await LoadConsentObjectsAsync();
+            if (_consent_forms == null)
+            {
+                throw new Exception("No consent objects have been found");
+            }
+            return _consent_forms.FirstOrDefault(b => b.Id == id);
+        }
+
+        /// <summary>
+        /// Return the count of all ingredients.
+        /// </summary>
+        /// <returns></returns>
+        public async Task<int> GetConsentCountAsync()
+        {
+            await LoadConsentObjectsAsync();
+            if (_consent_forms == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return _consent_forms.Count();
+            }
+        }
+
+        /// <summary>
+        /// Save changes made to an ingredient object.
+        /// </summary>
+        /// <param name="editedObj"></param>
+        /// <returns></returns>
+        public async Task<ConsentObj?> SaveConsentObjAsync(ConsentObj editedObj)
+        {
+            if (_consent_forms == null)
+            {
+                LoadConsentObjectsAsync();
+            }
+
+            if (editedObj.Id == 0)
+            {
+                if (_consent_forms.Count > 0)
+                {
+                    editedObj.Id = ((int)_consent_forms.Max(b => b.Id)) + 1;
+                }
+                else
+                {
+                    editedObj.Id = 1;
+                }
+            }
+            await SaveAsync<ConsentObj>(_consent_forms, _settings.ConsentObjectFolder, $"{editedObj.Id}.json", editedObj);
+            return editedObj;
+        }
+
+        /// <summary>
+        /// Check if a user has already completed the consent form.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<bool> CheckConsentStatus(int userId)
+        {
+            if (_consent_forms == null)
+            {
+                await LoadConsentObjectsAsync();
+            }
+
+            foreach (ConsentObj obj in _consent_forms)
+            {
+                if(obj.UserId == userId && obj.ConsentCompleted)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
 
         /////////////////////

@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ConsentForms\" />
     <Folder Include="CookingSteps\" />
     <Folder Include="Cooking\" />
     <Folder Include="Favourites\" />

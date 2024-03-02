@@ -34,6 +34,7 @@ builder.Services.AddOptions<CookCompApiJsonAccessSetting>().Configure(options =>
     options.LogEntryFolder = "LogEntries";
     options.TasksFolder = "Tasks";
     options.QuestionnaireFolder = "Questionnaires";
+    options.ConsentObjectFolder = "ConsentForms";
 }
 );
 

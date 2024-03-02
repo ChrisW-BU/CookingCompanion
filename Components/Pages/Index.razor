@@ -3,11 +3,228 @@
 @inject UserGlobal _user
 @inject PageHistory _page
 @inject NavigationManager _nav
+@inject ILocalStorageService _ls;
 
 <PageTitle>Cooking Companion</PageTitle>
 <PageBase>
-    @* <h1>Main Menu</h1> *@
-    @if (!_user.GetTaskComplete())
+    @if(!_user.GetConsentStatus())
+    {
+        @if (!nextPage)
+        {
+            <div class="row">
+                <div class="col-8">
+                    <h4>Cooking Companion</h4>
+                    <div class="d-none d-sm-block">
+                        <b>An assistant application for users with mild cognitive impairment</b>
+                    </div>
+                </div>
+                <div class="col-4 text-end">
+                    <div class="d-none d-lg-block">
+                        <img src="img/bath-logo.png" class="img-fluid" style="max-width:250px;" alt="...">
+                    </div>
+                    <div class="d-block d-lg-none">
+                        <div class="d-block d-sm-none">
+                            <img src="img/bath-logo.png" class="img-fluid" style="max-width:120px;" alt="...">
+                        </div>
+                        <div class="d-none d-sm-block">
+                            <img src="img/bath-logo.png" class="img-fluid" style="max-width:150px;" alt="...">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row d-block d-sm-none">
+                <div class="col">
+                    <b>An assistant application for users with mild cognitive impairment</b>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <h4>
+                        Participation Information
+                    </h4>
+                    <p>
+                        Before we continue, it's important to ensure that we are meeting all required ethical guidelines; the guidelines
+                        are set out under the University of Bath <a href="https://www.bath.ac.uk/topics/research-integrity-and-ethics/" target="_blank">Ethics@Bath</a> review process.
+                    </p>
+                    <p>
+                        You should have received a 'Participant Information Sheet' prior to this test period, which outlines the following project information:
+                    </p>
+                    <ul style="width:90%" class="list-group list-group-numbered mx-4 pb-4">
+                        <li class="list-group-item">Project scope and purpose</li>
+                        <li class="list-group-item">Selection and participation criteria</li>
+                        <li class="list-group-item">Data collection and management</li>
+                        <li class="list-group-item">Participation withdrawal</li>
+                    </ul>
+                    <p>
+                        <b>
+                            If you haven't received this information prior to this test period, you should read it 
+                            <a href="/ParticipantInfoSheet.pdf" target="_blank">here</a> before continuing.
+                        </b>
+                    </p>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col">
+                    <h4>
+                        Project Contact Details
+                    </h4>
+                    <p>
+                        <b>Researcher: </b>Christopher Whitehead (cw2480@bath.ac.uk)<br />
+                        <b>Supervisor: </b>Zack Lyons (zl221@bath.ac.uk)
+                    </p>
+                </div>
+            </div>
+            <ButtonControl Name="Next Page" Icon="fas fa-circle-arrow-right" Colour="success" OnBaseClickCall="NextPage"/>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-8">
+                    <h4>Consent Form</h4>
+                    <div class="d-none d-sm-block">
+                        <p style="font-size: 11px;">
+                            <b>Researcher: </b>Christopher Whitehead (cw2480@bath.ac.uk)<br />
+                            <b>Supervisor: </b>Zack Lyons (zl221@bath.ac.uk)
+                        </p>
+                    </div>
+                </div>
+                <div class="col-4 text-end">
+                    <div class="d-none d-lg-block">
+                        <img src="img/bath-logo.png" class="img-fluid" style="max-width:250px;" alt="...">
+                    </div>
+                    <div class="d-block d-lg-none">
+                        <div class="d-block d-sm-none">
+                            <img src="img/bath-logo.png" class="img-fluid" style="max-width:120px;" alt="...">
+                        </div>
+                        <div class="d-none d-sm-block">
+                            <img src="img/bath-logo.png" class="img-fluid" style="max-width:150px;" alt="...">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="row d-block d-sm-none">
+                <div class="col">
+                    <p style="font-size: 11px;">
+                        <b>Researcher: </b>Christopher Whitehead (cw2480@bath.ac.uk)<br />
+                        <b>Supervisor: </b>Zack Lyons (zl221@bath.ac.uk)
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>Please <u>flick</u> the switch if you agree with the statement</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-11">
+                    <b>1).</b> I have been provided with information explaining what participation in this project involves.
+                </div>
+                <div class="col-1 align-middle">
+                    <FormSwitchControl NoLabel=true @bind-Value="consentObj.PointOne"/>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-11">
+                    <b>2).</b> I have had an opportunity to ask questions and discuss this project.
+                </div>
+                <div class="col-1 align-middle">
+                    <FormSwitchControl NoLabel=true @bind-Value="consentObj.PointTwo" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-11">
+                    <b>3).</b> I have received satisfactory answers to all questions I have asked.
+                </div>
+                <div class="col-1 align-middle">
+                    <FormSwitchControl NoLabel=true @bind-Value="consentObj.PointThree" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-11">
+                    <b>4).</b> I have received enough information about the project to make a decision about my
+                    participation.
+                </div>
+                <div class="col-1 align-middle">
+                    <FormSwitchControl NoLabel=true @bind-Value="consentObj.PointFour" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-11">
+                    <b>5).</b> I understand that I am free to withdraw my consent to participate in the project at any time
+                    without having to give a reason for withdrawing
+                </div>
+                <div class="col-1 align-middle">
+                    <FormSwitchControl NoLabel=true @bind-Value="consentObj.PointFive" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-11">
+                    <b>6).</b> I understand that I am free to withdraw my data within two weeks of my participation.
+                </div>
+                <div class="col-1 align-middle">
+                    <FormSwitchControl NoLabel=true @bind-Value="consentObj.PointSix" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-11">
+                    <b>7).</b> I understand the nature and purpose of the procedures involved in this project. These
+                    have been communicated to me on the information sheet accompanying this form.
+                </div>
+                <div class="col-1 align-middle">
+                    <FormSwitchControl NoLabel=true @bind-Value="consentObj.PointSeven" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-11">
+                    <b>8).</b> I understand and acknowledge that the investigation is designed to promote scientific
+                    knowledge and that the University of Bath will use the data I provide only for the
+                    purpose(s) set out in the information sheet.
+                </div>
+                <div class="col-1 align-middle">
+                    <FormSwitchControl NoLabel=true @bind-Value="consentObj.PointEight" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-11">
+                    <b>9).</b> I understand the data I provide will be treated as confidential, and that on completion of
+                    the project my name or other identifying information will not be disclosed in any
+                    presentation or publication of the research.
+                </div>
+                <div class="col-1 align-middle">
+                    <FormSwitchControl NoLabel=true @bind-Value="consentObj.PointNine" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-11">
+                    <b>10).</b> I understand that my consent to use the data I provide is conditional upon the University
+                    complying with its duties and obligations under the Data Protection Act.
+                </div>
+                <div class="col-1 align-middle">
+                    <FormSwitchControl NoLabel=true @bind-Value="consentObj.PointTen" />
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-11">
+                    <b>11).</b> I hereby fully and freely consent to my participation in this project.
+                </div>
+                <div class="col-1 align-middle">
+                    <FormSwitchControl NoLabel=true @bind-Value="consentObj.PointEleven" />
+                </div>
+            </div>
+            <div class="mt-3">
+                <FormInputText Name="Participant's full name" @bind-Value="consentObj.ParticipantName"/>
+                <FormInputText Name="Researcher's full name" IsDisabled=true Value="Christopher Whitehead"/>
+            </div>
+            <div style="font-size:10px;" class="mb-3">
+                Upon clicking 'Sign & Accept' you are digitally signing that you agree with everything stated above.
+                A date and time stamp will be taken upon successful acceptance, and you will progress to the prototype test.
+            </div>
+            <ButtonControl Name="Sign & Accept" Colour="success" Icon="fas fa-circle-check" OnBaseClickCall="AcceptForm" />
+        }
+    }
+    else if (!_user.GetTaskComplete() && _user.GetConsentStatus())
     {
         <h4>Welcome to Cooking Companion!</h4>
         <p>
@@ -16,18 +233,6 @@
             and other mild forms of related dementia. The hope is that in the future such apps could help users with MCI
             perform certain daily tasks with more <b>confidence</b> and potentially slow down progression to advanced forms
             of dementia such as Alzheimer's. The daily task selected for this particular study is <b>cooking</b>.
-        </p>
-        <h4>Before we continue...</h4>
-        <p>
-            Before participating you should ensure that you have received the following documentation
-            which forms part of the University of Bath informed consent process:
-        </p>
-        <ul style="width:90%" class="list-group list-group-numbered mx-4 pb-4">
-            <li class="list-group-item">Participant Sheet - Study information sheet.</li>
-            <li class="list-group-item">Consent Form - Consent to participating in this study.</li>
-        </ul>
-        <p>
-            <u>You should have also confirmed that you are 18 years old or more which is a requirement for participation.</u>
         </p>
         <h4>What will you be asked to do?</h4>
         <p>
@@ -94,6 +299,103 @@
 </PageBase>
 
 @code {
+    private ConsentObj consentObj = new();
+
+    private bool nextPage = false;
+
+    private async void NextPage()
+    {
+        nextPage = true;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async void AcceptForm()
+    {
+        if(ValidateForm())
+        {
+            consentObj.ResearcherSignDate = DateTime.Now;
+            consentObj.ParticipantSignDate = DateTime.Now;
+            consentObj.ConsentCompleted = true;
+            consentObj.UserId = _user.Id;
+            await _api.SaveConsentObjAsync(consentObj);
+
+            try
+            {
+                string lsu = await _ls.GetItemAsStringAsync("uls");
+                Guid guid = Guid.Parse(lsu);
+
+                if (guid != Guid.Empty)
+                {
+                    User? getUser = await _api.GetUser(guid);
+                    getUser.ConsentCompleted = true;
+                    _user.SetUserInfo(getUser);
+                    await _api.SaveUserAsync(getUser);
+                    await _api.SaveManualLogEntry(_user.Id, _user.Id, CookCompAPI.UserLogs.Consented, "User");
+                }
+                await InvokeAsync(StateHasChanged);
+            }
+            catch { }
+        }
+        else
+        {
+            _api.Output("Invalid");
+        }
+    }
+
+    private bool ValidateForm()
+    {
+        if(!consentObj.PointOne)
+        {
+            return false;
+        }
+        if (!consentObj.PointTwo)
+        {
+            return false;
+        }
+        if (!consentObj.PointThree)
+        {
+            return false;
+        }
+        if(!consentObj.PointFour)
+        {
+            return false;
+        }
+        if(!consentObj.PointFive)
+        {
+            return false;
+        }
+        if(!consentObj.PointSix)
+        {
+            return false;
+        }
+        if(!consentObj.PointSeven)
+        {
+            return false;
+        }
+        if(!consentObj.PointEight)
+        {
+            return false;
+        }
+        if(!consentObj.PointNine)
+        {
+            return false;
+        }
+        if(!consentObj.PointTen)
+        {
+            return false;
+        }
+        if (!consentObj.PointEleven)
+        {
+            return false;
+        }
+        if(consentObj.ParticipantName.Length == 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     protected override async Task OnInitializedAsync()
     {
         if(_user.LoggedIn)

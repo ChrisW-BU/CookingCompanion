@@ -25,7 +25,8 @@ namespace Data.Models.Interfaces
             Error,
             LoggedIn,
             TokenRefreshed,
-            LoggedOut
+            LoggedOut,
+            Consented
         }
 
         ////////////////////////////////
@@ -177,6 +178,17 @@ namespace Data.Models.Interfaces
         Task SaveManualLogEntry(int userId, int entityId, UserLogs ul, string entityType);
         Task<List<LogEntry>?> GetManualLogEntryList();
         Task<List<LogEntry>?> GetUserManualLogEntryList(int userId);
+
+
+
+        ////////////////////////////////
+        // IConsentObj
+        ////////////////////////////////
+        Task<List<ConsentObj>?> GetConsentListAsync(int consentCount, int index);
+        Task<ConsentObj?> GetConsentUniqueAsync(int id);
+        Task<int> GetConsentCountAsync();
+        Task<ConsentObj?> SaveConsentObjAsync(ConsentObj editedObj);
+        Task<bool> CheckConsentStatus(int userId);
 
 
 
