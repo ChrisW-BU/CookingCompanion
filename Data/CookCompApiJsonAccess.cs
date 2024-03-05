@@ -1685,6 +1685,25 @@ namespace Data
                 await LoadUsersAsync();
             }
 
+            if (editedObj.Id == 0)
+            {
+                int userId = 0;
+
+                if (_users?.Count == 0)
+                {
+                    userId = 1;
+                }
+                else
+                {
+                    userId = ((int)_users.Max(b => b.Id)) + 1;
+                }
+
+                if (editedObj.Id == 0)
+                {
+                    editedObj.Id = userId;
+                }
+            }
+
             await SaveAsync<User>(_users, _settings.UserFolder, $"{editedObj.Id}.json", editedObj);
             return editedObj;
         }
@@ -1875,20 +1894,23 @@ namespace Data
                 await LoadTasksAsync();
             }
 
-            int taskId = 0;
+            if (editedObj.Id == 0)
+            {
+                int taskId = 0;
 
-            if (_tasks?.Count == 0)
-            {
-                taskId = 1;
-            }
-            else
-            {
-                taskId = ((int)_tasks.Max(b => b.Id)) + 1;
-            }
+                if (_tasks?.Count == 0)
+                {
+                    taskId = 1;
+                }
+                else
+                {
+                    taskId = ((int)_tasks.Max(b => b.Id)) + 1;
+                }
 
-            if(editedObj.Id == 0)
-            {
-                editedObj.Id = taskId;
+                if (editedObj.Id == 0)
+                {
+                    editedObj.Id = taskId;
+                }
             }
 
             await SaveAsync<TaskObj>(_tasks, _settings.TasksFolder, $"{editedObj.Id}.json", editedObj);
