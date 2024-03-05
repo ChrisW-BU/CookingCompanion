@@ -19,9 +19,11 @@
                     }
                 </div>
                 <div class="user-select-none" style="display:flex; align-items:center">
+                    <span class="d-none d-sm-block">Cooking Companion</span>
+                    &nbsp
                     @if (_user.LoggedIn && _user.GetTaskComplete())
                     {
-                        <button class="navbar-toggler" type="button" title="Navigation" data-bs-toggle="offcanvas"
+                        <button class="navbar-toggler ms-4" type="button" title="Navigation" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
                             <span class="fas fa-bars"></span>
                         </button>
@@ -32,8 +34,8 @@
                             <span class="fas fa-bars"></span>
                         </button>
                     }
-                    &nbsp
-                    <span class="d-none d-sm-block">Cooking Companion</span>
+                    
+                    
                 </div>
             </div>
 
