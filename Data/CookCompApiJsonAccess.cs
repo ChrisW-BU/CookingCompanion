@@ -1625,7 +1625,7 @@ namespace Data
                     }
                     else
                     {
-                        if (u.Name == userName)
+                        if (u.Name.ToUpper() == userName.Trim().ToUpper())
                         {
                             await SaveLogEntryAsync(u, u.Id, u.Id, Models.Interfaces.CookCompAPI.LogActionType.Read, "Logged In");
                             return u;
