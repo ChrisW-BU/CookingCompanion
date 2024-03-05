@@ -15,7 +15,8 @@
         <FormInputText Name="Image URL" @bind-Value="RecipeObj.ImgUrl" AutoComplete=false FieldWidth="4" />
         <FormInputText Name="Duration" @bind-Value="RecipeObj.Duration" AutoComplete=false FieldWidth="4" />
         <FormInputTextArea Name="Description" @bind-Value="RecipeObj.Description" AutoComplete=false FieldWidth="12" />
-        <FormCheckbox Name="Is Vegetarian" @bind-Value="RecipeObj.IsVege" FieldWidth="12" />
+        <FormCheckbox Name="Is Vegetarian" @bind-Value="RecipeObj.IsVege" FieldWidth="6" />
+            <FormCheckbox Name="Is Vegan" @bind-Value="RecipeObj.IsVegan" FieldWidth="6" />
     </FormBase>
     <ButtonContainer>
         <SaveButtonControl OnClickCall="Save" />

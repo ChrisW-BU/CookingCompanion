@@ -1,5 +1,6 @@
 ﻿@inject NavigationManager NavManager
 @inject PageHistory _page
+@inject IJSRuntime _js;
 
 <div @onclick="OnClickEvent" style="150px;" class="p-2 @MenuItemSize w-menu-item fs-3 text-center rounded-3 user-select-none">
         <span style="font-size:1.6rem; text-align:center" class="@Icon">
@@ -57,5 +58,7 @@
             _page.AddPage("");
         }
         await OnMenuItemClick.InvokeAsync();
+        await _js.InvokeVoidAsync("RPCC.offCanvas");
+        await InvokeAsync(StateHasChanged);
     }
 }

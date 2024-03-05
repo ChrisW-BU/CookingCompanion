@@ -16,6 +16,8 @@
 
         public bool IsVege { get; set; }
 
+        public bool IsVegan { get; set; }
+
         public DateTime LastModified { get; set; }
 
         public DateTime DateAdded { get; set; }

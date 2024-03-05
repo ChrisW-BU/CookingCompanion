@@ -45,7 +45,7 @@
                 </div>
                 <div class="offcanvas-body">
                     <div class="grid gap-3">
-                        <MenuItem IsOffCanvas=true Icon="fas fa-home" Title="Home" Href=""></MenuItem>
+                        @* <MenuItem IsOffCanvas=true Icon="fas fa-home" Title="Home" Href=""></MenuItem> *@
                         @if (_user.IsAdmin)
                         {
                             <MenuItem IsOffCanvas=true Icon="fas fa-tools" Title="Admin Panel" Href="5e3ab173-93a1-43fc-86d1-45c9999cfc85"></MenuItem>
@@ -55,6 +55,7 @@
                             <MenuItem IsOffCanvas=true Icon="fas fa-burger" Title="Recipes" Href="recipes"></MenuItem>
                             <MenuItem IsOffCanvas=true Icon="fas fa-list-check" Title="Shopping Lists" Href="shoppinglist"></MenuItem>
                             <MenuItem IsOffCanvas=true Icon="fas fa-star" Title="Favourites" Href="favourites"></MenuItem>
+                            <MenuItem IsOffCanvas=true Icon="fas fa-clipboard-question" Title="Questionnaire" Href=""></MenuItem>
                         }
                     </div>
                 </div>
@@ -65,7 +66,7 @@
             </div>
             @if (_user.LoggedIn)
             {
-                <div class="@bodyCSS" style="user-select:none">
+                <div class="@bodyCSS" style="user-select:none" id="mainDiv">
                     <article class="content px-3">
                         @Body
                     </article>

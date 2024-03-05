@@ -1,9 +1,9 @@
 ﻿@inject CookCompAPI _api
 
-<div style="height: 320px; @CustomStyles" class="card w-card-item p-2 g-col-12 g-col-md-6 g-col-lg-4 user-select-none" @onclick="OnClickCall">
+<div style="@CustomStyles" class="card w-card-item p-2 g-col-12 g-col-md-6 g-col-lg-4 user-select-none" @onclick="OnClickCall">
     <div class="row g-0" style="overflow:hidden;">
         <div class="col-4">
-            <img src="@ImgUrl" class="img-fluid rounded-start" alt="@Name">
+            <img src="@ImgUrl" class="img-fluid rounded-start rounded-end" alt="@Name">
         </div>
         <div class="col-8 text-center">
             <div class="card-body">
@@ -12,14 +12,33 @@
                 <div>
                     <i class="fa-fw far fa-clock"></i>&nbsp<span class="card-text"><small class="text-body-secondary">@Duration minutes</small></span>
                 </div>
+                <div>
+                    <i class="fa-fw fas fa-users"></i>&nbsp<span class="card-text"><small class="text-body-secondary">Serves 4</small></span>
+                </div>
+                <div>
+                    <span class="card-text">
+                        @if (IsVege)
+                        {
+                            <small class="text-body-secondary">Vegetarian; </small>
+                        }
+                        @if(IsVegan)
+                        {
+                            <small class="text-body-secondary">Vegan; </small>
+                        }
+                        @if(!IsVege && !IsVegan)
+                        {
+                            <small class="text-body-secondary">Not suitable for vegetarians; </small>
+                        }
+                    </span>
+                </div>
                 <div class="grid gap-2 text-center">
                     <FavouriteStarIcon OnClickCall="OnFavouriteClick" IsFavourite="FavObj.IsFavourite" IsInteractive=true ColSize="3" /> <CompletedIcon ColSize="3" /> <VegetarianIcon ColSize="3" IsVege="@IsVege" />
                 </div>
             </div>
         </div>
-        <div>
+        @* <div>
             <p class="card-text">@Description</p>
-        </div>
+        </div> *@
     </div>
 </div>
 
@@ -43,6 +62,9 @@
 
     [Parameter]
     public bool IsVege { get; set; }
+
+    [Parameter]
+    public bool IsVegan { get; set; }
 
     [Parameter]
     public string ImgUrl { get; set; } = string.Empty;

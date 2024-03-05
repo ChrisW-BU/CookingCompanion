@@ -4,6 +4,7 @@
 @inject PageHistory _page
 @inject NavigationManager _nav
 @inject ILocalStorageService _ls;
+@inject IJSRuntime _js;
 
 <PageTitle>Cooking Companion</PageTitle>
 <PageBase>
@@ -236,9 +237,12 @@
         </p>
         <h4>What will you be asked to do?</h4>
         <p>
-            This test will involve a number of <b>scenarios</b> where you will be presented with a <b>task</b> to complete.
+            You will be presented with 6 miniature tasks to complete which relate to functionality in the prototype.
             Upon successful completion of the task you can move on to the next one. If you get stuck or are unable
-            to complete the task for what ever reason, just press the <b>"Skip Task"</b> button. Once all scenarios have been completed you will be given access to the whole prototype. We then encourage you
+            to complete the task for what ever reason, just press the <b>"Skip Task"</b> button. We will be looking at
+            the overall completion success of these tasks as a way to establish a baseline for performance. These measurements
+            could then potentially be used as a benchmark for future tests with MCI users. Once all scenarios have been 
+            completed you will be given access to the whole prototype. We then encourage you
             to have a little play with the features before continuing on to the brief questionnaire.
         </p>
         <h4>How long will this take?</h4>
@@ -284,10 +288,10 @@
         else
         {
             <h4>Questionnaire Time</h4>
-            <p>
-                Thank you for your participation so far. If you feel you have familiarised yourself with the
-            functionality of the prototype, we would like to invite you to participate in the questionnaire. This
-            shouldn't take more than <b>5-10 minutes</b> of your time.
+            <p>Thank you for your participation so far. The prototype functionality is available from the burger menu 
+                at the top right. If you feel you have familiarised yourself with the functionality of the prototype, 
+                we would like to invite you to participate in the questionnaire. This shouldn't take more than 
+                <b>5-10 minutes</b> of your time - just click the button below.
         </p>
         <ButtonContainer>
             <ButtonControl Name="Start Questionnaire" OnBaseClickCall="GoToQuestionnaire" Icon="fas fa-play" Colour="success" />
@@ -297,16 +301,17 @@
 
 
 </PageBase>
-
+<PopupObj @ref="ourPopUp" />
 @code {
     private ConsentObj consentObj = new();
-
+    private PopupObj ourPopUp = new();
     private bool nextPage = false;
 
     private async void NextPage()
     {
         nextPage = true;
         await InvokeAsync(StateHasChanged);
+        await _js.InvokeVoidAsync("RPCC.scrollToView");
     }
 
     private async void AcceptForm()
@@ -333,12 +338,14 @@
                     await _api.SaveManualLogEntry(_user.Id, _user.Id, CookCompAPI.UserLogs.Consented, "User");
                 }
                 await InvokeAsync(StateHasChanged);
+                await _js.InvokeVoidAsync("RPCC.scrollToView");
             }
             catch { }
         }
         else
         {
-            _api.Output("Invalid");
+            ourPopUp.Show("Please check that all items have been agreed and your name included.");
+            await _js.InvokeVoidAsync("RPCC.scrollToView");
         }
     }
 

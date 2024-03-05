@@ -14,3 +14,18 @@ RPCC.pageClick = function myFunction1(e) {
 RPCC.removeEventListener = () => {
     document.removeEventListener('click', RPCC.pageClick);
 }
+
+RPCC.scrollToView = () => {
+    document.getElementById('mainDiv').scrollIntoView({ behavior: 'smooth' });
+}
+
+RPCC.offCanvas = () => {
+    let myOffCanvas = document.getElementById('offcanvasMenu');
+
+    const hideCanvas = () => {
+        let openedCanvas = bootstrap.Offcanvas.getInstance(myOffCanvas);
+        openedCanvas.hide();
+    }
+
+    hideCanvas();
+}

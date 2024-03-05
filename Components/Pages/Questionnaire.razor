@@ -17,8 +17,9 @@
     else
     {
         <AlertItem Style="AlertItem.AlertStyle.Warning">
-            Please be as <b>honest and detailed</b> as you can. This <u>questionnaire will not save your answers</u> and should
-            be completed in a single session. It should take no longer than <b>5-10 minutes</b>.
+            Please be as <b>honest and detailed</b> as you can. This questionnaire will <u>
+                not be saved if you navigate away from this page
+            </u> and should be completed in a single session. It should take no longer than <b>5-10 minutes</b>.
         </AlertItem>
         <QuestionRadioScale QuestionObj="@QuestionObj" QuestionName="@QuestionObj?.GetQuestionOne()" QuestionNumber="1"
                             FormName="QuestionOne" Answers="QuestionObj?.GetQuestionOneOptions()" />
@@ -150,6 +151,7 @@
         else
         {
             ourPopUp.Show("Check all questions have been answered correctly.");
+            await JSRuntime.InvokeVoidAsync("RPCC.scrollToView");
         }
     }
 

@@ -105,7 +105,7 @@
     private async void ListItemChecked()
     {
         bool allTrue = listItems.All(a => a.HasObtained); // Returns true if all elements are true
-        if(allTrue)
+        if(allTrue && pinClicked)
         {
             ourModal.OpenModal();
         }
