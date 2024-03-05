@@ -15,5 +15,7 @@
         public bool QuestionnaireCompleted { get; set; }
 
         public bool ConsentCompleted { get; set; }
+
+        public DateTime LastLoggedIn { get; set; }
     }
 }

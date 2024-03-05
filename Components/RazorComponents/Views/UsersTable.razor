@@ -7,6 +7,7 @@
             <td><b>Username</b></td>
             <td><b>Tasks Completed</b></td>
             <td><b>Questionnaire Completed</b></td>
+            <td><b>Last Logged In</b></td>
             <td></td>
         </tr>
     </thead>
@@ -22,6 +23,9 @@
                 </td>
                 <td>
                     @r.QuestionnaireCompleted
+                </td>
+                <td>
+                    @r.LastLoggedIn.ToString("G");
                 </td>
                 <td>
                     <DeleteButtonControl OnClickCall="@(e => Delete(r.Id))" />
@@ -55,6 +59,10 @@
         try
         {
             TableData = await _api.GetUserListAsync();
+            if(TableData.Count > 0)
+            {
+                TableData = TableData.OrderBy(a => a.Name).ToList();
+            }
         }
         catch {}
 

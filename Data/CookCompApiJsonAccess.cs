@@ -1620,6 +1620,8 @@ namespace Data
                         if (u.UserToken.ToString() == userName)
                         {
                             await SaveLogEntryAsync(u, u.Id, u.Id, Models.Interfaces.CookCompAPI.LogActionType.Read, "Token Validated");
+                            u.LastLoggedIn = DateTime.Now;
+                            await SaveUserAsync(u);
                             return u;
                         }
                     }
@@ -1628,6 +1630,8 @@ namespace Data
                         if (u.Name.ToUpper() == userName.Trim().ToUpper())
                         {
                             await SaveLogEntryAsync(u, u.Id, u.Id, Models.Interfaces.CookCompAPI.LogActionType.Read, "Logged In");
+                            u.LastLoggedIn = DateTime.Now;
+                            await SaveUserAsync(u);
                             return u;
                         }
                     }
