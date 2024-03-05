@@ -61,13 +61,13 @@
     private async void FinishedTyping(Object? source, ElapsedEventArgs e)
     {
         submitString = await Task.FromResult(bindString);
-        _api.Output(submitString);
+        //_api.Output(submitString);
         await SearchForRecipe();
     }
 
     private async Task SearchForRecipe()
     {
-        recipes = await _api.GetRecipeBySearchAsync(submitString);
+        recipes = await _api.GetRecipeBySearchAsync(submitString.Trim());
         await InvokeAsync(StateHasChanged);
     }
 

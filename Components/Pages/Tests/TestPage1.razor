@@ -100,7 +100,7 @@
     {
         submitString = await Task.FromResult(bindString);
 
-        if (submitString?.Length == 0 || !recipe.Name.ToLower().Contains(submitString.ToLower()))
+        if (submitString?.Length == 0 || !recipe.Name.ToLower().Contains(submitString.Trim().ToLower()))
         {
             hideDivOne = false;
             hideDivTwo = true;
