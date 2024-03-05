@@ -1617,6 +1617,7 @@ namespace Data
                 {
                     if (isGuidCheck)
                     {
+                        // Think this is redundant now, as is the isGuidCheck
                         if (u.UserToken.ToString() == userName)
                         {
                             await SaveLogEntryAsync(u, u.Id, u.Id, Models.Interfaces.CookCompAPI.LogActionType.Read, "Token Validated");
@@ -1630,6 +1631,7 @@ namespace Data
                         if (u.Name.ToUpper() == userName.Trim().ToUpper())
                         {
                             await SaveLogEntryAsync(u, u.Id, u.Id, Models.Interfaces.CookCompAPI.LogActionType.Read, "Logged In");
+                            u.UserToken = Guid.NewGuid();
                             u.LastLoggedIn = DateTime.Now;
                             await SaveUserAsync(u);
                             return u;
@@ -1659,6 +1661,11 @@ namespace Data
             return null;
         }
 
+        /// <summary>
+        /// This will check if an existing token matches a user, and return that user.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<User?> GetUser(Guid userId)
         {
             await GetUserListAsync();
