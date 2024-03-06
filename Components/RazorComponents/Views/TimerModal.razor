@@ -1,0 +1,70 @@
+﻿@if (ModalFade)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+<div class="modal @cssClass" tabindex="-1" role="dialog" style="display:@cssDisplay" aria-labelledby="rpccModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header mx-auto">
+                <h5 class="modal-title" id="rpccModalLabel">You are @HeadStr.ToLower()</h5>
+                @if (ShowClose)
+                {
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                    </button>
+                }
+            </div>
+            <div class="modal-body mx-auto">
+                <p>A timer is already running. Do you want to cancel the current timer?</p>
+            </div>
+            <div class="modal-footer mx-auto">
+                <button type="button" class="btn btn-danger" data-dismiss="modal" @onclick="OnClickCall">Yes</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" @onclick="OnCancelCall">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback OnClickCall { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancelCall { get; set; }
+
+    public string cssDisplay = "none;";
+    public string cssClass = "";
+    public bool ModalFade = false;
+    public bool ShowClose = false;
+
+    [Parameter]
+    public string HeadStr { get; set; } = string.Empty;
+
+    [Parameter]
+    public string BodyStr { get; set; } = string.Empty;
+
+    public void OpenModal()
+    {
+        Show();
+        StateHasChanged();
+    }
+
+    public void CloseModal()
+    {
+        Hide();
+        StateHasChanged();
+    }
+
+    public void Show()
+    {
+        cssDisplay = "block";
+        cssClass = "fade show";
+        ModalFade = true;
+    }
+
+    public void Hide()
+    {
+        cssDisplay = "none";
+        cssClass = "";
+        ModalFade = false;
+    }
+}
