@@ -3,6 +3,7 @@
 @inject NavigationManager _nav
 @inject PageHistory _page
 @inject UserGlobal _user
+@using ClosedXML.Excel
 
 @if (_user.IsAdmin)
 {
@@ -19,6 +20,7 @@
         <ButtonContainer>
             <AddNewButtonControl OnClickCall="AddNewUser" />
             <BackButtonControl OnClickCall="PageBack" />
+            <ButtonControl Name="Export Excel" Icon="fas fa-file-excel" Colour="warning" OnBaseClickCall="PrintToExcel" />
         </ButtonContainer>
     </PageBase>
 }
@@ -47,6 +49,67 @@
         _api.ClearCacheAsync();
         _nav.NavigateTo("/d0ec2085-543e-479d-9f26-b0c6897174cf/" + 0);
         _page.AddPage("69de5095-37ed-4334-8049-fc002b0d0ee2");
+    }
+
+    private async void PrintToExcel()
+    {
+        var wb = new XLWorkbook();
+        wb.Properties.Author = "Chris Whitehead";
+        wb.Properties.Title = "CC Research Project";
+        wb.Properties.Subject = "Test Results";
+
+        var ws = wb.Worksheets.Add("Test Results");
+
+        ws.Cell(1, 1).Value = "Username";
+        ws.Cell(1, 2).Value = "Completed";
+        ws.Cell(1, 3).Value = "1). Which type of device did you use to perform this test?";
+        ws.Cell(1, 4).Value = "2). What age group do you fall in?";
+        ws.Cell(1, 5).Value = "3). How frequently do you use digital recipe aids? ";
+        ws.Cell(1, 6).Value = "4). When using the prototype, did you encounter any problems?";
+        ws.Cell(1, 7).Value = "4a).";
+        ws.Cell(1, 8).Value = "5). 'The prototype responded promptly to my interactions.'";
+        ws.Cell(1, 9).Value = "6). 'I found the user interface intuitive and user friendly.'"; // seven
+        ws.Cell(1, 10).Value = "7). 'I was able to complete a recipe from start to finish.'";
+        ws.Cell(1, 11).Value = "8). Did all features work as you anticipated?";
+        ws.Cell(1, 12).Value = "8a).";
+        ws.Cell(1, 13).Value = "9). 'The cooking process was clear and helpful.'";
+        ws.Cell(1, 14).Value = "10). Were there any elements of the design that you found distracting or overwhelming?";
+        ws.Cell(1, 15).Value = "10a).";
+        ws.Cell(1, 16).Value = "11). 'The prototype succeeded in guiding me through it's features.'";
+        ws.Cell(1, 17).Value = "12). What changes would you make to the prototype to improve the user experience, and why?";
+        ws.Cell(1, 18).Value = "13). 'I would use this tool when I am cooking a recipe.'";
+        ws.Cell(1, 19).Value = "14). 'I would recommend this tool to someone else.'";
+
+        // Get a list of all questionnaires.
+        List<QuestionnaireObj> surveyList = await _api.GetQuestionnaireObjListAsync();
+
+        for (int row = 0; row < surveyList.Count; row++)
+        {
+            User getUser = await _api.GetUser(surveyList[row].UserId);
+            ws.Cell(row + 2, 1).Value = getUser.Name;
+            ws.Cell(row + 2, 2).Value = surveyList[row].TimeStarted.Value.ToString("g");
+            ws.Cell(row + 2, 3).Value = surveyList[row].QuestionOneAnswer;
+            ws.Cell(row + 2, 4).Value = surveyList[row].QuestionTwoAnswer;
+            ws.Cell(row + 2, 5).Value = surveyList[row].QuestionThreeAnswer;
+            ws.Cell(row + 2, 6).Value = surveyList[row].QuestionFourAnswer;
+            ws.Cell(row + 2, 7).Value = surveyList[row].QuestionFourAnswerString;
+            ws.Cell(row + 2, 8).Value = surveyList[row].QuestionFiveAnswer;
+            ws.Cell(row + 2, 9).Value = surveyList[row].QuestionSevenAnswer;
+            ws.Cell(row + 2, 10).Value = surveyList[row].QuestionEightAnswer;
+            ws.Cell(row + 2, 11).Value = surveyList[row].QuestionNineAnswer;
+            ws.Cell(row + 2, 12).Value = surveyList[row].QuestionNineAnswerString;
+            ws.Cell(row + 2, 13).Value = surveyList[row].QuestionTenAnswer;
+            ws.Cell(row + 2, 14).Value = surveyList[row].QuestionElevenAnswer;
+            ws.Cell(row + 2, 15).Value = surveyList[row].QuestionElevenAnswerString;
+            ws.Cell(row + 2, 16).Value = surveyList[row].QuestionTwelveAnswer;
+            ws.Cell(row + 2, 17).Value = surveyList[row].QuestionThirteenAnswer;
+            ws.Cell(row + 2, 18).Value = surveyList[row].QuestionFourteenAnswer;
+            ws.Cell(row + 2, 19).Value = surveyList[row].QuestionFifteenAnswer;
+        }
+
+        MemoryStream XLSStream = new();
+        //wb.SaveAs(XLSStream);
+        wb.SaveAs("RPCC_Results.xlsx");
     }
 
     private void PageBack()

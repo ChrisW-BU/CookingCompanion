@@ -54,7 +54,7 @@
 
         // SYSTEM FEEDBACK
         protected string QuestionFour = "4). When using the prototype, did you encounter any problems? " +
-            "If so, can you please give some details as to what happened. ";
+            "If so, can you please give some details as to what happened. "; // YES/NO
         public string GetQuestionFour()
         {
             return QuestionFour;
@@ -65,7 +65,7 @@
 
 
         protected string QuestionFive = "5). 'The prototype responded promptly to my interactions.'";
-        public string GetQuestionFive()
+        public string GetQuestionFive() // LIKERT
         {
             return QuestionFive;
         }
@@ -73,20 +73,20 @@
 
 
 
-        public string QuestionSix = "6). Were there any times you performed an action and"
-            +" were met with an unexpected reaction? If so, can you please give some details of what occurred. ";
-        public string GetQuestionSix()
-        {
-            return QuestionSix;
-        }
-        public int QuestionSixAnswer { get; set; }
-        public string QuestionSixAnswerString { get; set; } = string.Empty;
+        //public string QuestionSix = "6). Were there any times you performed an action and"
+        //    +" were met with an unexpected reaction? If so, can you please give some details of what occurred. ";
+        //public string GetQuestionSix()
+        //{
+        //    return QuestionSix;
+        //}
+        //public int QuestionSixAnswer { get; set; }
+        //public string QuestionSixAnswerString { get; set; } = string.Empty;
 
 
 
         // UX/UI QUESTIONS
         public string QuestionSeven = "6). 'I found the user interface intuitive and user friendly.'";
-        public string GetQuestionSeven()
+        public string GetQuestionSeven() // LIKERT
         {
             return QuestionSeven;
         }
@@ -95,7 +95,7 @@
 
 
         public string QuestionEight = "7). 'I was able to complete a recipe from start to finish.'";
-        public string GetQuestionEight()
+        public string GetQuestionEight() // YES/NO
         {
             return QuestionEight;
         }
@@ -105,7 +105,7 @@
 
         public string QuestionNine = "8). Did all features work as you anticipated e.g., the cooking process, favourites, " +
             "and shopping list? If not, can you explain why? ";
-        public string GetQuestionNine()
+        public string GetQuestionNine() // YES/NO
         {
             return QuestionNine;
         }
@@ -115,7 +115,7 @@
 
 
         public string QuestionTen = "9). 'The cooking process was clear and helpful.'";
-        public string GetQuestionTen()
+        public string GetQuestionTen() // LIKERT
         {
             return QuestionTen;
         }
@@ -125,7 +125,7 @@
 
         public string QuestionEleven = "10). Were there any elements of the design that you found distracting or overwhelming? " +
             "If yes, can you briefly detail them. ";
-        public string GetQuestionEleven()
+        public string GetQuestionEleven() // BINARY
         {
             return QuestionEleven;
         }
@@ -135,7 +135,7 @@
 
 
         public string QuestionTwelve = "11). 'The prototype succeeded in guiding me through it's features.'";
-        public string GetQuestionTwelve()
+        public string GetQuestionTwelve() // LIKERT
         {
             return QuestionTwelve;
         }
@@ -144,7 +144,7 @@
 
 
         public string QuestionThirteen = "12). What changes would you make to the prototype to improve the user experience, and why?";
-        public string GetQuestionThirteen()
+        public string GetQuestionThirteen() // TEXT
         {
             return QuestionThirteen;
         }
@@ -153,7 +153,7 @@
 
 
         public string QuestionFourteen = "13). 'I would use this tool when I am cooking a recipe.'";
-        public string GetQuestionFourteen()
+        public string GetQuestionFourteen() // LIKERT
         {
             return QuestionFourteen;
         }
@@ -162,7 +162,7 @@
 
 
         public string QuestionFifteen = "14). 'I would recommend this tool to someone else.'";
-        public string GetQuestionFifteen()
+        public string GetQuestionFifteen() // LIKERT
         {
             return QuestionFifteen;
         }
