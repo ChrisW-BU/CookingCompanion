@@ -8,7 +8,7 @@
 
 <PageTitle>Cooking Companion</PageTitle>
 <PageBase>
-    @if(!_user.GetConsentStatus())
+    @* @if(!_user.GetConsentStatus())
     {
         @if (!nextPage)
         {
@@ -297,8 +297,41 @@
             <ButtonControl Name="Start Questionnaire" OnBaseClickCall="GoToQuestionnaire" Icon="fas fa-play" Colour="success" />
         </ButtonContainer>
         }
-    }
+    } *@
+    <div class="row">
+        <div class="col-8">
+            <h4>Cooking Companion</h4>
+            <div class="d-none d-sm-block">
+                <b>An assistant application for users with mild cognitive impairment</b>
+            </div>
+        </div>
+        <div class="col-4 text-end">
+            <div class="d-none d-lg-block">
+                <img src="img/bath-logo.png" class="img-fluid" style="max-width:250px;" alt="...">
+            </div>
+            <div class="d-block d-lg-none">
+                <div class="d-block d-sm-none">
+                    <img src="img/bath-logo.png" class="img-fluid" style="max-width:120px;" alt="...">
+                </div>
+                <div class="d-none d-sm-block">
+                    <img src="img/bath-logo.png" class="img-fluid" style="max-width:150px;" alt="...">
+                </div>
 
+            </div>
+        </div>
+    </div>
+    <div class="row d-block d-sm-none">
+        <div class="col">
+            <b>An assistant application for users with mild cognitive impairment</b>
+        </div>
+    </div>
+
+    <div class="grid gap-3">
+        <MenuItem IsOffCanvas=false Icon="fas fa-burger" Title="Recipes" Href="recipes"></MenuItem>
+        <MenuItem IsOffCanvas=false Icon="fas fa-list-check" Title="Shopping Lists" Href="shoppinglist"></MenuItem>
+        <MenuItem IsOffCanvas=false Icon="fas fa-star" Title="Favourites" Href="favourites"></MenuItem>
+    </div>
+    
 
 </PageBase>
 <PopupObj @ref="ourPopUp" />

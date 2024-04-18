@@ -48,6 +48,7 @@
 
     private async void OnClickEvent()
     {
+
         NavManager.NavigateTo(Href);
         if (IsAdmin)
         {
@@ -58,7 +59,10 @@
             _page.AddPage("");
         }
         await OnMenuItemClick.InvokeAsync();
-        await _js.InvokeVoidAsync("RPCC.offCanvas");
+        if (IsOffCanvas)
+        {
+            await _js.InvokeVoidAsync("RPCC.offCanvas");
+        }
         await InvokeAsync(StateHasChanged);
     }
 }

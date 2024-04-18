@@ -21,6 +21,7 @@
             <AddNewButtonControl OnClickCall="AddNewUser" />
             <BackButtonControl OnClickCall="PageBack" />
             <ButtonControl Name="Export Excel" Icon="fas fa-file-excel" Colour="warning" OnBaseClickCall="PrintToExcel" />
+            @* <ButtonControl Name="Task Excel" Icon="fas fa-file-excel" Colour="warning" OnBaseClickCall="TasksToExcel" /> *@
         </ButtonContainer>
     </PageBase>
 }
@@ -110,6 +111,101 @@
         MemoryStream XLSStream = new();
         //wb.SaveAs(XLSStream);
         wb.SaveAs("RPCC_Results.xlsx");
+    }
+
+    private async void TasksToExcel()
+    {
+        var wb = new XLWorkbook();
+        wb.Properties.Author = "Chris Whitehead";
+        wb.Properties.Title = "CC Research Project";
+        wb.Properties.Subject = "Task Results";
+
+        var ws = wb.Worksheets.Add("Test Results");
+
+        ws.Cell(1, 1).Value = "Username";
+        ws.Cell(1, 2).Value = "Task 1 - Clicks";
+        ws.Cell(1, 3).Value = "Task 1 - Time";
+        ws.Cell(1, 4).Value = "Task 2 - Clicks";
+        ws.Cell(1, 5).Value = "Task 2 - Time";
+        ws.Cell(1, 6).Value = "Task 3 - Clicks";
+        ws.Cell(1, 7).Value = "Task 3 - Time";
+        ws.Cell(1, 8).Value = "Task 4 - Clicks";
+        ws.Cell(1, 9).Value = "Task 4 - Time";
+        ws.Cell(1, 10).Value = "Task 5 - Clicks";
+        ws.Cell(1, 11).Value = "Task 5 - Time";
+        ws.Cell(1, 12).Value = "Task 6 - Clicks";
+        ws.Cell(1, 13).Value = "Task 6 - Time";
+
+        if(users.Count == 0)
+        {
+            users = await _api.GetUserListAsync();
+
+            users = users.OrderBy(a => a.Name).ToList();
+        }
+
+        int rowCount = 0;
+
+        foreach(User user in users)
+        {
+            _api.Output("User Count: " + users.Count);
+            _api.Output("[" + user.Name + "]");
+
+            List<TaskObj> taskList = await _api.GetUserTaskList(user.Id);
+
+            if (taskList.Count == 6)
+            {
+                taskList = taskList.OrderBy(a => a.TaskId).ToList();
+
+                _api.Output(taskList.Count.ToString());
+
+                ws.Cell(rowCount + 2, 1).Value = user.Name;
+                ws.Cell(rowCount + 2, 2).Value = taskList[0].ClickCount;
+                ws.Cell(rowCount + 2, 3).Value = taskList[0].GetTimeTaken;
+                ws.Cell(rowCount + 2, 4).Value = taskList[1].ClickCount;
+                ws.Cell(rowCount + 2, 5).Value = taskList[1].GetTimeTaken;
+                ws.Cell(rowCount + 2, 6).Value = taskList[2].ClickCount;
+                ws.Cell(rowCount + 2, 7).Value = taskList[2].GetTimeTaken;
+                ws.Cell(rowCount + 2, 8).Value = taskList[3].ClickCount;
+                ws.Cell(rowCount + 2, 9).Value = taskList[3].GetTimeTaken;
+                ws.Cell(rowCount + 2, 10).Value = taskList[4].ClickCount;
+                ws.Cell(rowCount + 2, 11).Value = taskList[4].GetTimeTaken;
+                ws.Cell(rowCount + 2, 12).Value = taskList[5].ClickCount;
+                ws.Cell(rowCount + 2, 13).Value = taskList[5].GetTimeTaken;
+
+                rowCount++;
+            }
+        }
+
+        // // Get a list of all questionnaires.
+        // List<QuestionnaireObj> surveyList = await _api.GetQuestionnaireObjListAsync();
+
+        // for (int row = 0; row < surveyList.Count; row++)
+        // {
+        //     User getUser = await _api.GetUser(surveyList[row].UserId);
+        //     ws.Cell(row + 2, 1).Value = getUser.Name;
+        //     ws.Cell(row + 2, 2).Value = surveyList[row].TimeStarted.Value.ToString("g");
+        //     ws.Cell(row + 2, 3).Value = surveyList[row].QuestionOneAnswer;
+        //     ws.Cell(row + 2, 4).Value = surveyList[row].QuestionTwoAnswer;
+        //     ws.Cell(row + 2, 5).Value = surveyList[row].QuestionThreeAnswer;
+        //     ws.Cell(row + 2, 6).Value = surveyList[row].QuestionFourAnswer;
+        //     ws.Cell(row + 2, 7).Value = surveyList[row].QuestionFourAnswerString;
+        //     ws.Cell(row + 2, 8).Value = surveyList[row].QuestionFiveAnswer;
+        //     ws.Cell(row + 2, 9).Value = surveyList[row].QuestionSevenAnswer;
+        //     ws.Cell(row + 2, 10).Value = surveyList[row].QuestionEightAnswer;
+        //     ws.Cell(row + 2, 11).Value = surveyList[row].QuestionNineAnswer;
+        //     ws.Cell(row + 2, 12).Value = surveyList[row].QuestionNineAnswerString;
+        //     ws.Cell(row + 2, 13).Value = surveyList[row].QuestionTenAnswer;
+        //     ws.Cell(row + 2, 14).Value = surveyList[row].QuestionElevenAnswer;
+        //     ws.Cell(row + 2, 15).Value = surveyList[row].QuestionElevenAnswerString;
+        //     ws.Cell(row + 2, 16).Value = surveyList[row].QuestionTwelveAnswer;
+        //     ws.Cell(row + 2, 17).Value = surveyList[row].QuestionThirteenAnswer;
+        //     ws.Cell(row + 2, 18).Value = surveyList[row].QuestionFourteenAnswer;
+        //     ws.Cell(row + 2, 19).Value = surveyList[row].QuestionFifteenAnswer;
+        // }
+
+        MemoryStream XLSStream = new();
+        //wb.SaveAs(XLSStream);
+        wb.SaveAs("RPCC_tasks.xlsx");
     }
 
     private void PageBack()
